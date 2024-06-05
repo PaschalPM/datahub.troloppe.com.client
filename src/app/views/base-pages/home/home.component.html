@@ -1,0 +1,39 @@
+<div class="flex grow flex-col">
+    <div class="flex grow items-center justify-evenly gap-4">
+        <section class="grow basis-1/3 space-y-6">
+            <h1
+                class="text-dark-blue mx-6 font-serif text-3xl/snug font-medium md:mx-0 lg:text-4xl/snug xl:text-5xl/snug">
+                DataHUB for Troloppe Property Services
+            </h1>
+            <p class="mx-6 text-xs/tight text-light-blue md:mx-0 md:w-[90%] xl:text-sm/tight">
+                An exclusive solution for streamlined data collection and management
+                designed specifically for our team members. It enables efficient gathering
+                and secure storage of property information. Property data collected from
+                the field stays confidential and accessible only to authorized personnel.
+            </p>
+            <div class="my-2 grow-0 basis-1/2 md:hidden">
+                <img src="assets/home-illustration.png" alt="homepage illustration image" class="mx-auto" width="320px"
+                    height="185px" />
+            </div>
+            <div class="text-center md:text-left">
+                <app-signin-or-dashboard-link [signInOrDashboard]="signInOrDashboard" type="actionButton">
+                </app-signin-or-dashboard-link>
+            </div>
+        </section>
+        <aside class="hidden grow-0 basis-1/2 md:block">
+            <img src="assets/home-illustration.png" alt="homepage illustration image" class="ml-auto" width="550px" />
+        </aside>
+    </div>
+    <div class="hidden gap-3 py-2 md:flex">
+        <a href="https://www.facebook.com/troloppeproperty/">
+            <facebook-icon></facebook-icon>
+        </a>
+        <a href="https://www.instagram.com/troloppepropertyservices/?hl=en">
+            <instagram-icon></instagram-icon>
+        </a>
+        <a href="https://www.linkedin.com/company/troloppe-property-services/?originalSubdomain=ng">
+            <linkedin-icon></linkedin-icon>
+        </a>
+    </div>
+
+</div>

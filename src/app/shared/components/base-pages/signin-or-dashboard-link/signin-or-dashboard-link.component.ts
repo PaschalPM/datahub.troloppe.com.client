@@ -52,7 +52,7 @@ export class SigninOrDashboardLinkComponent {
 
   currentUserName = '';
   actionButtonClass =
-    'bg-secondary inline-block rounded-sm px-8 py-2 text-sm text-white mt-8 lg:mt-12 lg:text-base';
+    'bg-secondary inline-block rounded-sm px-8 py-2 text-sm text-white mt-8 lg:mt-12 lg:text-base hover:bg-secondary/80';
 
   constructor(private css: ClientStorageService) {}
   ngOnInit(): void {

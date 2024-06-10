@@ -4,8 +4,7 @@ import { ClientStorageService } from './client-storage.service';
 import { HttpClient } from '@angular/common/http';
 import { BASE_API_URL, apiHttpOptions } from '../../configs/global';
 import { Router } from '@angular/router';
-import { User } from '../interfaces/user';
-import { Auth } from '../interfaces/auth';
+import { User as UserType } from '../types/user';
 import { UserRoles } from '../enums/user-roles';
 
 const API_AUTH_URL = BASE_API_URL + '/auth';
@@ -14,22 +13,22 @@ const API_AUTH_URL = BASE_API_URL + '/auth';
   providedIn: 'root',
 })
 export class AuthService {
-  static CURRENT_USER_KEY = 'currentUser';
-  private _currentUser!: User | null;
+  static CURRENT_USER_STORE_KEY = 'currentUser';
+  private _currentUser!: UserType | null;
 
   // Getter to retrieve currently logged-in user
   get currentUser() {
-    this._currentUser = this.css.local().get(AuthService.CURRENT_USER_KEY);
+    this._currentUser = this.css.local().get(AuthService.CURRENT_USER_STORE_KEY);
     return this._currentUser;
   }
 
   // Setter to set current user privately
-  private set currentUser(value: User | null) {
+  private set currentUser(value: UserType | null) {
     this._currentUser = value;
     if (value) {
-      this.css.local().set(AuthService.CURRENT_USER_KEY, value);
+      this.css.local().set(AuthService.CURRENT_USER_STORE_KEY, value);
     } else {
-      this.css.local().remove(AuthService.CURRENT_USER_KEY);
+      this.css.local().remove(AuthService.CURRENT_USER_STORE_KEY);
     }
   }
 
@@ -38,16 +37,16 @@ export class AuthService {
     private httpClient: HttpClient,
     private router: Router
   ) {
-    this.currentUser = this.css.local().get(AuthService.CURRENT_USER_KEY);
+    this.currentUser = this.css.local().get(AuthService.CURRENT_USER_STORE_KEY);
   }
 
-  getLoggedInUser(): Observable<User> {
-    return this.httpClient.get<User>(`${API_AUTH_URL}/user`, apiHttpOptions);
+  getLoggedInUser(): Observable<UserType> {
+    return this.httpClient.get<UserType>(`${API_AUTH_URL}/user`, apiHttpOptions);
   }
 
-  signIn(body: Pick<Auth, 'email' | 'password'>): Observable<User> {
+  signIn(body: Pick<AuthType, 'email' | 'password'>): Observable<UserType> {
     return this.httpClient
-      .post<User>(`${API_AUTH_URL}/login`, body, apiHttpOptions)
+      .post<UserType>(`${API_AUTH_URL}/login`, body, apiHttpOptions)
       .pipe(
         tap((value) => {
           this.currentUser = value;
@@ -67,7 +66,7 @@ export class AuthService {
   }
 
   changePassword(
-    body: Pick<Auth, 'email' | 'password'>
+    body: Pick<AuthType, 'email' | 'password'>
   ): Observable<{ message: string }> {
     return this.httpClient.post<{ message: string }>(
       `${API_AUTH_URL}/change-password`,
@@ -76,7 +75,7 @@ export class AuthService {
     );
   }
 
-  forgotPassword(body: Pick<Auth, 'email'>): Observable<{ message: string }> {
+  forgotPassword(body: Pick<AuthType, 'email'>): Observable<{ message: string }> {
     return this.httpClient.post<{ message: string }>(
       `${API_AUTH_URL}/forgot-password`,
       body,
@@ -84,7 +83,7 @@ export class AuthService {
     );
   }
 
-  resetPassword(body: Auth): Observable<{ message: string }> {
+  resetPassword(body: AuthType): Observable<{ message: string }> {
     return this.httpClient.post<{ message: string }>(
       `${API_AUTH_URL}/reset-password`,
       body,

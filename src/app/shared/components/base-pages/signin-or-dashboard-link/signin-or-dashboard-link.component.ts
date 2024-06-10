@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ClientStorageService } from '../../../services/client-storage.service';
 import { RouterModule } from '@angular/router';
+import { User } from '../../../types/user';
 
 @Component({
   selector: 'app-signin-or-dashboard-link',
@@ -59,7 +60,7 @@ export class SigninOrDashboardLinkComponent {
     if (this.signInOrDashboard === 'dashboard') {
       this.currentUserName = this.css
         .local()
-        .get<CurrentUserType>('currentUser')?.name as string;
+        .get<User>('currentUser')?.name as string;
     }
   }
 }

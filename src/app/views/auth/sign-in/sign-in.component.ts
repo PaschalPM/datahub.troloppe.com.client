@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TimerService } from '../../../shared/services/timer.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -21,4 +22,10 @@ import { Component } from '@angular/core';
   `
 })
 export class SignInComponent {
+
+  constructor(private timer: TimerService){
+    this.timer.countdown(60).subscribe((value) => {
+      console.log(value)
+    })
+  }
 }

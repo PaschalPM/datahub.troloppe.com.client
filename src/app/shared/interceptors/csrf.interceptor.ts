@@ -1,14 +1,17 @@
 import { HttpClient, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { BASE_API_URL, apiHttpOptions } from '../../configs/global';
-import { CookieService } from 'ngx-cookie-service';
+import { BASE_API_URL } from '../../configs/global';
 import { switchMap } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
 
 export const csrfInterceptor: HttpInterceptorFn = (req, next) => {
   const cookiesService = inject(CookieService);
+  const condition =
+    ['POST', 'PUT', 'DELETE'].includes(req.method) ||
+    req.url.endsWith('/api/auth/user');
 
-  if (['POST', 'PUT', 'DELETE'].includes(req.method)) {
-    csrfRequest().pipe(
+  if (condition) {
+    return csrfRequest().pipe(
       switchMap(() => {
         const token = cookiesService.get('XSRF-TOKEN');
         if (token) {
@@ -16,18 +19,16 @@ export const csrfInterceptor: HttpInterceptorFn = (req, next) => {
             headers: req.headers.set('X-XSRF-TOKEN', token),
             withCredentials: true,
           });
-
           return next(modifiedReq);
         }
         return next(req);
       })
     );
-    return next(req);
   }
   return next(req);
 };
 
 function csrfRequest() {
   const httpClient = inject(HttpClient);
-  return httpClient.get(BASE_API_URL + '/sanctum/csrf-cookie', apiHttpOptions);
+  return httpClient.get(BASE_API_URL + '/sanctum/csrf-cookie');
 }

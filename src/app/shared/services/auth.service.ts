@@ -44,6 +44,14 @@ export class AuthService {
     return this.httpClient.get<UserType>(`${API_AUTH_URL}/user`, apiHttpOptions);
   }
 
+  verifyUserByEmail(body: Pick<AuthType, 'email'>): Observable<void> {
+    return this.httpClient.post<void>(
+      `${API_AUTH_URL}/verify-user`,
+      body,
+      apiHttpOptions,
+    );
+  }
+
   signIn(body: Pick<AuthType, 'email' | 'password'>): Observable<UserType> {
     return this.httpClient
       .post<UserType>(`${API_AUTH_URL}/login`, body, apiHttpOptions)

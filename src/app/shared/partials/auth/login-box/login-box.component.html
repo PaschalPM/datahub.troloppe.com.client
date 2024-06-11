@@ -1,20 +1,14 @@
 <div class="m-2 bg-white p-5 lg:w-[450px] lg:p-10">
-    <div class="mb-6">
-      <img src="assets/Logo.svg" alt="logo" class="mb-6" />
-      <h1 class="mb-1 text-xl font-medium">Sign In</h1>
-      <p class="text-md">to access your dashboard</p>
-    </div>
-  
-    <!-- @if (stage === "VERIFY_EMAIL") {
-      <verify-email
-        [(stage)]="stage"
-        [emailControl]="emailControl"
-      ></verify-email>
-    } @else if (stage === "VERIFY_PASSWORD") {
-      <verify-password
-        [(stage)]="stage"
-        [emailControl]="emailControl"
-      ></verify-password>
-    } -->
+  <div class="mb-6">
+    <img src="assets/Logo.svg" alt="logo" class="mb-6" />
+    <h1 class="mb-1 text-xl font-medium">Sign In</h1>
+    <p class="text-md">to access your dashboard</p>
   </div>
-  
+
+  @if (stage === "VERIFY_EMAIL") {
+  <auth-verify-email [(stage)]="stage" [loginFormGroup]="loginFormGroup"></auth-verify-email>
+
+  } @else if (stage === "VERIFY_PASSWORD") {
+  <auth-login [(stage)]="stage" [loginFormGroup]="loginFormGroup"></auth-login>
+  }
+</div>

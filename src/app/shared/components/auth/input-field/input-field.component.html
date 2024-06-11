@@ -1,0 +1,54 @@
+<div [class]="class" class="relative">
+    <div [class]="utils.cn(classStyles.inputBorder, errorBorder)">
+        <div *ngIf="type === 'password'; then passwordInput else nonPasswordInput"></div>
+    </div>
+
+    <!-- Error Section -->
+    <div
+        [class]="utils.cn('transition-all duration-300 ease-in-out text-sm text-red-500', {'-mt-5 min-h-5 opacity-0': !errorCondition, 'mt-0 opacity-100': errorCondition})">
+        <div *ngIf="control.hasError('required')">
+            {{ name | capitalize }} field is required.
+        </div>
+        <div *ngIf="control.hasError('email')">
+            Please enter a valid email address.
+        </div>
+        <div *ngIf="control.hasError('minlength')">
+            {{ name | capitalize }} must be at least 8 characters long.
+        </div>
+        <div *ngIf="control.hasError('serverError')">
+            {{ control.getError('serverError').message }}
+        </div>
+
+    </div>
+
+    <!-- Forgot Password Link -->
+    <div *ngIf="type === 'password' && forgetPassword" class="text-right">
+        <a routerLink="/forgot-password" [state]="emailAddress"  class="inline-block text-sm font-medium text-dodger-blue">Forgot
+            Password?</a>
+    </div>
+
+
+
+
+    <!-- Templates -->
+    <ng-template #passwordInput>
+        <div class="relative">
+            <input [formControl]="control" [name]="name" [type]="dynamicType"
+                [class]="utils.cn(classStyles.input,'pr-10')" [placeholder]="placeholder"
+                (focus)="control.markAsUntouched()" />
+            <span (click)="displayPassword = !displayPassword" [class]="
+              utils.cn(
+                'absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-gray-700'
+              )
+            ">
+                <pw-visibility-icon [show]="displayPassword"></pw-visibility-icon>
+            </span>
+        </div>
+    </ng-template>
+
+    <ng-template #nonPasswordInput>
+        <input [formControl]="control" [name]="name" [type]="type" [class]="classStyles.input"
+            [placeholder]="placeholder" (focus)="control.markAsUntouched()" />
+    </ng-template>
+
+</div>

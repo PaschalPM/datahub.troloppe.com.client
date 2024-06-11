@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { TimerService } from './timer.service';
+import { CsrfService } from './csrf.service';
 
-describe('TimerService', () => {
-  let service: TimerService;
+describe('CsrfService', () => {
+  let service: CsrfService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(TimerService);
+    service = TestBed.inject(CsrfService);
   });
 
   it('should be created', () => {

@@ -31,6 +31,14 @@ export const routes: Routes = [
     component: AuthLayoutComponent,
     children: [
       {
+        title: 'Forgot Password',
+        path: 'forgot-password',
+        loadComponent: () =>
+          import('./views/auth/forgot-password/forgot-password.component').then(
+            (c) => c.ForgotPasswordComponent
+          ),
+      },
+      {
         title: 'Sign In',
         path: 'sign-in',
         loadComponent: () =>

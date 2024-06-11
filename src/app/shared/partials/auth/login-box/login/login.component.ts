@@ -59,13 +59,13 @@ export class LoginComponent extends BaseComponent {
           alert('Loggin in');
         },
         error: (err) => {
-          console.log(err)
+          console.log(err);
           this.passwordControl.setErrors({
             serverError: {
               message: err.error.message,
             },
           });
-          this.loading = false
+          this.loading = false;
         },
       });
     }

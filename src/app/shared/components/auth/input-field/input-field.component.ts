@@ -24,8 +24,7 @@ export class InputFieldComponent {
   @Input() type: 'text' | 'email' | 'password' = 'text';
   @Input() class = '';
   @Input() forgetPassword = false
-  @Input() emailAddress = ''
-
+  @Input() emailAddress!: string
   displayPassword = true;
   
   classStyles = {

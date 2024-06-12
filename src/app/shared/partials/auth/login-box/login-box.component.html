@@ -8,7 +8,7 @@
   @if (stage === "VERIFY_EMAIL") {
   <auth-verify-email [(stage)]="stage" [loginFormGroup]="loginFormGroup"></auth-verify-email>
 
-  } @else if (stage === "VERIFY_PASSWORD") {
+  } @else if (stage === "LOGIN_STAGE") {
   <auth-login [(stage)]="stage" [loginFormGroup]="loginFormGroup"></auth-login>
   }
 </div>

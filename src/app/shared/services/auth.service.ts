@@ -6,6 +6,7 @@ import { BASE_API_URL, apiHttpOptions } from '../../configs/global';
 import { Router } from '@angular/router';
 import { User as UserType } from '../types/user';
 import { UserRoles } from '../enums/user-roles';
+import { CURRENT_USER_STORE_KEY } from '../constants';
 
 const API_AUTH_URL = BASE_API_URL + '/auth';
 
@@ -13,12 +14,11 @@ const API_AUTH_URL = BASE_API_URL + '/auth';
   providedIn: 'root',
 })
 export class AuthService {
-  static CURRENT_USER_STORE_KEY = 'currentUser';
   private _currentUser!: UserType | null;
 
   // Getter to retrieve currently logged-in user
   get currentUser() {
-    this._currentUser = this.css.local().get(AuthService.CURRENT_USER_STORE_KEY);
+    this._currentUser = this.css.local().get(CURRENT_USER_STORE_KEY);
     return this._currentUser;
   }
 
@@ -26,9 +26,9 @@ export class AuthService {
   private set currentUser(value: UserType | null) {
     this._currentUser = value;
     if (value) {
-      this.css.local().set(AuthService.CURRENT_USER_STORE_KEY, value);
+      this.css.local().set(CURRENT_USER_STORE_KEY, value);
     } else {
-      this.css.local().remove(AuthService.CURRENT_USER_STORE_KEY);
+      this.css.local().remove(CURRENT_USER_STORE_KEY);
     }
   }
 
@@ -37,7 +37,7 @@ export class AuthService {
     private httpClient: HttpClient,
     private router: Router
   ) {
-    this.currentUser = this.css.local().get(AuthService.CURRENT_USER_STORE_KEY);
+    this.currentUser = this.css.local().get(CURRENT_USER_STORE_KEY);
   }
 
   getLoggedInUser(): Observable<UserType> {

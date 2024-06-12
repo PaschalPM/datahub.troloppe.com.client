@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 class StorageFactory {
+  
   private storage = localStorage;
   constructor(storage: Storage) {
     this.storage = storage;

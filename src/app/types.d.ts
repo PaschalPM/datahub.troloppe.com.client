@@ -1,5 +1,5 @@
 type EventEmitterType<T> = { event: string; payload: T };
-type LoginStageType = 'VERIFY_EMAIL' | 'VERIFY_PASSWORD';
+type LoginStageType = 'VERIFY_EMAIL' | 'LOGIN_STAGE';
 type ColorSchemeType = 'auto' | 'light' | 'dark';
 
 type AuthType = {

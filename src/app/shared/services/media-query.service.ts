@@ -5,14 +5,6 @@ import { fromEvent, map, startWith } from 'rxjs';
   providedIn: 'root',
 })
 export class MediaQueryService {
-  // Breakpoints
-  static SMALL = '(min-width: 640px)';
-  static MEDIUM = '(min-width: 768px)';
-  static LARGE = '(min-width: 1024px)';
-  static EXTRA_LARGE = '(min-width: 1280px)';
-
-  // Color Scheme
-  public static SYSTEM_COLOR_SCHEME = '(prefers-color-scheme: dark)';
 
   constructor() {}
 

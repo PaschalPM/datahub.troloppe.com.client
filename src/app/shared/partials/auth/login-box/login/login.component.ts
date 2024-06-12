@@ -1,7 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { InputFieldComponent } from '../../../../components/auth/input-field/input-field.component';
 import { BaseComponent } from '../base.component';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
 import { SubmitBtnComponent } from '../../../../components/auth/submit-btn/submit-btn.component';
 import { ReadonlyInputFieldComponent } from '../../../../components/auth/readonly-input-field/readonly-input-field.component';
@@ -19,7 +19,7 @@ import { ReadonlyInputFieldComponent } from '../../../../components/auth/readonl
     <form [formGroup]="loginFormGroup" (ngSubmit)="onLogin()">
       <auth-readonly-input-field
         [control]="emailControl"
-        (changeBtnClick)="stage = 'VERIFY_EMAIL'"
+        (changeBtnClick)="onChangeStage()"
         class="mb-3"
       >
       </auth-readonly-input-field>
@@ -31,7 +31,7 @@ import { ReadonlyInputFieldComponent } from '../../../../components/auth/readonl
           placeholder="Password"
           [control]="passwordControl"
           [forgetPassword]="true"
-          [emailAddress]="emailControl.value"
+          [emailForResetLink]="emailControl.value"
         ></auth-input-field>
       </div>
       <auth-submit-btn [loading]="loading" text="Sign In"></auth-submit-btn>
@@ -49,6 +49,12 @@ export class LoginComponent extends BaseComponent {
     this.emailControl = this.loginFormGroup.get('email') as FormControl;
     this.passwordControl = this.loginFormGroup.get('password') as FormControl;
   }
+
+  onChangeStage(){
+    this.stage = 'VERIFY_EMAIL'
+    this.stageChange.emit(this.stage)
+  }
+  
   onLogin() {
     this.loginFormGroup.markAllAsTouched();
     if (this.loginFormGroup.valid) {

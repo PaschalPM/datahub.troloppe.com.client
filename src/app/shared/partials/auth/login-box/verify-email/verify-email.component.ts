@@ -38,7 +38,7 @@ export class VerifyEmailComponent extends BaseComponent {
       this.loading = true;
       this.authService.verifyUserByEmail(this.loginFormGroup.value).subscribe({
         next: () => {
-          this.stage = 'VERIFY_PASSWORD';
+          this.stage = 'LOGIN_STAGE';
           this.stageChange.emit(this.stage);
           this.loginFormGroup.markAsUntouched()
         },

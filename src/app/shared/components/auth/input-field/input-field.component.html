@@ -18,12 +18,15 @@
         <div *ngIf="control.hasError('serverError')">
             {{ control.getError('serverError').message }}
         </div>
+        <div *ngIf="control.hasError('mismatch')">
+            {{ control.getError('mismatch').message }}
+        </div>
 
     </div>
 
     <!-- Forgot Password Link -->
     <div *ngIf="type === 'password' && forgetPassword" class="text-right">
-        <a routerLink="/forgot-password" [state]="emailAddress"  class="inline-block text-sm font-medium text-dodger-blue">Forgot
+        <a routerLink="/forgot-password" [state]="{emailForResetLink}"  class="inline-block text-sm font-medium text-dodger-blue">Forgot
             Password?</a>
     </div>
 
@@ -33,10 +36,10 @@
     <!-- Templates -->
     <ng-template #passwordInput>
         <div class="relative">
-            <input [formControl]="control" [name]="name" [type]="dynamicType"
+            <input #passwordInputElement [formControl]="control" [name]="name" [type]="dynamicType"
                 [class]="utils.cn(classStyles.input,'pr-10')" [placeholder]="placeholder"
                 (focus)="control.markAsUntouched()" />
-            <span (click)="displayPassword = !displayPassword" [class]="
+            <span (click)="toggleVisibility()" [class]="
               utils.cn(
                 'absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-gray-700'
               )

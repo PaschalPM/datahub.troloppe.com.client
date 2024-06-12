@@ -31,6 +31,14 @@ export const routes: Routes = [
     component: AuthLayoutComponent,
     children: [
       {
+        title: 'Sign In',
+        path: 'sign-in',
+        loadComponent: () =>
+          import('./views/auth/sign-in/sign-in.component').then(
+            (c) => c.SignInComponent
+          ),
+      },
+      {
         title: 'Forgot Password',
         path: 'forgot-password',
         loadComponent: () =>
@@ -39,11 +47,11 @@ export const routes: Routes = [
           ),
       },
       {
-        title: 'Sign In',
-        path: 'sign-in',
+        title: 'Reset Password',
+        path: 'reset-password',
         loadComponent: () =>
-          import('./views/auth/sign-in/sign-in.component').then(
-            (c) => c.SignInComponent
+          import('./views/auth/reset-password/reset-password.component').then(
+            (c) => c.ResetPasswordComponent
           ),
       },
     ],

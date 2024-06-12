@@ -6,13 +6,15 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { NavigationStart, Router } from '@angular/router';
 import { InputFieldComponent } from '../../../shared/components/auth/input-field/input-field.component';
 import { SubmitBtnComponent } from '../../../shared/components/auth/submit-btn/submit-btn.component';
 import { AuthService } from '../../../shared/services/auth.service';
+import { ClientStorageService } from '../../../shared/services/client-storage.service';
+import { EMAIL_FOR_RESET_PASSWORD } from '../../../shared/constants';
 
 @Component({
-  selector: 'app-forgot-password',
+  selector: 'auth-forgot-password',
   standalone: true,
   imports: [InputFieldComponent, SubmitBtnComponent, ReactiveFormsModule],
   templateUrl: './forgot-password.component.html',
@@ -25,17 +27,21 @@ export class ForgotPasswordComponent {
   constructor(
     private router: Router,
     private fb: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private css: ClientStorageService
   ) {
-    const emailAddress = this.router.getCurrentNavigation()?.extras
-      .state as unknown as FormControl;
-    this.emailControl = new FormControl(emailAddress, [
+    const emailForResetLink = this.router.getCurrentNavigation()?.extras
+      .state?.['emailForResetLink'] as unknown as string;
+
+    this.emailControl = new FormControl(emailForResetLink, [
       Validators.required,
       Validators.email,
     ]);
     this.forgotPasswordFormGroup = this.fb.group({
       email: this.emailControl,
     });
+
+    this.setEmailForResetLinkAsStateOnPopstate(emailForResetLink);
   }
 
   onSendResetLinkMail() {
@@ -48,6 +54,8 @@ export class ForgotPasswordComponent {
         .subscribe({
           next: (value) => {
             alert(value.message);
+            const email = this.forgotPasswordFormGroup.get('email')?.value
+            this.storeEmailForResetLinkForResetPasswordView(email)
             this.loading = false;
           },
           error: (err) => {
@@ -61,5 +69,25 @@ export class ForgotPasswordComponent {
           },
         });
     }
+  }
+
+  private setEmailForResetLinkAsStateOnPopstate(emailForResetLink: string) {
+    this.router.events.subscribe({
+      next: (event) => {
+        if (event instanceof NavigationStart) {
+          if (event.navigationTrigger === 'popstate') {
+            this.router.navigate(['/sign-in'], {
+              state: {
+                emailForResetLink,
+              },
+            });
+          }
+        }
+      },
+    });
+  }
+
+  private storeEmailForResetLinkForResetPasswordView(emailForResetLink: string){
+    this.css.local().set(EMAIL_FOR_RESET_PASSWORD, emailForResetLink)
   }
 }

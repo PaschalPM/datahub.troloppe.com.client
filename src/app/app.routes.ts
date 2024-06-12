@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { LayoutComponent as BasePagesLayoutComponent } from './views/base-pages/layout/layout.component';
 import { NotFoundComponent } from './views/not-found/not-found.component';
 import { LayoutComponent as AuthLayoutComponent } from './views/auth/layout/layout.component';
+import { resetPasswordGuard } from './shared/guards/reset-password.guard';
 
 export const routes: Routes = [
   {
@@ -49,6 +50,7 @@ export const routes: Routes = [
       {
         title: 'Reset Password',
         path: 'reset-password',
+        canActivate: [resetPasswordGuard],
         loadComponent: () =>
           import('./views/auth/reset-password/reset-password.component').then(
             (c) => c.ResetPasswordComponent

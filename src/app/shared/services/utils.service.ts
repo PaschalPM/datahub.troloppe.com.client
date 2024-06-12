@@ -8,13 +8,6 @@ import { twMerge } from 'tailwind-merge';
 export class UtilsService {
   constructor() {}
 
-  getUrlParam(name: string): string | null {
-    const queryString = location.search;
-    const urlParams = new URLSearchParams(queryString);
-
-    return urlParams.get(name);
-  }
-
   cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
   }

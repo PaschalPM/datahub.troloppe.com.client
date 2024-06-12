@@ -9,12 +9,11 @@ import {
 import { matchFields } from '../../../shared/validators/match-fields';
 import { ClientStorageService } from '../../../shared/services/client-storage.service';
 import { EMAIL_FOR_RESET_PASSWORD } from '../../../shared/constants';
-import { UtilsService } from '../../../shared/services/utils.service';
 import { InputFieldComponent } from '../../../shared/components/auth/input-field/input-field.component';
 import { SubmitBtnComponent } from '../../../shared/components/auth/submit-btn/submit-btn.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../../shared/services/auth.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'auth-reset-password',
@@ -34,17 +33,14 @@ export class ResetPasswordComponent {
   constructor(
     private fb: FormBuilder,
     private css: ClientStorageService,
-    private utils: UtilsService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private activeRoute: ActivatedRoute
   ) {
-    const email = this.css.local().get(EMAIL_FOR_RESET_PASSWORD);
-    const token = this.utils.getUrlParam('token');
-
     this.resetPasswordFormGroup = this.fb.group(
       {
-        email: [email, [Validators.required, Validators.email]],
-        token: [token, [Validators.required]],
+        email: ['', [Validators.required, Validators.email]],
+        token: ['', [Validators.required]],
         password: this.passwordControl,
         password_confirmation: this.passwordConfirmationControl,
       },
@@ -53,12 +49,20 @@ export class ResetPasswordComponent {
         validators: [matchFields('password', 'password_confirmation')],
       }
     );
-    this.css.local().remove(EMAIL_FOR_RESET_PASSWORD);
   }
 
+  ngOnInit(): void {
+    this.activeRoute.queryParams.subscribe((params) => {
+      const email = this.css.local().get(EMAIL_FOR_RESET_PASSWORD);
+      const token = params['token'];
+      this.resetPasswordFormGroup.get('email')?.setValue(email);
+      this.resetPasswordFormGroup.get('token')?.setValue(token);
+    });
+  }
   onResetPassword() {
     this.resetPasswordFormGroup.markAllAsTouched();
-
+    console.log(this.resetPasswordFormGroup.value)
+    
     if (this.resetPasswordFormGroup.valid) {
       this.loading = true;
 

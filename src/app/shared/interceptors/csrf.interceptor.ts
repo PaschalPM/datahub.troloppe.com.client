@@ -30,5 +30,5 @@ export const csrfInterceptor: HttpInterceptorFn = (req, next) => {
 
 function csrfRequest() {
   const httpClient = inject(HttpClient);
-  return httpClient.get(BASE_API_URL + '/sanctum/csrf-cookie');
+  return httpClient.get(BASE_API_URL + '/sanctum/csrf-cookie', {withCredentials: true});
 }

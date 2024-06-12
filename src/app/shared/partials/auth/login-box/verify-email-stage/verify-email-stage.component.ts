@@ -6,7 +6,7 @@ import { InputFieldComponent } from '../../../../components/auth/input-field/inp
 import { AuthService } from '../../../../services/auth.service';
 
 @Component({
-  selector: 'auth-verify-email',
+  selector: 'auth-verify-email-stage',
   standalone: true,
   imports: [SubmitBtnComponent, InputFieldComponent, ReactiveFormsModule],
   template: `
@@ -22,7 +22,7 @@ import { AuthService } from '../../../../services/auth.service';
     </form>
   `,
 })
-export class VerifyEmailComponent extends BaseComponent {
+export class VerifyEmailStageComponent extends BaseComponent {
   emailControl!: FormControl;
 
   constructor(private authService: AuthService) {
@@ -32,6 +32,7 @@ export class VerifyEmailComponent extends BaseComponent {
   ngOnInit(): void {
     this.emailControl = this.loginFormGroup.get('email') as FormControl;
   }
+  
   onVerifyEmail() {
     this.loginFormGroup.markAllAsTouched();
     if (this.emailControl.valid) {
@@ -43,9 +44,10 @@ export class VerifyEmailComponent extends BaseComponent {
           this.loginFormGroup.markAsUntouched()
         },
         error: (err) => {
+          console.log(err)
           this.emailControl.setErrors({
             serverError: {
-              message: err.error.message,
+              message: err.error.message ?? 'Oops something went wrong.',
             },
           });
           this.loading = false;

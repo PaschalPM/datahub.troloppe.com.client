@@ -5,9 +5,11 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
 import { SubmitBtnComponent } from '../../../../components/auth/submit-btn/submit-btn.component';
 import { ReadonlyInputFieldComponent } from '../../../../components/auth/readonly-input-field/readonly-input-field.component';
+import { ClientStorageService } from '../../../../services/client-storage.service';
+import { EMAIL_FOR_RESET_PASSWORD } from '../../../../constants';
 
 @Component({
-  selector: 'auth-login',
+  selector: 'auth-login-stage',
   standalone: true,
   imports: [
     InputFieldComponent,
@@ -38,11 +40,11 @@ import { ReadonlyInputFieldComponent } from '../../../../components/auth/readonl
     </form>
   `,
 })
-export class LoginComponent extends BaseComponent {
+export class LoginStageComponent extends BaseComponent {
   emailControl!: FormControl;
   passwordControl!: FormControl;
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private css: ClientStorageService) {
     super();
   }
   ngOnInit(): void {
@@ -63,6 +65,7 @@ export class LoginComponent extends BaseComponent {
       this.authService.signIn(this.loginFormGroup.value).subscribe({
         next: () => {
           alert('Loggin in');
+          this.css.local().remove(EMAIL_FOR_RESET_PASSWORD)
         },
         error: (err) => {
           console.log(err);

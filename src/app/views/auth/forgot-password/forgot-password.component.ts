@@ -55,7 +55,7 @@ export class ForgotPasswordComponent {
           next: (value) => {
             alert(value.message);
             const email = this.forgotPasswordFormGroup.get('email')?.value
-            this.storeEmailForResetLinkForResetPasswordView(email)
+            this.storeEmailForResetLink(email)
             this.loading = false;
           },
           error: (err) => {
@@ -71,14 +71,14 @@ export class ForgotPasswordComponent {
     }
   }
 
-  private setEmailForResetLinkAsStateOnPopstate(emailForResetLink: string) {
+  private setEmailForResetLinkAsStateOnPopstate(emailForLogin: string) {
     this.router.events.subscribe({
       next: (event) => {
         if (event instanceof NavigationStart) {
           if (event.navigationTrigger === 'popstate') {
             this.router.navigate(['/sign-in'], {
               state: {
-                emailForResetLink,
+                emailForLogin,
               },
             });
           }
@@ -87,7 +87,7 @@ export class ForgotPasswordComponent {
     });
   }
 
-  private storeEmailForResetLinkForResetPasswordView(emailForResetLink: string){
+  private storeEmailForResetLink(emailForResetLink: string){
     this.css.local().set(EMAIL_FOR_RESET_PASSWORD, emailForResetLink)
   }
 }

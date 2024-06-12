@@ -6,9 +6,9 @@
   </div>
 
   @if (stage === "VERIFY_EMAIL") {
-  <auth-verify-email [(stage)]="stage" [loginFormGroup]="loginFormGroup"></auth-verify-email>
+  <auth-verify-email-stage [(stage)]="stage" [loginFormGroup]="loginFormGroup"></auth-verify-email-stage>
 
   } @else if (stage === "LOGIN_STAGE") {
-  <auth-login [(stage)]="stage" [loginFormGroup]="loginFormGroup"></auth-login>
+  <auth-login-stage [(stage)]="stage" [loginFormGroup]="loginFormGroup"></auth-login-stage>
   }
 </div>

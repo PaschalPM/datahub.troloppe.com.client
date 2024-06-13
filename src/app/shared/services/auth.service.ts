@@ -68,7 +68,6 @@ export class AuthService {
       .pipe(
         tap(() => {
           this.currentUser = null;
-          this.router.navigateByUrl('/');
         })
       );
   }

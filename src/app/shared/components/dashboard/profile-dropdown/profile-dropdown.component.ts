@@ -13,6 +13,7 @@ import { ClickOutsideDirective } from '../../../directives/click-outside.directi
 import { ProfileModalComponent } from '../../../partials/profile-modal/profile-modal.component';
 import { ColorSchemeModalComponent } from '../../../partials/color-scheme-modal/color-scheme-modal.component';
 import { AuthService } from '../../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'dashboard-profile-dropdown',
@@ -28,7 +29,8 @@ export class ProfileDropdownComponent {
   constructor(
     private modalService: ModalService,
     public colorScheme: ColorSchemeService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   openProfileModal() {
@@ -50,6 +52,7 @@ export class ProfileDropdownComponent {
   signOut() {
     this.authService.signOut().subscribe(() => {
       alert('Logged out');
+      this.router.navigateByUrl('/')
     });
   }
 }

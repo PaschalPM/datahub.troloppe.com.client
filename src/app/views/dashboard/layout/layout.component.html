@@ -1,0 +1,10 @@
+<div [class]="utils.cn('flex min-h-screen transition-all duration-500', {'-ml-[55px] md:-ml-[200px]': !isMenuOpened})">
+    <dashboard-side-menu></dashboard-side-menu>
+    <div class="flex grow flex-col">
+        <dashboard-navbar [title]="title"></dashboard-navbar>
+        <main class="grow overflow-auto bg-lighter-blue p-4 dark:bg-gray-800 dark:text-white">
+            <router-outlet></router-outlet>
+        </main>
+    </div>
+</div>
+<app-modal></app-modal>

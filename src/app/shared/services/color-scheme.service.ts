@@ -2,12 +2,13 @@ import { EventEmitter, Inject, Injectable } from '@angular/core';
 import { ClientStorageService } from './client-storage.service';
 import { MediaQueryService } from './media-query.service';
 import { DOCUMENT } from '@angular/common';
+import { SYSTEM_COLOR_SCHEME } from '../constants/media-query';
+import { COLOR_SCHEME_STORE_KEY } from '../constants';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ColorSchemeService {
-  static COLOR_SCHEME_STORE_KEY = 'colorscheme';
   current!: ColorSchemeType;
   private currentChange = new EventEmitter<ColorSchemeType>();
 
@@ -21,7 +22,7 @@ export class ColorSchemeService {
     if (value === 'light') this.document.body.classList.remove('dark');
     else if (value === 'dark') this.document.body.classList.add('dark');
     else
-      this.mediaQuery.observe(MediaQueryService.SYSTEM_COLOR_SCHEME).subscribe({
+      this.mediaQuery.observe(SYSTEM_COLOR_SCHEME).subscribe({
         next: (matches) => {
           if (matches) {
             this.document.body.classList.add('dark');
@@ -45,7 +46,7 @@ export class ColorSchemeService {
     this.current = this.css
       .local()
       .get(
-        ColorSchemeService.COLOR_SCHEME_STORE_KEY,
+        COLOR_SCHEME_STORE_KEY,
         'auto'
       ) as ColorSchemeType;
     this.currentChange.emit(this.current);
@@ -54,7 +55,7 @@ export class ColorSchemeService {
   save() {
     this.css
       .local()
-      .set(ColorSchemeService.COLOR_SCHEME_STORE_KEY, this.current);
+      .set(COLOR_SCHEME_STORE_KEY, this.current);
   }
 
   unsubscribe() {

@@ -1,0 +1,46 @@
+<div class="flex items-center justify-between dark:text-white">
+    <h1 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
+      My Profile
+    </h1>
+  </div>
+  <div>
+    <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+      <dashboard-input-field
+        name="name"
+        label="Your name"
+        [readonly]="true"
+        [control]="nameFormControl"
+        [(formIsSubmitting)]="formIsSubmitting"
+      >
+      </dashboard-input-field>
+      <dashboard-input-field
+        name="email"
+        type="email"
+        label="Your email"
+        [readonly]="true"
+        [control]="emailFormControl"
+        [(formIsSubmitting)]="formIsSubmitting"
+      >
+      </dashboard-input-field>
+      <dashboard-input-field
+        name="role"
+        label="Your role"
+        [readonly]="true"
+        [control]="roleFormControl"
+        [(formIsSubmitting)]="formIsSubmitting"
+      >
+      </dashboard-input-field>
+      <dashboard-input-field
+        name="new-password"
+        label="New Password"
+        type="password"
+        [control]="newPasswordFormControl"
+        [(formIsSubmitting)]="formIsSubmitting"
+      >
+      </dashboard-input-field>
+      <div class="flex justify-end">
+        <text-button text="update" type="submit"></text-button>
+      </div>
+    </form>
+  </div>
+  

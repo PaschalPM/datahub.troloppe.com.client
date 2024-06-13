@@ -29,6 +29,7 @@ export class ResetPasswordComponent {
   ]);
   passwordConfirmationControl = new FormControl('', [Validators.required]);
   loading = false;
+  formIsSubmitting = false
 
   constructor(
     private fb: FormBuilder,
@@ -60,7 +61,7 @@ export class ResetPasswordComponent {
     });
   }
   onResetPassword() {
-    this.resetPasswordFormGroup.markAllAsTouched();
+    this.formIsSubmitting = true
     console.log(this.resetPasswordFormGroup.value)
     
     if (this.resetPasswordFormGroup.valid) {

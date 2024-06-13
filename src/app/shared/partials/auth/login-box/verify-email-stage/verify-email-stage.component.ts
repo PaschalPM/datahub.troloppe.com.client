@@ -17,6 +17,7 @@ import { AuthService } from '../../../../services/auth.service';
         class="mb-4"
         placeholder="Email address"
         [control]="emailControl"
+        [(formIsSubmitting)]="formIsSubmitting"
       ></auth-input-field>
       <auth-submit-btn [loading]="loading" text="Next"></auth-submit-btn>
     </form>
@@ -34,7 +35,7 @@ export class VerifyEmailStageComponent extends BaseComponent {
   }
   
   onVerifyEmail() {
-    this.loginFormGroup.markAllAsTouched();
+    this.formIsSubmitting = true
     if (this.emailControl.valid) {
       this.loading = true;
       this.authService.verifyUserByEmail(this.loginFormGroup.value).subscribe({
@@ -44,7 +45,6 @@ export class VerifyEmailStageComponent extends BaseComponent {
           this.loginFormGroup.markAsUntouched()
         },
         error: (err) => {
-          console.log(err)
           this.emailControl.setErrors({
             serverError: {
               message: err.error.message ?? 'Oops something went wrong.',

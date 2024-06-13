@@ -1,0 +1,44 @@
+<div class="divider-y container mx-auto max-w-[800px] bg-white px-2 py-4 dark:bg-gray-700">
+    <div class="g text my-3 border-b">
+        <button [class]="utils.cn(tabClass, unreadPaneActive)" (click)="openUnreadPane()">
+            Unread ({{ ns.unreadNotificationSize }})
+        </button>
+        <button [class]="utils.cn(tabClass, allPaneActive)" (click)="openAllPane()">
+            All ({{ ns.allNotificationSize }})
+        </button>
+    </div>
+    <div class="divide-y dark:divide-gray-600">
+        <ng-template *ngIf="
+        unreadPane;
+        then unreadNotificationsTemplate;
+        else notificationsTemplate
+      "></ng-template>
+    </div>
+</div>
+
+<ng-template #unreadNotificationsTemplate>
+    @if (ns.unreadNotifications.length) {
+    @for (item of ns.unreadNotifications; track item.notificationId) {
+    <div>
+        <dashboard-notification-item [notificationId]="item.notificationId" [label]="item.label"
+            [message]="item.message" [sendAt]="item.sendAt" [isRead]="item.isRead" [severity]="item.severity"
+            (markAsReadChange)="ns.markAsRead($event)"></dashboard-notification-item>
+    </div>
+    }
+    } @else {
+    <div [class]="noNotificationClass">No Unread Notifications ...</div>
+    }
+</ng-template>
+<ng-template #notificationsTemplate>
+    @if (ns.notifications.length) {
+    @for (item of ns.notifications; track item.notificationId) {
+    <div>
+        <dashboard-notification-item [notificationId]="item.notificationId" [label]="item.label"
+            [message]="item.message" [sendAt]="item.sendAt" [isRead]="item.isRead" [severity]="item.severity"
+            (markAsReadChange)="ns.markAsRead($event)"></dashboard-notification-item>
+    </div>
+    }
+    } @else {
+    <div [class]="noNotificationClass">No Notifications...</div>
+    }
+</ng-template>

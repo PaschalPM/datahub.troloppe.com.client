@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { ClientStorageService } from '../../../services/client-storage.service';
 import { RouterModule } from '@angular/router';
-import { User } from '../../../types/user';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-signin-or-dashboard-link',
@@ -55,12 +54,14 @@ export class SigninOrDashboardLinkComponent {
   actionButtonClass =
     'bg-secondary inline-block rounded-sm px-8 py-2 text-sm text-white mt-8 lg:mt-12 lg:text-base hover:bg-secondary/80';
 
-  constructor(private css: ClientStorageService) {}
+  constructor(private authService: AuthService) {}
   ngOnInit(): void {
-    if (this.signInOrDashboard === 'dashboard') {
-      this.currentUserName = this.css
-        .local()
-        .get<User>('currentUser')?.name as string;
+    const currentUser = this.authService.currentUser
+    if (currentUser){
+      this.signInOrDashboard = 'dashboard'
+      this.currentUserName = currentUser.name
+    } else {
+      this.signInOrDashboard = 'sign-in'
     }
   }
 }

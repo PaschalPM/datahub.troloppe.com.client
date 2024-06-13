@@ -1,0 +1,28 @@
+<nav
+    class="sticky top-0 z-30 flex w-full items-center justify-between border-b border-gray-300 bg-white p-4 dark:border-gray-800 dark:bg-gray-700 dark:text-white">
+    <div class="space-x-3 font-medium">
+        <dashboard-menu-toggler></dashboard-menu-toggler>
+        <h3 class="inline text-lg">{{ title }}</h3>
+    </div>
+    <div class="flex items-center gap-5">
+        <button routerLink="/dashboard/notifications">
+            <my-mat-icon aria-hidden="false" [badge]="ns.unreadNotificationSize"
+                [badgeHidden]="ns.unreadNotificationSize === 0">
+                notifications
+            </my-mat-icon>
+        </button>
+        <button id="profile-dropdown-toggler" class="inline-flex items-center" (click)="toggleProfileDropdown()">
+            <span class="md:hidden">
+                <my-mat-icon> person </my-mat-icon>
+            </span>
+            <div class="hidden items-center md:flex">
+                <span> Paschal </span>
+                <my-mat-icon> keyboard_arrow_down </my-mat-icon>
+            </div>
+        </button>
+    </div>
+</nav>
+
+<dashboard-profile-dropdown name="Paschal" *ngIf="isProfileDropdownOpen"
+    (isProfileDropdownOpenChange)="isProfileDropdownOpen = false">
+</dashboard-profile-dropdown>

@@ -1,8 +1,11 @@
 import { Routes } from '@angular/router';
 import { LayoutComponent as BasePagesLayoutComponent } from './views/base-pages/layout/layout.component';
-import { NotFoundComponent } from './views/not-found/not-found.component';
 import { LayoutComponent as AuthLayoutComponent } from './views/auth/layout/layout.component';
+import { LayoutComponent as DashboardLayoutComponent } from './views/dashboard/layout/layout.component';
+import { NotFoundComponent } from './views/not-found/not-found.component';
 import { resetPasswordGuard } from './shared/guards/reset-password.guard';
+import { dashboardGuard } from './shared/guards/dashboard.guard';
+import { authGuard } from './shared/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -30,6 +33,7 @@ export const routes: Routes = [
   {
     path: '',
     component: AuthLayoutComponent,
+    canActivate: [authGuard],
     children: [
       {
         title: 'Sign In',
@@ -55,6 +59,37 @@ export const routes: Routes = [
           import('./views/auth/reset-password/reset-password.component').then(
             (c) => c.ResetPasswordComponent
           ),
+      },
+    ],
+  },
+  {
+    path: 'dashboard',
+    component: DashboardLayoutComponent,
+    canActivate: [dashboardGuard],
+    children: [
+      {
+        title: 'Home',
+        path: '',
+        loadComponent: () =>
+          import('./views/dashboard/home/home.component').then(
+            (c) => c.HomeComponent
+          ),
+      },
+      {
+        title: 'Street Data',
+        path: 'street-data',
+        loadComponent: () =>
+          import('./views/dashboard/street-data/street-data.component').then(
+            (c) => c.StreetDataComponent,
+          ),
+      },
+      {
+        title: 'Notifications',
+        path: 'notifications',
+        loadComponent: () =>
+          import(
+            './views/dashboard/notifications/notifications.component'
+          ).then((c) => c.NotificationsComponent),
       },
     ],
   },

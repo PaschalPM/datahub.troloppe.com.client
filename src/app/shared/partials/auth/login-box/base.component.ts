@@ -11,4 +11,5 @@ export class BaseComponent {
   @Input({ required: true }) loginFormGroup!: FormGroup;
 
   loading = false;
+  formIsSubmitting = false
 }

@@ -1,0 +1,21 @@
+<div class="space-y-6">
+    <h1 class="text-xl font-normal">Color Scheme</h1>
+    <div
+      class="mt-1 flex w-full font-medium [&>button]:grow [&>button]:border [&>button]:p-2 [&>button]:text-xs"
+    >
+      @for (scheme of schemes; track scheme) {
+        <button
+          [ngClass]="{
+            'bg-dodger-blue/20 transition-all duration-300 ease-in-out dark:bg-orange-400/50':
+              selectedScheme === scheme
+          }"
+          (click)="onSelectScheme($event)"
+        >
+          {{ scheme | capitalize }}
+        </button>
+      }
+    </div>
+    <div class="flex justify-end">
+      <text-button text="ok" (clickEvent)="onOk()"></text-button>
+    </div>
+  </div>

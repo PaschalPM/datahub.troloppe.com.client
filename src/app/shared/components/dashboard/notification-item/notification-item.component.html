@@ -1,0 +1,32 @@
+<div class="flex w-full gap-4 p-2 py-4 md:p-4">
+    <span *ngIf="severity === 'info'" class="mt-1 text-green-500">
+      <my-mat-icon> info </my-mat-icon>
+    </span>
+    <span *ngIf="severity === 'warning'" class="mt-1 text-amber-500">
+      <my-mat-icon> warning </my-mat-icon>
+    </span>
+    <div class="grow space-y-1">
+      <h2 class="font-medium">{{ label }}</h2>
+      <p class="text-sm">
+        {{ message }}
+      </p>
+      <small class="text-black/50 dark:text-white/50">{{ sendAt }}</small>
+    </div>
+    <div
+      [class]="
+        utils.cn('flex flex-col justify-start md:justify-end', {
+          invisible: isRead
+        })
+      "
+    >
+      <text-button
+        (clickEvent)="markAsRead(notificationId)"
+        text="Mark as read"
+        [small]="true"
+        class="hidden md:inline"
+      ></text-button>
+      <dashboard-mini-drawer [(showMiniDrawer)]="showMiniDrawer">
+        <button (click)="markAsRead(notificationId)">Mark as read</button>
+      </dashboard-mini-drawer>
+    </div>
+  </div>

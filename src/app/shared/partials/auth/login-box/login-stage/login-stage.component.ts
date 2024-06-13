@@ -7,6 +7,7 @@ import { SubmitBtnComponent } from '../../../../components/auth/submit-btn/submi
 import { ReadonlyInputFieldComponent } from '../../../../components/auth/readonly-input-field/readonly-input-field.component';
 import { ClientStorageService } from '../../../../services/client-storage.service';
 import { EMAIL_FOR_RESET_PASSWORD } from '../../../../constants';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'auth-login-stage',
@@ -34,6 +35,7 @@ import { EMAIL_FOR_RESET_PASSWORD } from '../../../../constants';
           [control]="passwordControl"
           [forgetPassword]="true"
           [emailForResetLink]="emailControl.value"
+          [(formIsSubmitting)]="formIsSubmitting"
         ></auth-input-field>
       </div>
       <auth-submit-btn [loading]="loading" text="Sign In"></auth-submit-btn>
@@ -44,7 +46,12 @@ export class LoginStageComponent extends BaseComponent {
   emailControl!: FormControl;
   passwordControl!: FormControl;
 
-  constructor(private authService: AuthService, private css: ClientStorageService) {
+  constructor(
+    private authService: AuthService,
+    private css: ClientStorageService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) {
     super();
   }
   ngOnInit(): void {
@@ -52,20 +59,26 @@ export class LoginStageComponent extends BaseComponent {
     this.passwordControl = this.loginFormGroup.get('password') as FormControl;
   }
 
-  onChangeStage(){
-    this.stage = 'VERIFY_EMAIL'
-    this.stageChange.emit(this.stage)
+  onChangeStage() {
+    this.stage = 'VERIFY_EMAIL';
+    this.stageChange.emit(this.stage);
   }
-  
+
   onLogin() {
-    this.loginFormGroup.markAllAsTouched();
+    this.formIsSubmitting = true;
     if (this.loginFormGroup.valid) {
       this.loading = true;
-      console.log(this.loginFormGroup.value);
       this.authService.signIn(this.loginFormGroup.value).subscribe({
         next: () => {
           alert('Loggin in');
-          this.css.local().remove(EMAIL_FOR_RESET_PASSWORD)
+          this.css.local().remove(EMAIL_FOR_RESET_PASSWORD);
+          this.activatedRoute.queryParams.subscribe((params) => {
+            if (params['returnUrl']) {
+              this.router.navigateByUrl(params['returnUrl']);
+            } else {
+              this.router.navigateByUrl('/dashboard');
+            }
+          });
         },
         error: (err) => {
           console.log(err);

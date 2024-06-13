@@ -23,6 +23,7 @@ export class ForgotPasswordComponent {
   forgotPasswordFormGroup!: FormGroup;
   emailControl!: FormControl;
   loading = false;
+  formIsSubmitting = false
 
   constructor(
     private router: Router,
@@ -45,7 +46,7 @@ export class ForgotPasswordComponent {
   }
 
   onSendResetLinkMail() {
-    this.forgotPasswordFormGroup.markAllAsTouched();
+    this.formIsSubmitting = true
 
     if (this.forgotPasswordFormGroup.valid) {
       this.loading = true;

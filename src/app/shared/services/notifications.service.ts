@@ -1,34 +1,44 @@
 import { Injectable } from '@angular/core';
 import { notifications as notificationFixtures } from '../../fixtures/notifications';
+import { BehaviorSubject, Observable, delay, map, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationsService {
-
-  notifications: NotificationType[] = notificationFixtures
-
-  get unreadNotifications() {
-    return this.notifications.filter((value) => !value.isRead);
+  private notifications: NotificationType[] = [];
+  private getNotifications(): Observable<NotificationType[]> {
+    return of(notificationFixtures).pipe(delay(1000));
   }
 
-  get allNotificationSize() {
-    return this.notifications.length;
-  }
+  private allNotificationsObservable = new BehaviorSubject<NotificationType[]>(
+    this.notifications
+  );
+  private unreadNotificationsObservable = this.allNotificationsObservable.pipe(
+    map((value) => value.filter((value) => !value.isRead))
+  );
 
-  get unreadNotificationSize() {
-    return this.unreadNotifications.length;
+  get allNotifications$(){
+    return this.allNotificationsObservable.asObservable()
   }
-
-  constructor() {}
+  get unreadNotifications$(){
+    return this.unreadNotificationsObservable
+  }
+  constructor() {
+    this.getNotifications().subscribe((value) => {
+      this.notifications = value;
+      this.allNotificationsObservable.next(this.notifications);
+    });
+  }
 
   markAsRead(notificationId: number) {
-    this.notifications = this.notifications.map((notification) => {
-      if (notification.notificationId === notificationId) {
-        notification.isRead = true;
-      }
-      return notification;
-    });
-    console.log(this.notifications);
+    this.allNotificationsObservable.next(
+      this.notifications.map((notification) => {
+        if (notificationId === notification.id) {
+          notification.isRead = true;
+        }
+        return notification;
+      })
+    );
   }
 }

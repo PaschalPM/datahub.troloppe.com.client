@@ -31,6 +31,6 @@ import { CommonModule } from '@angular/common';
   `,
 })
 export class MyMatIconComponent {
-  @Input() badge!: number | string;
+  @Input() badge!: number | string | undefined;
   @Input() badgeHidden = false;
 }

@@ -1,6 +1,6 @@
 export const notifications: NotificationType[] = [
   {
-    notificationId: 1,
+    id: 1,
     label: 'Password Update Required',
     message: 'For your security, please change your temporary password now.',
     sendAt: '1 hour ago',
@@ -8,7 +8,7 @@ export const notifications: NotificationType[] = [
     isRead: false,
   },
   {
-    notificationId: 2,
+    id: 2,
     label: 'New Street Location Update',
     message: 'Your upline has set a new street location. Prepare to head out.',
     sendAt: '1 hour ago',
@@ -16,7 +16,7 @@ export const notifications: NotificationType[] = [
     isRead: false,
   },
   {
-    notificationId: 3,
+    id: 3,
     label: 'Password Update Required',
     message: 'For your security, please change your temporary password now.',
     sendAt: '1 hour ago',

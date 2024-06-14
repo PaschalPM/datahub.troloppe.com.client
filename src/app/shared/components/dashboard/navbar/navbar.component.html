@@ -6,8 +6,8 @@
     </div>
     <div class="flex items-center gap-5">
         <button routerLink="/dashboard/notifications">
-            <my-mat-icon aria-hidden="false" [badge]="ns.unreadNotificationSize"
-                [badgeHidden]="ns.unreadNotificationSize === 0">
+            <my-mat-icon aria-hidden="false" [badge]="(ns.unreadNotifications$ | async)?.length"
+                [badgeHidden]="(ns.unreadNotifications$ | async)?.length === 0">
                 notifications
             </my-mat-icon>
         </button>

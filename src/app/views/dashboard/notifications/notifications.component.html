@@ -1,27 +1,27 @@
 <div class="divider-y container mx-auto max-w-[800px] bg-white px-2 py-4 dark:bg-gray-700">
     <div class="g text my-3 border-b">
         <button [class]="utils.cn(tabClass, unreadPaneActive)" (click)="openUnreadPane()">
-            Unread ({{ ns.unreadNotificationSize }})
+            Unread ({{ (ns.unreadNotifications$ | async)?.length }})
         </button>
         <button [class]="utils.cn(tabClass, allPaneActive)" (click)="openAllPane()">
-            All ({{ ns.allNotificationSize }})
+            All ({{ (ns.allNotifications$ | async)?.length }})
         </button>
     </div>
     <div class="divide-y dark:divide-gray-600">
         <ng-template *ngIf="
         unreadPane;
         then unreadNotificationsTemplate;
-        else notificationsTemplate
+        else allNotificationsTemplate
       "></ng-template>
     </div>
 </div>
 
 <ng-template #unreadNotificationsTemplate>
-    @if (ns.unreadNotifications.length) {
-    @for (item of ns.unreadNotifications; track item.notificationId) {
+    @if ((ns.unreadNotifications$ | async)?.length) {
+    @for (item of (ns.unreadNotifications$ | async); track item.id) {
     <div>
-        <dashboard-notification-item [notificationId]="item.notificationId" [label]="item.label"
-            [message]="item.message" [sendAt]="item.sendAt" [isRead]="item.isRead" [severity]="item.severity"
+        <dashboard-notification-item [id]="item.id" [label]="item.label" [message]="item.message" [sendAt]="item.sendAt"
+            [isRead]="item.isRead" [severity]="item.severity"
             (markAsReadChange)="ns.markAsRead($event)"></dashboard-notification-item>
     </div>
     }
@@ -29,12 +29,12 @@
     <div [class]="noNotificationClass">No Unread Notifications ...</div>
     }
 </ng-template>
-<ng-template #notificationsTemplate>
-    @if (ns.notifications.length) {
-    @for (item of ns.notifications; track item.notificationId) {
+<ng-template #allNotificationsTemplate>
+    @if ((ns.allNotifications$ | async)?.length) {
+    @for (item of (ns.allNotifications$ | async); track item.id) {
     <div>
-        <dashboard-notification-item [notificationId]="item.notificationId" [label]="item.label"
-            [message]="item.message" [sendAt]="item.sendAt" [isRead]="item.isRead" [severity]="item.severity"
+        <dashboard-notification-item [id]="item.id" [label]="item.label" [message]="item.message" [sendAt]="item.sendAt"
+            [isRead]="item.isRead" [severity]="item.severity"
             (markAsReadChange)="ns.markAsRead($event)"></dashboard-notification-item>
     </div>
     }

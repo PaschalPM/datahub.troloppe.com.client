@@ -72,16 +72,12 @@ export class ForgotPasswordComponent {
     }
   }
 
-  private setEmailForResetLinkAsStateOnPopstate(emailForLogin: string) {
+  private setEmailForResetLinkAsStateOnPopstate(emailForResetLink: string) {
     this.router.events.subscribe({
       next: (event) => {
         if (event instanceof NavigationStart) {
           if (event.navigationTrigger === 'popstate') {
-            this.router.navigate(['/sign-in'], {
-              state: {
-                emailForLogin,
-              },
-            });
+            this.css.local().set(EMAIL_FOR_RESET_PASSWORD, emailForResetLink)
           }
         }
       },

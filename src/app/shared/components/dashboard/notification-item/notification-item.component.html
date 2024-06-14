@@ -20,13 +20,13 @@
       "
     >
       <text-button
-        (clickEvent)="markAsRead(notificationId)"
+        (clickEvent)="markAsRead(id)"
         text="Mark as read"
         [small]="true"
         class="hidden md:inline"
       ></text-button>
       <dashboard-mini-drawer [(showMiniDrawer)]="showMiniDrawer">
-        <button (click)="markAsRead(notificationId)">Mark as read</button>
+        <button (click)="markAsRead(id)">Mark as read</button>
       </dashboard-mini-drawer>
     </div>
   </div>

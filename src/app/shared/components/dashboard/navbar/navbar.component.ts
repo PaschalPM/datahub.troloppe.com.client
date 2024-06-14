@@ -3,7 +3,7 @@ import { NotificationsService } from '../../../services/notifications.service';
 import { MenuTogglerComponent } from '../menu-toggler/menu-toggler.component';
 import { ProfileDropdownComponent } from '../profile-dropdown/profile-dropdown.component';
 import { MyMatIconComponent } from '../../common/my-mat-icon.component';
-import { NgIf } from '@angular/common';
+import { AsyncPipe, NgIf } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -14,7 +14,8 @@ import { RouterModule } from '@angular/router';
     ProfileDropdownComponent,
     MyMatIconComponent,
     NgIf,
-    RouterModule
+    RouterModule,
+    AsyncPipe
   ],
   templateUrl: './navbar.component.html',
   styles: `

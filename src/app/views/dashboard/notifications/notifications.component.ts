@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { UtilsService } from '../../../shared/services/utils.service';
 import { NotificationsService } from '../../../shared/services/notifications.service';
 import { NotificationItemComponent } from '../../../shared/components/dashboard/notification-item/notification-item.component';
-import { NgIf } from '@angular/common';
+import { AsyncPipe, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [NotificationItemComponent, NgIf],
+  imports: [NotificationItemComponent, NgIf, AsyncPipe],
   templateUrl: './notifications.component.html',
   styles: ``
 })

@@ -12,7 +12,7 @@ import { MiniDrawerComponent } from '../mini-drawer/mini-drawer.component';
   templateUrl: './notification-item.component.html'
 })
 export class NotificationItemComponent {
-  @Input({ required: true }) notificationId!: number;
+  @Input({ required: true }) id!: number;
   @Input({ required: true }) label!: string;
   @Input({ required: true }) message!: string;
   @Input({ required: true }) sendAt!: string;
@@ -23,8 +23,8 @@ export class NotificationItemComponent {
 
   constructor(public utils: UtilsService) {}
 
-  markAsRead(notificationId: number) {
-    this.markAsReadChange.emit(notificationId);
+  markAsRead(id: number) {
+    this.markAsReadChange.emit(id);
     this.showMiniDrawer = false;
   }
 }

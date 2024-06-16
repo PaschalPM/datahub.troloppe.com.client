@@ -1,15 +1,7 @@
 <div class="divider-y container mx-auto max-w-[800px] bg-white px-2 py-4 dark:bg-gray-700">
-    <div class="g text my-3 border-b">
-        <button [class]="utils.cn(tabClass, unreadPaneActive)" (click)="openUnreadPane()">
-            Unread ({{ (ns.unreadNotifications$ | async)?.length }})
-        </button>
-        <button [class]="utils.cn(tabClass, allPaneActive)" (click)="openAllPane()">
-            All ({{ (ns.allNotifications$ | async)?.length }})
-        </button>
-    </div>
+    <pane-navigator-panel [(activePane)]="activePane" [tabs]="tabs"> </pane-navigator-panel>
     <div class="divide-y dark:divide-gray-600">
-        <ng-template *ngIf="
-        unreadPane;
+        <ng-template *ngIf="activePane === 'unreadNotification';
         then unreadNotificationsTemplate;
         else allNotificationsTemplate
       "></ng-template>
@@ -17,28 +9,41 @@
 </div>
 
 <ng-template #unreadNotificationsTemplate>
-    @if ((ns.unreadNotifications$ | async)?.length) {
-    @for (item of (ns.unreadNotifications$ | async); track item.id) {
+
+    @if(unreadNotifications){
+    @if(unreadNotifications.length){
+    @for (item of unreadNotifications; track item.id) {
     <div>
-        <dashboard-notification-item [id]="item.id" [label]="item.label" [message]="item.message" [sendAt]="item.sendAt"
-            [isRead]="item.isRead" [severity]="item.severity"
-            (markAsReadChange)="ns.markAsRead($event)"></dashboard-notification-item>
+        <dashboard-notification-item [notification]="item" (markAsReadChange)="markAsRead($event)"></dashboard-notification-item>
     </div>
     }
-    } @else {
-    <div [class]="noNotificationClass">No Unread Notifications ...</div>
     }
+    @else {
+    <div class="empty-state">No Unread Notifications ...</div>
+    }
+    }
+    @else {
+    <div class="empty-state">
+        <spinner></spinner>
+    </div>
+    }
+
 </ng-template>
 <ng-template #allNotificationsTemplate>
-    @if ((ns.allNotifications$ | async)?.length) {
-    @for (item of (ns.allNotifications$ | async); track item.id) {
+    @if(allNotifications){
+    @if (allNotifications.length) {
+    @for (item of allNotifications; track item.id) {
     <div>
-        <dashboard-notification-item [id]="item.id" [label]="item.label" [message]="item.message" [sendAt]="item.sendAt"
-            [isRead]="item.isRead" [severity]="item.severity"
-            (markAsReadChange)="ns.markAsRead($event)"></dashboard-notification-item>
+        <dashboard-notification-item [notification]="item" (markAsReadChange)="markAsRead($event)"></dashboard-notification-item>
     </div>
     }
     } @else {
-    <div [class]="noNotificationClass">No Notifications...</div>
+    <div class="empty-state">No Notifications...</div>
+    }
+    }
+    @else {
+    <div class="empty-state">
+        <spinner></spinner>
+    </div>
     }
 </ng-template>

@@ -10,17 +10,22 @@ import { ColorSchemeService } from '../../../shared/services/color-scheme.servic
 import { TOGGLE_SIDE_MENU } from '../../../shared/constants/event-keys';
 import { EXTRA_LARGE } from '../../../shared/constants/media-query';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
+import { NotificationsService } from '../../../shared/services/notifications.service';
+import { WindowFocusService } from '../../../shared/services/window-focus.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
   imports: [RouterModule, SideMenuComponent, NavbarComponent, ModalComponent],
-  templateUrl: './layout.component.html'
+  templateUrl: './layout.component.html',
 })
 export class LayoutComponent {
   isMenuOpened = false;
   title = 'Home';
   isProfileDropdownOpen = false;
+
+  windowFocusSubscription!: Subscription
 
   constructor(
     private mediaQuery: MediaQueryService,
@@ -28,6 +33,8 @@ export class LayoutComponent {
     private pageTitle: Title,
     private appEventEmitter: AppEventEmitterService,
     private colorScheme: ColorSchemeService,
+    private ns: NotificationsService,
+    private wfs: WindowFocusService,
     public utils: UtilsService
   ) {
     this.appEventEmitter.listen(TOGGLE_SIDE_MENU, (state: boolean) => {
@@ -57,7 +64,22 @@ export class LayoutComponent {
     });
 
     // Sets the color scheme of the dashboard
-    this.colorScheme.listen();
     this.colorScheme.init();
+
+    // Fetches User's Notifications
+    this.ns.fetchNotifications();
+    
+
+    this.windowFocusSubscription =  this.wfs.focus$.subscribe((isFocused) => {
+      if (isFocused){
+        this.colorScheme.init()
+        this.ns.fetchNotifications();
+      }
+    })
   }
+
+  ngOnDestroy(): void {
+    this.windowFocusSubscription.unsubscribe()
+  }
+
 }

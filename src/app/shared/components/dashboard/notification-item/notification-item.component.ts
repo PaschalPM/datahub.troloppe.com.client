@@ -12,19 +12,14 @@ import { MiniDrawerComponent } from '../mini-drawer/mini-drawer.component';
   templateUrl: './notification-item.component.html'
 })
 export class NotificationItemComponent {
-  @Input({ required: true }) id!: number;
-  @Input({ required: true }) label!: string;
-  @Input({ required: true }) message!: string;
-  @Input({ required: true }) sendAt!: string;
-  @Input({ required: true }) isRead!: boolean;
-  @Input() severity: 'warning' | 'info' = 'info';
+  @Input({ required: true }) notification!: NotificationType;
   @Output() markAsReadChange = new EventEmitter();
   showMiniDrawer = false;
 
   constructor(public utils: UtilsService) {}
 
-  markAsRead(id: number) {
-    this.markAsReadChange.emit(id);
+  markAsRead(notification: NotificationType) {
+    this.markAsReadChange.emit(notification);
     this.showMiniDrawer = false;
   }
 }

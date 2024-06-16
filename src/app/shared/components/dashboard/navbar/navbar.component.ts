@@ -27,8 +27,13 @@ import { RouterModule } from '@angular/router';
 export class NavbarComponent {
   @Input({ required: true }) title = 'Home';
   isProfileDropdownOpen = false;
+  unreadNotificationsCount = 0
 
-  constructor(public ns: NotificationsService) {}
+  constructor(public ns: NotificationsService) {
+    ns.observe().subscribe((value) => {
+      this.unreadNotificationsCount = value?.filter((value) => !value.isRead).length ?? 0
+    })
+  }
 
   toggleProfileDropdown() {
     this.isProfileDropdownOpen = !this.isProfileDropdownOpen;

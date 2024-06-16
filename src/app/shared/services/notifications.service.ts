@@ -1,44 +1,67 @@
 import { Injectable } from '@angular/core';
 import { notifications as notificationFixtures } from '../../fixtures/notifications';
-import { BehaviorSubject, Observable, delay, map, of } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  delay,
+  interval,
+  map,
+  of,
+  startWith,
+  switchMap,
+  tap,
+} from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationsService {
+  // private notifications = notificationFixtures;
   private notifications: NotificationType[] = [];
-  private getNotifications(): Observable<NotificationType[]> {
-    return of(notificationFixtures).pipe(delay(1000));
+  private notificationsObservable$ = new BehaviorSubject<
+    NotificationType[] | undefined
+  >(undefined);
+
+  private _getNotifications() {
+    return of(this.notifications).pipe(delay(1000));
   }
 
-  private allNotificationsObservable = new BehaviorSubject<NotificationType[]>(
-    this.notifications
-  );
-  private unreadNotificationsObservable = this.allNotificationsObservable.pipe(
-    map((value) => value.filter((value) => !value.isRead))
-  );
+  constructor(private httpClient: HttpClient) {
+  }
+  
+  public fetchNotifications() {
+    interval(15000)
+      .pipe(
+        startWith(0),
+        switchMap(() => {
+          // return this._getNotifications();
+          return this.httpClient.get<NotificationType[]>(
+            'http://localhost:3000/notifications'
+          );
+        })
+      )
+      .subscribe((value) => {
+        this.notifications = value;
+        this.notificationsObservable$.next(value);
+      });
+  }
 
-  get allNotifications$(){
-    return this.allNotificationsObservable.asObservable()
+  observe() {
+    return this.notificationsObservable$.asObservable();
   }
-  get unreadNotifications$(){
-    return this.unreadNotificationsObservable
-  }
-  constructor() {
-    this.getNotifications().subscribe((value) => {
-      this.notifications = value;
-      this.allNotificationsObservable.next(this.notifications);
+
+  updateNotification(updatedNotification: NotificationType) {
+    this.notifications = this.notifications.map((notification) => {
+      if (notification.id === updatedNotification.id) {
+        return updatedNotification;
+      }
+      return notification;
     });
-  }
+    this.httpClient
+      .put(`http://localhost:3000/notifications/${updatedNotification.id}`, updatedNotification)
+      .subscribe();
 
-  markAsRead(notificationId: number) {
-    this.allNotificationsObservable.next(
-      this.notifications.map((notification) => {
-        if (notificationId === notification.id) {
-          notification.isRead = true;
-        }
-        return notification;
-      })
-    );
+    this.notificationsObservable$.next(this.notifications);
   }
 }

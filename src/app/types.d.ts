@@ -16,3 +16,10 @@ type NotificationType = {
   severity: 'warning' | 'info';
   isRead: boolean;
 };
+
+type OverviewWidgetItem = {
+  id: number,
+  totalSum: number;
+  overviewTitle: string;
+  myMatIcon: string;
+};

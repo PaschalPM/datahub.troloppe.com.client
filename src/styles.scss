@@ -12,3 +12,11 @@
 .router-active {
   @apply border-l-4 border-light-blue bg-white px-3 font-medium text-black transition-colors duration-300 ease-in-out dark:border-orange-400 dark:bg-gray-700 dark:text-white;
 }
+
+g {
+ @apply fill-black dark:fill-white;
+}
+
+g .arc {
+  stroke: white!important;
+}

@@ -1,19 +1,35 @@
 import { Component } from '@angular/core';
-import { User } from '../../../shared/types/user';
-import { AuthService } from '../../../shared/services/auth.service';
-import { UserRoles } from '../../../shared/enums/user-roles';
-import { HomeNoticeComponent } from '../../../shared/components/dashboard/home-notice/home-notice.component';
-import { OverviewComponent } from '../../../shared/components/dashboard/widgets/overview/overview.component';
+import { AuthNoticeComponent } from '../../../shared/components/dashboard/home/auth-notice/auth-notice.component';
+import { PaneNavigatorPanelComponent } from '../../../shared/components/pane-navigator-panel/pane-navigator-panel.component';
+import { StreetDataOverviewComponent } from '../../../shared/partials/dashboard/street-data-overview/street-data-overview.component';
+import { ChartComponent } from '../../../shared/components/dashboard/chart/chart.component';
+import { productSales } from '../../../fixtures/products';
+import { ChartContainerComponent } from '../../../shared/components/chart-container/chart-container.component';
 
 @Component({
   selector: 'dashboard-home',
   standalone: true,
-  imports: [HomeNoticeComponent, OverviewComponent],
+  imports: [
+    AuthNoticeComponent,
+    PaneNavigatorPanelComponent,
+    StreetDataOverviewComponent,
+    ChartComponent,
+    ChartContainerComponent,
+  ],
   templateUrl: './home.component.html',
 })
 export class HomeComponent {
-  
-  allowedToView = [UserRoles.Admin, UserRoles.ResearchManager];
+  activePane: 'street-data' | 'investment-data' = 'street-data';
 
-  constructor(public auth: AuthService) {}
+  results = productSales;
+  tabs = [
+    {
+      pane: 'street-data',
+      tabLabel: `Street Data`,
+    },
+    {
+      pane: 'investment-data',
+      tabLabel: `Investment Data`,
+    },
+  ];
 }

@@ -1,10 +1,8 @@
-<dashboard-home-notice></dashboard-home-notice>
-<div class="my-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-  @for (num of [1, 2, 3, 4]; track num) {
-    <dashboard-widget-overview></dashboard-widget-overview>
-  }
-</div>
+<h2 class="mb-4 text-lg font-semibold">Overview</h2>
+<pane-navigator-panel [(activePane)]="activePane" [tabs]="tabs" type="pill" class="mb-8"></pane-navigator-panel>
 
-@if (auth.isAuthorized(allowedToView)) {
-  <!-- Hello World -->
+<dashboard-home-auth-notice></dashboard-home-auth-notice>
+
+@if (activePane === 'street-data'){
+  <dashboard-street-data-overview></dashboard-street-data-overview>
 }

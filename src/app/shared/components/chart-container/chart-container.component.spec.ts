@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HomeNoticeComponent } from './home-notice.component';
+import { ChartContainerComponent } from './chart-container.component';
 
-describe('HomeNoticeComponent', () => {
-  let component: HomeNoticeComponent;
-  let fixture: ComponentFixture<HomeNoticeComponent>;
+describe('ChartContainerComponent', () => {
+  let component: ChartContainerComponent;
+  let fixture: ComponentFixture<ChartContainerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HomeNoticeComponent]
+      imports: [ChartContainerComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(HomeNoticeComponent);
+    fixture = TestBed.createComponent(ChartContainerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

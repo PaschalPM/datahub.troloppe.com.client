@@ -1,0 +1,25 @@
+@if(type === 'horizontal-bar'){
+<div #horizontalBarRef class="pt-4 flex justify-center flex-col">
+    <h2 class="md:text-lg mb-2 font-medium text-center"> {{ title }} </h2>
+    <ngx-charts-bar-horizontal [showGridLines]="true" [showDataLabel]="true" class="sm:hidden"
+        [customColors]="currentColor" [showGridLines]="true" [view]="[300, 100]" [yAxis]="true"
+        [results]="results"></ngx-charts-bar-horizontal>
+    <ngx-charts-bar-horizontal [showGridLines]="true" [showDataLabel]="true" class="hidden sm:block md:hidden"
+        [customColors]="currentColor" [showGridLines]="true" [view]="[300, 125]" [yAxis]="true"
+        [results]="results"></ngx-charts-bar-horizontal>
+    <ngx-charts-bar-horizontal [showGridLines]="true" [showDataLabel]="true" class="hidden md:block"
+        [customColors]="currentColor" [showGridLines]="true" [view]="[0, 150]" [yAxis]="true"
+        [results]="results"></ngx-charts-bar-horizontal>
+</div>
+}
+@else if (type === 'pie') {
+<div  class="pt-4">
+    <h2 class="md:text-lg font-medium -mb-4 text-center"> {{ title }} </h2>
+    <ngx-charts-pie-chart class="lg:hidden" [labels]="true" [results]="results" [customColors]="currentColor"
+        [view]="[305,305]"></ngx-charts-pie-chart>
+    <ngx-charts-pie-chart class="hidden md:block lg:hidden" [labels]="true" [results]="results" [customColors]="currentColor"
+        [view]="[400,400]"></ngx-charts-pie-chart>
+    <ngx-charts-pie-chart class="hidden lg:block" [labels]="true" [results]="results" [customColors]="currentColor"
+        [view]="[450,450]"></ngx-charts-pie-chart>
+</div>
+}

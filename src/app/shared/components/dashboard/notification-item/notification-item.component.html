@@ -1,32 +1,32 @@
 <div class="flex w-full gap-4 p-2 py-4 md:p-4">
-    <span *ngIf="severity === 'info'" class="mt-1 text-green-500">
+    <span *ngIf="notification.severity === 'info'" class="mt-1 text-green-500">
       <my-mat-icon> info </my-mat-icon>
     </span>
-    <span *ngIf="severity === 'warning'" class="mt-1 text-amber-500">
+    <span *ngIf="notification.severity === 'warning'" class="mt-1 text-amber-500">
       <my-mat-icon> warning </my-mat-icon>
     </span>
     <div class="grow space-y-1">
-      <h2 class="font-medium">{{ label }}</h2>
+      <h2 class="font-medium">{{notification.label }}</h2>
       <p class="text-sm">
-        {{ message }}
+        {{ notification.message }}
       </p>
-      <small class="text-black/50 dark:text-white/50">{{ sendAt }}</small>
+      <small class="text-black/50 dark:text-white/50">{{ notification.sendAt }}</small>
     </div>
     <div
       [class]="
         utils.cn('flex flex-col justify-start md:justify-end', {
-          invisible: isRead
+          invisible: notification.isRead
         })
       "
     >
       <text-button
-        (clickEvent)="markAsRead(id)"
+        (clickEvent)="markAsRead(notification)"
         text="Mark as read"
         [small]="true"
         class="hidden md:inline"
       ></text-button>
       <dashboard-mini-drawer [(showMiniDrawer)]="showMiniDrawer">
-        <button (click)="markAsRead(id)">Mark as read</button>
+        <button (click)="markAsRead(notification)">Mark as read</button>
       </dashboard-mini-drawer>
     </div>
   </div>

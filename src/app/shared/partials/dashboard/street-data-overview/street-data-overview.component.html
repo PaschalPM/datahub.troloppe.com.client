@@ -1,0 +1,19 @@
+<div class="my-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+    @for (overview of overviewItems; track overview.id) {
+    <dashboard-widget-overview [totalSum]="overview.totalSum" [overviewTitle]="overview.overviewTitle"
+        [myMatIcon]="overview.myMatIcon"></dashboard-widget-overview>
+    }
+</div>
+
+<dashboard-chart-container class="flex flex-wrap md:flex-nowrap justify-center md:justify-between ">
+
+    <dashboard-chart type="pie" [results]="results" title="Verified Street Data Per Locality"> </dashboard-chart>
+    <dashboard-chart type="pie" [results]="results" title="Verified Street Data Per Property Type"> </dashboard-chart>
+
+</dashboard-chart-container>
+
+@if (isPermitted) {
+<dashboard-chart-container class="justify-center">
+    <dashboard-chart [results]="results" title="Verified Street Data Uploads By Staff"></dashboard-chart>
+</dashboard-chart-container>
+}

@@ -3,9 +3,7 @@ import { Observable, tap } from 'rxjs';
 import { ClientStorageService } from './client-storage.service';
 import { HttpClient } from '@angular/common/http';
 import { BASE_API_URL, apiHttpOptions } from '../../configs/global';
-import { Router } from '@angular/router';
 import { User as UserType } from '../types/user';
-import { UserRoles } from '../enums/user-roles';
 import { CURRENT_USER_STORE_KEY } from '../constants';
 
 const API_AUTH_URL = BASE_API_URL + '/auth';
@@ -34,21 +32,23 @@ export class AuthService {
 
   constructor(
     private css: ClientStorageService,
-    private httpClient: HttpClient,
-    private router: Router
+    private httpClient: HttpClient
   ) {
     this.currentUser = this.css.local().get(CURRENT_USER_STORE_KEY);
   }
 
   getLoggedInUser(): Observable<UserType> {
-    return this.httpClient.get<UserType>(`${API_AUTH_URL}/user`, apiHttpOptions);
+    return this.httpClient.get<UserType>(
+      `${API_AUTH_URL}/user`,
+      apiHttpOptions
+    );
   }
 
   verifyUserByEmail(body: Pick<AuthType, 'email'>): Observable<void> {
     return this.httpClient.post<void>(
       `${API_AUTH_URL}/verify-user`,
       body,
-      apiHttpOptions,
+      apiHttpOptions
     );
   }
 
@@ -82,7 +82,9 @@ export class AuthService {
     );
   }
 
-  forgotPassword(body: Pick<AuthType, 'email'>): Observable<{ message: string }> {
+  forgotPassword(
+    body: Pick<AuthType, 'email'>
+  ): Observable<{ message: string }> {
     return this.httpClient.post<{ message: string }>(
       `${API_AUTH_URL}/forgot-password`,
       body,
@@ -96,10 +98,5 @@ export class AuthService {
       body,
       apiHttpOptions
     );
-  }
-
-  // Checks if user has required roles to access some views
-  isAuthorized(roles: `${UserRoles}`[]) {
-    return roles.some((role) => this.currentUser?.roles.includes(role));
   }
 }

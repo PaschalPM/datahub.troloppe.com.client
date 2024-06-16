@@ -2,14 +2,13 @@ import { Injectable } from '@angular/core';
 import { notifications as notificationFixtures } from '../../fixtures/notifications';
 import {
   BehaviorSubject,
-  Observable,
+  catchError,
   delay,
   interval,
-  map,
   of,
   startWith,
   switchMap,
-  tap,
+  throwError,
 } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
@@ -18,7 +17,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class NotificationsService {
   // private notifications = notificationFixtures;
-  private notifications: NotificationType[] = [];
+  private notifications: NotificationType[] | undefined = [];
   private notificationsObservable$ = new BehaviorSubject<
     NotificationType[] | undefined
   >(undefined);
@@ -27,23 +26,35 @@ export class NotificationsService {
     return of(this.notifications).pipe(delay(1000));
   }
 
-  constructor(private httpClient: HttpClient) {
-  }
-  
+  constructor(private httpClient: HttpClient) {}
+
   public fetchNotifications() {
-    interval(15000)
+    return interval(5000)
       .pipe(
         startWith(0),
         switchMap(() => {
           // return this._getNotifications();
-          return this.httpClient.get<NotificationType[]>(
-            'http://localhost:3000/notifications'
-          );
+          return this.httpClient
+            .get<NotificationType[]>('http://localhost:3000/notifications')
+            .pipe(
+              catchError((error) => {
+                if (error.name === 'HttpErrorResponse') {
+                  return throwError(() => 'Oops! Network Error...');
+                }
+                return throwError(() => error);
+              })
+            );
         })
       )
-      .subscribe((value) => {
-        this.notifications = value;
-        this.notificationsObservable$.next(value);
+      .subscribe({
+        next: (value) => {
+          this.notifications = value;
+          this.notificationsObservable$.next(value);
+        },
+        error: (err) => {
+          this.notifications = undefined
+          this.notificationsObservable$.error(err);
+        }
       });
   }
 
@@ -52,14 +63,17 @@ export class NotificationsService {
   }
 
   updateNotification(updatedNotification: NotificationType) {
-    this.notifications = this.notifications.map((notification) => {
+    this.notifications = this.notifications?.map((notification) => {
       if (notification.id === updatedNotification.id) {
         return updatedNotification;
       }
       return notification;
     });
     this.httpClient
-      .put(`http://localhost:3000/notifications/${updatedNotification.id}`, updatedNotification)
+      .put(
+        `http://localhost:3000/notifications/${updatedNotification.id}`,
+        updatedNotification
+      )
       .subscribe();
 
     this.notificationsObservable$.next(this.notifications);

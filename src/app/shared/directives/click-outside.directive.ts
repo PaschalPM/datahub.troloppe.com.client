@@ -13,7 +13,7 @@ import {
 export class ClickOutsideDirective {
   private display = true;
   @Output() clickOutside = new EventEmitter();
-  constructor(private elem: ElementRef) {}
+  constructor(private elem: ElementRef<HTMLElement>) {}
 
   @HostListener('document:click', ['$event.target'])
   onClickOutside(target: HTMLElement) {

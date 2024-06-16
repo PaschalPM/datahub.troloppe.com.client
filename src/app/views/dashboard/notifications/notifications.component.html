@@ -1,49 +1,38 @@
 <div class="divider-y container mx-auto max-w-[800px] bg-white px-2 py-4 dark:bg-gray-700">
     <pane-navigator-panel [(activePane)]="activePane" [tabs]="tabs"> </pane-navigator-panel>
     <div class="divide-y dark:divide-gray-600">
-        <ng-template *ngIf="activePane === 'unreadNotification';
+        @if(activeNotifications){
+        @if(activeNotifications.length){
+        @for (item of activeNotifications; track item.id) {
+        <div>
+            <dashboard-notification-item [notification]="item"
+                (markAsReadChange)="markAsRead($event)"></dashboard-notification-item>
+        </div>
+        }
+        }
+        @else {
+        <div class="empty-state"> {{ noNotificationText }}</div>
+        }
+        }
+        @else {
+        @if(error){
+
+        <div class="empty-state">
+            {{ error }}
+        </div>
+        }
+        @else {
+
+        <div class="empty-state">
+            <spinner></spinner>
+        </div>
+        }
+        }
+
+
+        <!-- <ng-template *ngIf="activePane === 'unreadNotifications';
         then unreadNotificationsTemplate;
         else allNotificationsTemplate
-      "></ng-template>
+      "></ng-template> -->
     </div>
 </div>
-
-<ng-template #unreadNotificationsTemplate>
-
-    @if(unreadNotifications){
-    @if(unreadNotifications.length){
-    @for (item of unreadNotifications; track item.id) {
-    <div>
-        <dashboard-notification-item [notification]="item" (markAsReadChange)="markAsRead($event)"></dashboard-notification-item>
-    </div>
-    }
-    }
-    @else {
-    <div class="empty-state">No Unread Notifications ...</div>
-    }
-    }
-    @else {
-    <div class="empty-state">
-        <spinner></spinner>
-    </div>
-    }
-
-</ng-template>
-<ng-template #allNotificationsTemplate>
-    @if(allNotifications){
-    @if (allNotifications.length) {
-    @for (item of allNotifications; track item.id) {
-    <div>
-        <dashboard-notification-item [notification]="item" (markAsReadChange)="markAsRead($event)"></dashboard-notification-item>
-    </div>
-    }
-    } @else {
-    <div class="empty-state">No Notifications...</div>
-    }
-    }
-    @else {
-    <div class="empty-state">
-        <spinner></spinner>
-    </div>
-    }
-</ng-template>

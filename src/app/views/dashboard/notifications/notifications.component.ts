@@ -4,10 +4,10 @@ import { NotificationsService } from '../../../shared/services/notifications.ser
 import { NotificationItemComponent } from '../../../shared/components/dashboard/notification-item/notification-item.component';
 import { AsyncPipe, NgIf } from '@angular/common';
 import { PaneNavigatorPanelComponent } from '../../../shared/components/pane-navigator-panel/pane-navigator-panel.component';
-import { Observable, delay, map, of } from 'rxjs';
+import {  Subscription } from 'rxjs';
 import { SpinnerComponent } from '../../../shared/components/svgs/spinner.component';
 
-type PaneType = 'unreadNotification' | 'allNotifications';
+type PaneType = 'unreadNotifications' | 'allNotifications';
 
 @Component({
   selector: 'app-notifications',
@@ -27,29 +27,30 @@ type PaneType = 'unreadNotification' | 'allNotifications';
   `,
 })
 export class NotificationsComponent {
-  allNotifications: NotificationType[] | undefined = undefined
+  allNotifications: NotificationType[] | undefined = undefined;
+  error: string | null = null;
+  activePane: PaneType = 'unreadNotifications';
 
   get unreadNotifications(): NotificationType[] | undefined {
     return this.allNotifications?.filter((value) => !value.isRead);
   }
 
-  private get allNotificationSum(): number {
-    const allNotifications =  this.allNotifications;
-    return allNotifications ? allNotifications.length : 0
+  get activeNotifications() {
+    return this.activePane === 'unreadNotifications'
+      ? this.unreadNotifications
+      : this.allNotifications;
   }
 
-  private get unreadNotificationSum(): number {
-    const unreadNotifications =  this.unreadNotifications;
-    return unreadNotifications ? unreadNotifications.length : 0
+  get noNotificationText(){
+    return this.activePane === 'unreadNotifications'
+      ? 'No Unread Notifications...'
+      : 'No Notifications...'
   }
-
-
-  activePane: PaneType = 'unreadNotification';
 
   get tabs() {
     return [
       {
-        pane: 'unreadNotification',
+        pane: 'unreadNotifications',
         tabLabel: `Unread (${this.unreadNotificationSum})`,
       },
       {
@@ -59,16 +60,35 @@ export class NotificationsComponent {
     ];
   }
 
+  private get allNotificationSum(): number {
+    const allNotifications = this.allNotifications;
+    return allNotifications ? allNotifications.length : 0;
+  }
+
+  private get unreadNotificationSum(): number {
+    const unreadNotifications = this.unreadNotifications;
+    return unreadNotifications ? unreadNotifications.length : 0;
+  }
+
   constructor(public utils: UtilsService, private ns: NotificationsService) {}
 
   ngOnInit(): void {
-    this.ns.observe().subscribe((notifications) => {
-      this.allNotifications = notifications
-    })
+    this.ns.observe().subscribe({
+      next: (notifications) => {
+        console.log('SUCCESS');
+        this.error = null;
+        this.allNotifications = notifications;
+      },
+      error: (err) => {
+        console.log('ERROR');
+        this.error = err;
+        this.allNotifications = undefined;
+      },
+    });
   }
 
   markAsRead(notification: NotificationType) {
     notification.isRead = true;
-    this.ns.updateNotification(notification)
+    this.ns.updateNotification(notification);
   }
 }

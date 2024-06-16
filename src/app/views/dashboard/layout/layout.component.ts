@@ -26,6 +26,7 @@ export class LayoutComponent {
   isProfileDropdownOpen = false;
 
   windowFocusSubscription!: Subscription
+  fetchNotificationsSubscription!: Subscription
 
   constructor(
     private mediaQuery: MediaQueryService,
@@ -67,19 +68,22 @@ export class LayoutComponent {
     this.colorScheme.init();
 
     // Fetches User's Notifications
-    this.ns.fetchNotifications();
+    this.fetchNotificationsSubscription =  this.ns.fetchNotifications();
     
 
     this.windowFocusSubscription =  this.wfs.focus$.subscribe((isFocused) => {
       if (isFocused){
         this.colorScheme.init()
-        this.ns.fetchNotifications();
+        this.fetchNotificationsSubscription =  this.ns.fetchNotifications();
+        } else {
+        this.fetchNotificationsSubscription.unsubscribe()
       }
     })
   }
 
   ngOnDestroy(): void {
     this.windowFocusSubscription.unsubscribe()
+    this.fetchNotificationsSubscription.unsubscribe()
   }
 
 }

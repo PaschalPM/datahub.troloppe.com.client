@@ -6,7 +6,7 @@
       "message": "For your security, please change your temporary password now.",
       "sendAt": "1 hour ago",
       "severity": "warning",
-      "isRead": false
+      "isRead": true
     },
     {
       "id": "2",
@@ -14,7 +14,7 @@
       "message": "Your upline has set a new street location. Prepare to head out.",
       "sendAt": "1 hour ago",
       "severity": "info",
-      "isRead": false
+      "isRead": true
     },
     {
       "id": "3",
@@ -25,12 +25,12 @@
       "isRead": true
     },
     {
-        "id": "4",
-        "label": "New Street Location Update - Ikoyi",
-        "message": "Your upline has set a new street location. Prepare to head out.",
-        "sendAt": "1 hour ago",
-        "severity": "info",
-        "isRead": false
-      }
+      "id": "4",
+      "label": "New Street Location Update - Ikoyi",
+      "message": "Your upline has set a new street location. Prepare to head out.",
+      "sendAt": "1 hour ago",
+      "severity": "info",
+      "isRead": false
+    }
   ]
 }

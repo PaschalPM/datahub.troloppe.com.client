@@ -7,7 +7,7 @@
 
         <!---: Image URL -->
         <app-image-uploader label="Add a photo" name="image" [formGroup]="streetDataFormGroup"
-            [formIsSubmitting]="formIsSubmitting" [(isUploading)]="isImageUploading"> </app-image-uploader>
+            [formIsSubmitting]="formIsSubmitting" [(isLoading)]="isImageLoading"> </app-image-uploader>
 
         <!---: Property Unique Code -->
         <select-dropdown label="Property Unique Code" name="uniqueCode" placeholder="Select Property Unique Code"
@@ -49,7 +49,7 @@
 
         <!---: Description -->
         <dashboard-input-field label="Description" name="description" [formGroup]="streetDataFormGroup"
-            [formIsSubmitting]="formIsSubmitting"></dashboard-input-field>
+            [formIsSubmitting]="formIsSubmitting" [maxLength]="1000"></dashboard-input-field>
 
 
         <!---: OPTIONAL -->
@@ -60,7 +60,7 @@
         </dashboard-input-field>
 
         <!---: Contact Numbers -->
-        <dashboard-input-field type="number-list" label="Contact Number (s)" name="contactNumbers"
+        <dashboard-input-field type="number-list" label="Contact Number(s)" name="contactNumbers"
             [formGroup]="streetDataFormGroup" [formIsSubmitting]="formIsSubmitting">
         </dashboard-input-field>
 

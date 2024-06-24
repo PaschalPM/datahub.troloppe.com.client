@@ -1,10 +1,11 @@
-<div class="relative my-5 space-y-1">
-  <label [for]="name" class="text-base lg:text-lg"> {{ label }}<span class="font-bold" *ngIf="isRequired"> *</span></label>
+<div class="relative my-5 space-y-1 text-gray-600 dark:text-white">
+  <label [for]="name" class="text-base lg:text-lg "> {{ label }}<span class="font-bold" *ngIf="isRequired">
+      *</span></label>
 
   @if (type === 'password') {
   <div class="relative">
     <input #myInput [type]="_type" [id]="name" [name]="name" [readonly]="readonly" [formControl]="control"
-      appKeyupIgnoreEnter (keyupIgnoreEnter)="onKeyUp()" [class]="classStyle" />
+      appKeyupIgnoreEnter (keyupIgnoreEnter)="onKeyUp()" (input)="onInput($event)"  [class]="classStyle" />
     <span (click)="toggleDisplayPassword()" [class]="
             utils.cn(
               'absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500'
@@ -13,16 +14,16 @@
       <pw-visibility-icon [show]="displayPassword"></pw-visibility-icon>
     </span>
   </div>
-  } 
+  }
   @else if (type === 'number-list'){
-    <input #myInput type="text" [id]="name" [name]="name" [readonly]="readonly" [formControl]="control"
+  <input #myInput type="text" [id]="name" [name]="name" [readonly]="readonly" [formControl]="control"
     [class]="classStyle" appKeyupIgnoreEnter (keyupIgnoreEnter)="onKeyUp()" (input)="onInput($event)" />
   }
   @else {
-  <input #myInput [type]="type" [id]="name" [name]="name" [readonly]="readonly" [formControl]="control"
-    [class]="classStyle" appKeyupIgnoreEnter (keyupIgnoreEnter)="onKeyUp()" />
+  <input #myInput [type]="type"  [id]="name" [name]="name" [readonly]="readonly" [formControl]="control"
+    [class]="classStyle" appKeyupIgnoreEnter (keyupIgnoreEnter)="onKeyUp()" (input)="onInput($event)"   />
   }
-
+  <!---: ERROR SECTION -->
   <div [class]="
         utils.cn(
           '!-mt-1  transform rounded text-sm text-red-500 opacity-0 transition-all duration-150 ease-in-out dark:text-red-400',
@@ -35,5 +36,8 @@
     <div *ngIf="control.errors?.['minlength'] && formIsSubmitting">
       {{ name | capitalize:true }} must be at least 8 characters long.
     </div>
+  </div>
+
+  <div *ngIf="!(formIsSubmitting && control.invalid)" class="mt-1 text-right text-sm"> {{currentLength}}/{{maxLength}}
   </div>
 </div>

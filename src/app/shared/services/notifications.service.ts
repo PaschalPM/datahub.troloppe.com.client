@@ -22,18 +22,14 @@ export class NotificationsService {
     NotificationType[] | undefined
   >(undefined);
 
-  private _getNotifications() {
-    return of(this.notifications).pipe(delay(1000));
-  }
 
   constructor(private httpClient: HttpClient) {}
 
   public fetchNotifications() {
-    return interval(5000)
+    return interval(1000 * 60 * 10)
       .pipe(
         startWith(0),
         switchMap(() => {
-          // return this._getNotifications();
           return this.httpClient
             .get<NotificationType[]>('http://localhost:3000/notifications')
             .pipe(

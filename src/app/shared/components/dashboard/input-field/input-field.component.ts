@@ -6,7 +6,12 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { UtilsService } from '../../../services/utils.service';
 import { CommonModule } from '@angular/common';
 import { PwVisibilityIconComponent } from '../../svgs/pw-visibility-icon.component';
@@ -35,14 +40,16 @@ export class InputFieldComponent {
   @Input({ required: true }) label!: string;
   @Input({ required: true }) name!: string;
   @Input({ required: true }) formIsSubmitting!: boolean;
-  @Input({ required: true }) formGroup!: FormGroup
+  @Input({ required: true }) formGroup!: FormGroup;
   @Input() type: 'text' | 'email' | 'password' | 'number-list' = 'text';
   @Input() readonly = false;
-  
+  @Input() maxLength = 250;
+
   @Output() formIsSubmittingChange = new EventEmitter();
-  
+
   isRequired = false;
-  control!:FormControl;
+  control!: FormControl;
+  currentLength = 0;
 
   get classStyle() {
     return this.utils.cn(
@@ -72,7 +79,7 @@ export class InputFieldComponent {
   constructor(public utils: UtilsService) {}
 
   ngOnInit(): void {
-    this.control = this.formGroup.controls?.[this.name] as FormControl
+    this.control = this.formGroup.controls?.[this.name] as FormControl;
     this.isRequired = this.control.hasValidator(Validators.required);
   }
   toggleDisplayPassword() {
@@ -84,21 +91,25 @@ export class InputFieldComponent {
     });
   }
 
-  onKeyUp(){
-    this.control.setErrors(null)
-  }
-  
-  
-  // -----> For Number List Type 
-  onInput(ev: Event){
-    const event = ev as InputEvent
-    const target = ev.target as HTMLInputElement
-    if (this.type === 'number-list') {
-      if (event.data?.match(/[A-Za-z]/g)){
-        const v = target.value.substring(0, target.value.length - 1)
-        this.control.setValue(v)
-      }
-    }
+  onKeyUp() {
+    this.control.setErrors(null);
   }
 
+  // -----> For Number List Type
+  onInput(ev: Event) {
+    const event = ev as InputEvent;
+    const target = ev.target as HTMLInputElement;
+    this.currentLength = target.value.length;
+
+    if (this.type === 'number-list') {
+      if (event.data?.match(/[A-Za-z]/g)) {
+        const v = target.value.slice(0, -1);
+        this.control.setValue(v);
+      }
+    }
+
+    if (this.currentLength >= this.maxLength) {
+      this.control.setValue(target.value.slice(0, -1));
+    }
+  }
 }

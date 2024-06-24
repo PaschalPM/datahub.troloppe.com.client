@@ -24,7 +24,7 @@ export class NewStreetDataComponent {
   formIsSubmitting = false;
   streetDataFormGroup!: FormGroup;
   selectedLocationValue = '';
-  isImageUploading = false
+  isImageLoading = false
 
   private locationsWithSections!: (IdAndValueType & {
     sections: Array<IdAndValueType>;

@@ -25,7 +25,7 @@ import {
       <div
         #drawerContent
         *ngIf="showMiniDrawer"
-        class="absolute right-2 top-6 min-h-10 min-w-32 bg-white p-4 text-left text-sm shadow-lg dark:bg-gray-700 md:hidden"
+        class="absolute right-2 top-6 min-h-10 min-w-32 bg-white p-4 text-left text-sm shadow-lg dark:bg-gray-800 md:hidden"
       >
         <ng-content></ng-content>
       </div>

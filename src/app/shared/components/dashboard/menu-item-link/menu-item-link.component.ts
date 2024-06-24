@@ -11,7 +11,7 @@ import { MyMatIconComponent } from '../../common/my-mat-icon.component';
       <a
         [routerLink]="link"
         routerLinkActive="router-active"
-        [routerLinkActiveOptions]="{ exact: true }"
+        [routerLinkActiveOptions]="{ exact: link === '/dashboard' || false }"
         class="inline-flex w-full items-center gap-2 p-4"
       >
         <my-mat-icon> {{ matIcon }} </my-mat-icon>

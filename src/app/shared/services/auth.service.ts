@@ -62,6 +62,10 @@ export class AuthService {
       );
   }
 
+  signOutOnClient(){
+    this.currentUser = null
+  }
+
   signOut(): Observable<{ message: string }> {
     return this.httpClient
       .delete<{ message: string }>(`${API_AUTH_URL}/logout`)

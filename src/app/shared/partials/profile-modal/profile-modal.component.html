@@ -4,12 +4,12 @@
     </h1>
   </div>
   <div>
-    <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="profileFormGroup" (ngSubmit)="onSubmit()">
       <dashboard-input-field
         name="name"
         label="Your name"
         [readonly]="true"
-        [control]="nameFormControl"
+        [formGroup]="profileFormGroup"
         [(formIsSubmitting)]="formIsSubmitting"
       >
       </dashboard-input-field>
@@ -18,7 +18,7 @@
         type="email"
         label="Your email"
         [readonly]="true"
-        [control]="emailFormControl"
+        [formGroup]="profileFormGroup"
         [(formIsSubmitting)]="formIsSubmitting"
       >
       </dashboard-input-field>
@@ -26,15 +26,15 @@
         name="role"
         label="Your role"
         [readonly]="true"
-        [control]="roleFormControl"
+        [formGroup]="profileFormGroup"
         [(formIsSubmitting)]="formIsSubmitting"
       >
       </dashboard-input-field>
       <dashboard-input-field
-        name="new-password"
+        name="newPassword"
         label="New Password"
         type="password"
-        [control]="newPasswordFormControl"
+        [formGroup]="profileFormGroup"
         [(formIsSubmitting)]="formIsSubmitting"
       >
       </dashboard-input-field>

@@ -1,5 +1,12 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UtilsService } from '../../../services/utils.service';
 import { CommonModule } from '@angular/common';
 import { PwVisibilityIconComponent } from '../../svgs/pw-visibility-icon.component';
@@ -14,33 +21,36 @@ import { KeyupIgnoreEnterDirective } from '../../../directives/keyup-ignore-ente
     CommonModule,
     PwVisibilityIconComponent,
     CapitalizePipe,
-    KeyupIgnoreEnterDirective
+    KeyupIgnoreEnterDirective,
   ],
   templateUrl: './input-field.component.html',
   styles: `
     :host {
       display: contents;
     }
-  `
+  `,
 })
 export class InputFieldComponent {
   @ViewChild('myInput') inputElement!: ElementRef<HTMLInputElement>;
   @Input({ required: true }) label!: string;
   @Input({ required: true }) name!: string;
-  @Input({ required: true }) control = new FormControl();
-  @Input({ required: true }) formIsSubmitting!: boolean
-  @Input() type: 'text' | 'email' | 'password' = 'text';
+  @Input({ required: true }) formIsSubmitting!: boolean;
+  @Input({ required: true }) formGroup!: FormGroup
+  @Input() type: 'text' | 'email' | 'password' | 'number-list' = 'text';
   @Input() readonly = false;
   
-  @Output() formIsSubmittingChange = new EventEmitter()
+  @Output() formIsSubmittingChange = new EventEmitter();
+  
+  isRequired = false;
+  control!:FormControl;
 
   get classStyle() {
     return this.utils.cn(
-      'block w-full h-10 rounded-md border outline-none border-gray-600 p-3 py-1 pr-10 text-sm focus:border-none dark:focus:ring-orange-400 disabled:border-gray-300 disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:focus:outline-none dark:bg-transparent dark:text-gray-200',
+      'block w-full h-10 rounded-md border outline-none border-gray-400 p-3 py-1 pr-10 text-sm focus:border-none focus:ring-dodger-blue dark:focus:ring-orange-400 disabled:border-gray-300 disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:focus:outline-none dark:bg-transparent dark:text-gray-200',
       this.errorBorder,
       {
         'text-black/50 dark:text-white/50 border-gray-600/50': this.readonly,
-      },
+      }
     );
   }
   displayPassword = true;
@@ -61,6 +71,10 @@ export class InputFieldComponent {
 
   constructor(public utils: UtilsService) {}
 
+  ngOnInit(): void {
+    this.control = this.formGroup.controls?.[this.name] as FormControl
+    this.isRequired = this.control.hasValidator(Validators.required);
+  }
   toggleDisplayPassword() {
     const input = this.inputElement?.nativeElement;
     this.displayPassword = !this.displayPassword;
@@ -70,8 +84,21 @@ export class InputFieldComponent {
     });
   }
 
-  resetFormIsSubmitting() {
-    this.formIsSubmitting = false
-    this.formIsSubmittingChange.emit(this.formIsSubmitting)
+  onKeyUp(){
+    this.control.setErrors(null)
   }
+  
+  
+  // -----> For Number List Type 
+  onInput(ev: Event){
+    const event = ev as InputEvent
+    const target = ev.target as HTMLInputElement
+    if (this.type === 'number-list') {
+      if (event.data?.match(/[A-Za-z]/g)){
+        const v = target.value.substring(0, target.value.length - 1)
+        this.control.setValue(v)
+      }
+    }
+  }
+
 }

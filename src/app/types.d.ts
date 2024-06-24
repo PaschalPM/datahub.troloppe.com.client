@@ -23,3 +23,12 @@ type OverviewWidgetItem = {
   overviewTitle: string;
   myMatIcon: string;
 };
+
+type OptionType = { value: string; label: string };
+
+type IdAndValueType = {id: number, value: string}
+
+type NewStreetDataFormType = {
+  // unique_codes: 
+  locations:  (IdAndValueType & {sections: Array<IdAndValueType>})[]
+}

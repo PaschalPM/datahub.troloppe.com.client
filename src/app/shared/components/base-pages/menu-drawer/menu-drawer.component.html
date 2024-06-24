@@ -1,0 +1,26 @@
+<ul
+  [ngClass]="{
+    'translate-y-0 shadow-sm shadow-light-blue': isMenuDrawerOpen,
+    '-translate-y-full': !isMenuDrawerOpen
+  }"
+  class="absolute w-full bg-white py-2 text-center transition-all duration-300 md:hidden"
+>
+  <li
+    [class]="liClass"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    <a routerLink="/" [class]="aClass"> Home </a>
+  </li>
+  <li [class]="liClass" routerLinkActive="active">
+    <a routerLink="/about" [class]="aClass"> About </a>
+  </li>
+  <li
+    [class]="liClass"
+    class="[&_*]:inline-block [&_*]:h-full [&_*]:w-full [&_a]:p-2"
+  >
+    <signin-or-dashboard-link
+      [signInOrDashboard]="signInOrDashboard"
+    ></signin-or-dashboard-link>
+  </li>
+</ul>

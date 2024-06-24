@@ -1,8 +1,10 @@
-<div [class]="utils.cn('flex min-h-screen transition-all duration-500', {'-ml-[55px] md:-ml-[200px]': !isMenuOpened})">
+<div
+    [class]="utils.cn('flex overflow-y-hidden max-h-screen transition-all duration-500', {'-ml-[55px] md:-ml-[200px]': !isMenuOpened})">
     <dashboard-side-menu></dashboard-side-menu>
-    <div class="flex grow flex-col">
+    <div
+        [class]="utils.cn('flex grow flex-col max-w-[calc(100%-56px)] md:max-w-[calc(100%-200px)]')">
         <dashboard-navbar [title]="title"></dashboard-navbar>
-        <main class="grow overflow-auto bg-lighter-blue p-4 dark:bg-gray-800 dark:text-white">
+        <main class="grow overflow-auto max-w-full bg-lighter-blue p-4 dark:bg-gray-800 dark:text-white">
             <router-outlet></router-outlet>
         </main>
     </div>

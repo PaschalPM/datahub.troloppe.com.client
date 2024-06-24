@@ -14,9 +14,29 @@
 }
 
 g {
- @apply fill-black dark:fill-white;
+  @apply fill-black dark:fill-white;
 }
 
 g .arc {
-  stroke: white!important;
+  stroke: white !important;
+}
+
+/* For WebKit based browsers (e.g., Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 10px; /* width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-300;
+  // background: #f1f1f1; /* color of the track */
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-500;
+  // background: #888; /* color of the scrollbar itself */
+  border-radius: 3px; /* roundness of the scrollbar thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-600;
 }

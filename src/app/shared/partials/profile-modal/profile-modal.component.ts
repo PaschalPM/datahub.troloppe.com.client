@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {
+  FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
@@ -16,29 +17,21 @@ import { TextButtonComponent } from '../../components/common/text-button/text-bu
   styles: ``,
 })
 export class ProfileModalComponent {
-  nameFormControl = new FormControl({ value: 'Paschal', disabled: true });
-  emailFormControl = new FormControl({
-    value: 'paschal.okafor@troloppe.com',
-    disabled: true,
-  });
-  roleFormControl = new FormControl({ value: 'Admin', disabled: true });
-  newPasswordFormControl = new FormControl('', {
-    validators: [Validators.required, Validators.minLength(8)],
-  });
-
-  myForm = new FormGroup(
-    {
-      newPassword: this.newPasswordFormControl,
-    },
-    { updateOn: 'submit' }
-  );
-
+  profileFormGroup!: FormGroup
   formIsSubmitting = false;
 
-
+  constructor(private fb: FormBuilder){
+    this.profileFormGroup = this.fb.group(  {
+      name: [{value: 'Paschal', disabled: true}],
+      email: [{value: 'paschal.okafor@troloppe.com', disabled: true}],
+      role: [{value: 'Admin', disabled: true}],
+      newPassword: ['', [Validators.required, Validators.minLength(8)]],
+    },
+    { updateOn: 'submit'})
+  }
   onSubmit() {
     this.formIsSubmitting = true;
-    if (this.myForm.valid) {
+    if (this.profileFormGroup.valid) {
 
       alert('ok');
     }

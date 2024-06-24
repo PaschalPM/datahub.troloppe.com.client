@@ -6,6 +6,7 @@ import { NotFoundComponent } from './views/not-found/not-found.component';
 import { resetPasswordGuard } from './shared/guards/reset-password.guard';
 import { dashboardGuard } from './shared/guards/dashboard.guard';
 import { authGuard } from './shared/guards/auth.guard';
+import { StreetDataComponent } from './views/dashboard/street-data/street-data.component';
 
 export const routes: Routes = [
   {
@@ -81,6 +82,14 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./views/dashboard/street-data/street-data.component').then(
             (c) => c.StreetDataComponent,
+          ),
+      },
+      {
+        title: 'New Street Data',
+        path: 'street-data/new',
+        loadComponent: () =>
+          import('./views/dashboard/new-street-data/new-street-data.component').then(
+            (c) => c.NewStreetDataComponent,
           ),
       },
       {

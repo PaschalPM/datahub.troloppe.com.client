@@ -1,0 +1,74 @@
+<div class="w-full p-2 md:p-4 lg:w-3/4 mx-auto ">
+    <h2 class="text-lg text-center font-medium">
+        Create New Street Data
+    </h2>
+    <form [formGroup]="streetDataFormGroup" (ngSubmit)="onSubmit()"
+        class="rounded-lg bg-white p-4 md:p-8 text-sm shadow-md backdrop-blur-md my-6 dark:border-white/50 dark:bg-white/5  dark:shadow-sm dark:shadow-white/35 ">
+
+        <!---: Image URL -->
+        <app-image-uploader label="Add a photo" name="image" [formGroup]="streetDataFormGroup"
+            [formIsSubmitting]="formIsSubmitting" [(isUploading)]="isImageUploading"> </app-image-uploader>
+
+        <!---: Property Unique Code -->
+        <select-dropdown label="Property Unique Code" name="uniqueCode" placeholder="Select Property Unique Code"
+            [isSearchable]="true" searchPlaceholder="Search For Property Unique Code..." [options]="uniqueCodeOptions"
+            [formGroup]="streetDataFormGroup" [formIsSubmitting]="formIsSubmitting">
+        </select-dropdown>
+
+        <!---: Street Address -->
+        <dashboard-input-field label="Street Address" name="streetAddress" [formGroup]="streetDataFormGroup"
+            [formIsSubmitting]="formIsSubmitting">
+        </dashboard-input-field>
+
+
+        <!---: Sector  -->
+        <select-dropdown label="Sector" name="sector" placeholder="Select Sector" [isSearchable]="true"
+            searchPlaceholder="Search For Sector..." [options]="sectorOptions" [formGroup]="streetDataFormGroup"
+            [formIsSubmitting]="formIsSubmitting">
+        </select-dropdown>
+
+        <!---: Location  -->
+        <select-dropdown label="Location" name="location" placeholder="Select Location" [isSearchable]="true"
+            searchPlaceholder="Search For Location..." [options]="locationOptions" [formGroup]="streetDataFormGroup"
+            [formIsSubmitting]="formIsSubmitting" (selectedValueChange)="setSelectedLocationValue($event)">
+        </select-dropdown>
+
+        <!---: Section  -->
+        @if(selectedLocationValue){
+        <select-dropdown label="Section" name="section" placeholder="Select Section" [isSearchable]="true"
+            searchPlaceholder="Search For Section..." [options]="sectionOptions" [formGroup]="streetDataFormGroup"
+            [formIsSubmitting]="formIsSubmitting">
+        </select-dropdown>
+        }
+
+        <!---: Construction Status -->
+        <select-dropdown label="Construction Status" name="constructionStatus" placeholder="Select Construction Status"
+            [options]="constructionStatusOptions" [formGroup]="streetDataFormGroup"
+            [formIsSubmitting]="formIsSubmitting">
+        </select-dropdown>
+
+        <!---: Description -->
+        <dashboard-input-field label="Description" name="description" [formGroup]="streetDataFormGroup"
+            [formIsSubmitting]="formIsSubmitting"></dashboard-input-field>
+
+
+        <!---: OPTIONAL -->
+
+        <!---: Contact Name -->
+        <dashboard-input-field label="Contact Name" name="contactName" [formGroup]="streetDataFormGroup"
+            [formIsSubmitting]="formIsSubmitting">
+        </dashboard-input-field>
+
+        <!---: Contact Numbers -->
+        <dashboard-input-field type="number-list" label="Contact Number (s)" name="contactNumbers"
+            [formGroup]="streetDataFormGroup" [formIsSubmitting]="formIsSubmitting">
+        </dashboard-input-field>
+
+        <!---: Contact Email -->
+        <dashboard-input-field label="Contact Email" name="contactEmail" type="email" [formGroup]="streetDataFormGroup"
+            [formIsSubmitting]="formIsSubmitting">
+        </dashboard-input-field>
+
+        <button>Submit</button>
+    </form>
+</div>

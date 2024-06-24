@@ -81,7 +81,6 @@ export class LoginStageComponent extends BaseComponent {
           });
         },
         error: (err) => {
-          console.log(err);
           this.passwordControl.setErrors({
             serverError: {
               message: err.error.message,

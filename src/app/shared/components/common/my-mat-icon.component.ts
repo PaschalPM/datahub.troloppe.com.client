@@ -20,7 +20,7 @@ import { UtilsService } from '../../services/utils.service';
       <badge *ngIf="!badgeHidden"> {{ badge }} </badge>
     </span>
     } @else {
-    <i class="material-icons">
+    <i [class]="utils.cn('material-icons', class)">
       <ng-container *ngTemplateOutlet="projected"
     /></i>
     }

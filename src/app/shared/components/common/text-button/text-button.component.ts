@@ -10,7 +10,7 @@ import { UtilsService } from '../../../services/utils.service';
       [type]="type"
       [class]="
         utils.cn(
-          'rounded-2xl p-4 py-2 font-medium tracking-wider text-dodger-blue hover:bg-dodger-blue/10 dark:text-orange-400 dark:hover:bg-orange-400/15',
+          'rounded-2xl text-xs md:text-sm p-4 py-2 font-medium tracking-wider text-dodger-blue hover:bg-dodger-blue/10 dark:text-orange-400 dark:hover:bg-orange-400/15',
           class,
           {
             'p-2 py-1 text-xs font-normal': small

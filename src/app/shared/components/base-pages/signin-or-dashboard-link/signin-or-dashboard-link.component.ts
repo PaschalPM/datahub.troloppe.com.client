@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
-  selector: 'app-signin-or-dashboard-link',
+  selector: 'signin-or-dashboard-link',
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
@@ -22,7 +22,13 @@ import { AuthService } from '../../../services/auth.service';
         routerLink="/dashboard"
         class="flex items-center gap-1"
       >
-        <img src="assets/OnIcon.png" alt="On Icon" width="20px" height="20px" />
+        <img
+          src="assets/OnIcon.png"
+          class="max-w-[20px]"
+          alt="On Icon"
+          width="20px"
+          height="20px"
+        />
         {{ currentUserName }}
       </a>
     </ng-template>
@@ -56,12 +62,12 @@ export class SigninOrDashboardLinkComponent {
 
   constructor(private authService: AuthService) {}
   ngOnInit(): void {
-    const currentUser = this.authService.currentUser
-    if (currentUser){
-      this.signInOrDashboard = 'dashboard'
-      this.currentUserName = currentUser.name
+    const currentUser = this.authService.currentUser;
+    if (currentUser) {
+      this.signInOrDashboard = 'dashboard';
+      this.currentUserName = currentUser.name;
     } else {
-      this.signInOrDashboard = 'sign-in'
+      this.signInOrDashboard = 'sign-in';
     }
   }
 }

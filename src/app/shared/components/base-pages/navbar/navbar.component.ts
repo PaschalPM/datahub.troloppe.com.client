@@ -2,11 +2,15 @@ import { Component } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { AppEventEmitterService } from '../../../services/app-event-emitter.service';
 import { SigninOrDashboardLinkComponent } from '../signin-or-dashboard-link/signin-or-dashboard-link.component';
+import { HamburgerIconComponent } from '../../../svgs/base-pages/hamburger-icon.component';
+import { ExitIconComponent } from '../../svgs/exit-icon.component';
+import { NgIf } from '@angular/common';
+import { MenuDrawerComponent } from '../menu-drawer/menu-drawer.component';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterModule, SigninOrDashboardLinkComponent],
+  imports: [NgIf, MenuDrawerComponent, RouterModule, SigninOrDashboardLinkComponent, HamburgerIconComponent, ExitIconComponent],
   template: `
     <div class="">
       <nav
@@ -29,19 +33,19 @@ import { SigninOrDashboardLinkComponent } from '../signin-or-dashboard-link/sign
           </li>
         </ul>
         <div class="hidden font-medium text-light-blue md:inline-block">
-          <app-signin-or-dashboard-link
+          <signin-or-dashboard-link
             [signInOrDashboard]="signInOrDashboard"
-          ></app-signin-or-dashboard-link>
+          ></signin-or-dashboard-link>
         </div>
         <button
           class="md:hidden"
           (click)="isMenuDrawerOpen = !isMenuDrawerOpen"
         >
-          <!-- <hamburger-icon *ngIf="!isMenuDrawerOpen"></hamburger-icon>
-          <exit-icon *ngIf="isMenuDrawerOpen"></exit-icon> -->
+          <hamburger-icon *ngIf="!isMenuDrawerOpen"></hamburger-icon>
+          <exit-icon *ngIf="isMenuDrawerOpen"></exit-icon>
         </button>
       </nav>
-      <!-- <menu-drawer [isMenuDrawerOpen]="isMenuDrawerOpen"></menu-drawer> -->
+      <menu-drawer [isMenuDrawerOpen]="isMenuDrawerOpen"></menu-drawer>
     </div>
   `,
 })

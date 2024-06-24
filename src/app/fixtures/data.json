@@ -1,0 +1,187 @@
+{
+  "notifications": [
+    {
+      "id": "1",
+      "label": "Password Update Required",
+      "message": "For your security, please change your temporary password now.",
+      "sendAt": "1 hour ago",
+      "severity": "warning",
+      "isRead": false
+    },
+    {
+      "id": "2",
+      "label": "New Street Location Update - Ikeja",
+      "message": "Your upline has set a new street location. Prepare to head out.",
+      "sendAt": "1 hour ago",
+      "severity": "info",
+      "isRead": true
+    },
+    {
+      "id": "3",
+      "label": "Password Update Required",
+      "message": "For your security, please change your temporary password now.",
+      "sendAt": "1 hour ago",
+      "severity": "warning",
+      "isRead": true
+    },
+    {
+      "id": "4",
+      "label": "New Street Location Update - Ikoyi",
+      "message": "Your upline has set a new street location. Prepare to head out.",
+      "sendAt": "1 hour ago",
+      "severity": "info",
+      "isRead": false
+    }
+  ],
+  "street-data": [
+    {
+      "id": 1,
+      "unique_code": "ST001",
+      "street_address": "123 Main St",
+      "description": "Residential street with single-family homes",
+      "sector": "Residential",
+      "location": "Downtown",
+      "section": "A1",
+      "number_of_units": 25,
+      "contact_name": "John Doe",
+      "contact_number": "555-1234",
+      "contact_email": "john.doe@example.com",
+      "construction_status": "Completed",
+      "comment": "Quiet neighborhood with a park nearby",
+      "is_verified": true,
+      "image_path": "/images/123_main_st.jpg",
+      "created_at": "2023-01-15T08:00:00Z",
+      "updated_at": "2024-01-15T08:00:00Z"
+    },
+    {
+      "id": 2,
+      "unique_code": "ST002",
+      "street_address": "456 Elm St",
+      "description": "Mixed-use street with shops and apartments",
+      "sector": "Commercial",
+      "location": "Midtown",
+      "section": "B2",
+      "number_of_units": 15,
+      "contact_name": "Jane Smith",
+      "contact_number": "555-5678",
+      "contact_email": "jane.smith@example.com",
+      "construction_status": "Under Construction",
+      "comment": "New shopping center under development",
+      "is_verified": true,
+      "image_path": "/images/456_elm_st.jpg",
+      "created_at": "2023-05-20T08:00:00Z",
+      "updated_at": "2024-02-20T08:00:00Z"
+    },
+    {
+      "id": 3,
+      "unique_code": "ST003",
+      "street_address": "789 Oak St",
+      "description": "Suburban street with townhouses",
+      "sector": "Residential",
+      "location": "Uptown",
+      "section": "C3",
+      "number_of_units": 30,
+      "contact_name": "Robert Brown",
+      "contact_number": "555-8765",
+      "contact_email": "robert.brown@example.com",
+      "construction_status": "Planning",
+      "comment": "Planned for development in 2025",
+      "is_verified": false,
+      "image_path": "/images/789_oak_st.jpg",
+      "created_at": "2023-09-10T08:00:00Z",
+      "updated_at": "2024-03-10T08:00:00Z"
+    },
+    {
+      "id": 4,
+      "unique_code": "ST004",
+      "street_address": "101 Pine St",
+      "description": "Industrial street with warehouses",
+      "sector": "Industrial",
+      "location": "Eastside",
+      "section": "D4",
+      "number_of_units": 10,
+      "contact_name": "Emily Davis",
+      "contact_number": "555-4321",
+      "contact_email": "emily.davis@example.com",
+      "construction_status": "Completed",
+      "comment": "Near major transportation hubs",
+      "is_verified": false,
+      "image_path": "/images/101_pine_st.jpg",
+      "created_at": "2023-12-01T08:00:00Z",
+      "updated_at": "2024-04-01T08:00:00Z"
+    },
+    {
+      "id": 5,
+      "unique_code": "ST005",
+      "street_address": "202 Maple St",
+      "description": "Commercial street with office buildings",
+      "sector": "Commercial",
+      "location": "Westside",
+      "section": "E5",
+      "number_of_units": 20,
+      "contact_name": "Michael Johnson",
+      "contact_number": "555-6543",
+      "contact_email": "michael.johnson@example.com",
+      "construction_status": "Renovation",
+      "comment": "Ongoing office space renovation",
+      "is_verified": true,
+      "image_path": "/images/202_maple_st.jpg",
+      "created_at": "2024-02-28T08:00:00Z",
+      "updated_at": "2024-06-01T08:00:00Z"
+    }
+  ],
+  "new-street-data-form": {
+    "unique_codes": [
+      { "id": 0, "value": "Not Available" },
+      { "id": 1, "value": "ST001" },
+      { "id": 2, "value": "ST002" },
+      { "id": 3, "value": "ST003" },
+      { "id": 4, "value": "ST004" },
+      { "id": 5, "value": "ST005" }
+    ],
+    "locations": [
+      {
+        "id": 1,
+        "value": "Ikoyi",
+        "sections": [
+          {
+            "id": 1,
+            "value": "Ikoyi Sec 1"
+          },
+          {
+            "id": 2,
+            "value": "Ikoyi Sec 2"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "value": "Lekki",
+        "sections": [
+          {
+            "id": 3,
+            "value": "Lekki Sec 1"
+          },
+          {
+            "id": 4,
+            "value": "Lekki Sec 2"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "value": "Victoria Island",
+        "sections": [
+          {
+            "id": 5,
+            "value": "V.I Sec 1"
+          },
+          {
+            "id": 6,
+            "value": "V.I Sec 2"
+          }
+        ]
+      }
+    ]
+  }
+}

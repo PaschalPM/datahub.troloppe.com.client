@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "start:dev": "concurrently \"npm:start --hmr\" \"npx json-server ./src/app/fixtures/data.json\""
+    "start:dev": "npx concurrently \"ng serve --hmr\" \"npx json-server ./src/app/fixtures/data.json\""
   },
   "private": true,
   "dependencies": {
@@ -20,6 +20,7 @@
     "@angular/platform-browser": "^17.3.0",
     "@angular/platform-browser-dynamic": "^17.3.0",
     "@angular/router": "^17.3.0",
+    "@ng-select/ng-select": "^13.3.0",
     "@swimlane/ngx-charts": "^20.5.0",
     "ag-grid-angular": "^31.3.2",
     "clsx": "^2.1.1",
@@ -27,7 +28,9 @@
     "ngx-cookie-service": "^17.1.0",
     "rxjs": "~7.8.0",
     "tailwind-merge": "^2.3.0",
+    "tailwindcss-mixins": "^0.0.11",
     "tslib": "^2.3.0",
+    "uninstall": "^0.0.0",
     "zone.js": "~0.14.3"
   },
   "devDependencies": {

@@ -10,8 +10,8 @@ import { ColorSchemeService } from '../../../services/color-scheme.service';
 import { ModalService } from '../../../services/modal.service';
 import { CapitalizePipe } from '../../../pipes/capitalize.pipe';
 import { ClickOutsideDirective } from '../../../directives/click-outside.directive';
-import { ProfileModalComponent } from '../../../partials/profile-modal/profile-modal.component';
-import { ColorSchemeModalComponent } from '../../../partials/color-scheme-modal/color-scheme-modal.component';
+import { ProfileModalComponent } from '../../../partials/modals/profile-modal/profile-modal.component';
+import { ColorSchemeModalComponent } from '../../../partials/modals/color-scheme-modal/color-scheme-modal.component';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 

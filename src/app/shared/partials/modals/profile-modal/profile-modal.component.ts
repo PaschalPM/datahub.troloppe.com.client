@@ -6,8 +6,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { InputFieldComponent } from '../../components/dashboard/input-field/input-field.component';
-import { TextButtonComponent } from '../../components/common/text-button/text-button.component';
+import { InputFieldComponent } from '../../../components/dashboard/input-field/input-field.component';
+import { TextButtonComponent } from '../../../components/common/text-button/text-button.component';
 
 @Component({
   selector: 'dashboard-profile-modal',

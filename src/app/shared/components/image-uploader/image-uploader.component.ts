@@ -18,7 +18,7 @@ import { CapitalizePipe } from '../../pipes/capitalize.pipe';
   standalone: true,
   imports: [MyMatIconComponent, NgIf, CapitalizePipe],
   template: `
-    <div class="mb-6 text-gray-600 dark:text-white">
+    <div class="mb-6 text-gray-600 dark:text-white ">
       <div>
         <label [for]="name" class="text-base lg:text-lg">
           {{ label }}<span class="font-bold" *ngIf="isRequired"> *</span></label
@@ -26,7 +26,12 @@ import { CapitalizePipe } from '../../pipes/capitalize.pipe';
         <!---: Image Uploader -->
         <div class="relative size-32" *ngIf="!imageUrl">
           <div
-            [class]="utils.cn('h-full  border border-gray-400 rounded-xl flex justify-center items-center text-4xl', errorBorder)"
+            [class]="
+              utils.cn(
+                'h-full bg-slate-100 dark:bg-slate-600  border border-slate-200 dark:border-slate-600 rounded-xl flex justify-center items-center text-4xl',
+                errorBorder
+              )
+            "
           >
             +
           </div>
@@ -102,7 +107,12 @@ export class ImageUploaderComponent {
       ? 'ring-1 ring-red-500 dark:ring-red-400 border-none'
       : '';
   }
-  
+
+  set loadingState(value: boolean) {
+    this.isLoading = value;
+    this.isLoadingChange.emit(this.isLoading);
+  }
+
   constructor(
     private tempImgUploader: TempImageUploaderService,
     public utils: UtilsService
@@ -115,7 +125,7 @@ export class ImageUploaderComponent {
 
   deleteImage() {
     if (this.imageUrl && !this.isLoading) {
-      this.isLoading = true;
+      this.loadingState = true;
       this.tempImgUploader.deleteImage(this.imageUrl).subscribe({
         next: () => {
           this.resetImage();
@@ -143,27 +153,25 @@ export class ImageUploaderComponent {
   private uploadToServer(image: File) {
     const formData = new FormData();
     formData.set(this.name, image, image.name);
-    this.isLoading = true;
-    this.isLoadingChange.emit(this.isLoading);
+    this.loadingState = true;
     this.tempImgUploader.store(formData).subscribe({
       next: (value) => {
         this.imageUrl = value.image_tmp_url;
         this.control.setValue(value.image_tmp_url);
-        this.isLoading = false;
-        this.isLoadingChange.emit(this.isLoading);
+        this.loadingState = false;
       },
       error: (err) => {
         if (err.status === 422) {
-          alert('Image format is not supported.')
+          alert('Image format is not supported.');
         }
-        this.resetImage()
+        this.resetImage();
       },
     });
   }
 
   private resetImage() {
     this.imageUrl = '';
-    this.isLoading = false;
+    this.loadingState = false;
     this.control.setValue(null);
   }
 }

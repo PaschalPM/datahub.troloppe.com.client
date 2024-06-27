@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { ModalService } from '../../services/modal.service';
-import { ColorSchemeService } from '../../services/color-scheme.service';
+import { ModalService } from '../../../services/modal.service';
+import { ColorSchemeService } from '../../../services/color-scheme.service';
 import { CommonModule } from '@angular/common';
-import { TextButtonComponent } from '../../components/common/text-button/text-button.component';
-import { CapitalizePipe } from '../../pipes/capitalize.pipe';
+import { TextButtonComponent } from '../../../components/common/text-button/text-button.component';
+import { CapitalizePipe } from '../../../pipes/capitalize.pipe';
 
 @Component({
   selector: 'app-color-scheme-modal',

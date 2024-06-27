@@ -1,7 +1,7 @@
-<div class="w-full p-2 md:p-4 lg:w-3/4 mx-auto ">
-    <h2 class="text-lg text-center font-medium">
-        Create New Street Data
-    </h2>
+<dashboard-active-location-indicator/>
+
+<div class="w-full p-2 md:p-4 lg:w-3/4 mx-auto -mt-5">
+
     <form [formGroup]="streetDataFormGroup" (ngSubmit)="onSubmit()"
         class="rounded-lg bg-white p-4 md:p-8 text-sm shadow-md backdrop-blur-md my-6 dark:border-white/50 dark:bg-white/5  dark:shadow-sm dark:shadow-white/35 ">
 
@@ -10,10 +10,10 @@
             [formIsSubmitting]="formIsSubmitting" [(isLoading)]="isImageLoading"> </app-image-uploader>
 
         <!---: Property Unique Code -->
-        <select-dropdown label="Property Unique Code" name="uniqueCode" placeholder="Select Property Unique Code"
-            [isSearchable]="true" searchPlaceholder="Search For Property Unique Code..." [options]="uniqueCodeOptions"
-            [formGroup]="streetDataFormGroup" [formIsSubmitting]="formIsSubmitting">
-        </select-dropdown>
+        <dashboard-select-dropdown label="Property Unique Code" name="uniqueCode" [formGroup]="streetDataFormGroup"
+            bindLabel="value" bindValue="id" [formIsSubmitting]="formIsSubmitting" [items]="uniqueCodeOptions">
+        </dashboard-select-dropdown>
+
 
         <!---: Street Address -->
         <dashboard-input-field label="Street Address" name="streetAddress" [formGroup]="streetDataFormGroup"
@@ -22,30 +22,33 @@
 
 
         <!---: Sector  -->
-        <select-dropdown label="Sector" name="sector" placeholder="Select Sector" [isSearchable]="true"
-            searchPlaceholder="Search For Sector..." [options]="sectorOptions" [formGroup]="streetDataFormGroup"
-            [formIsSubmitting]="formIsSubmitting">
-        </select-dropdown>
+        <dashboard-select-dropdown label="Sector" name="sector" [formGroup]="streetDataFormGroup" bindLabel="value"
+            bindValue="id" [formIsSubmitting]="formIsSubmitting" [items]="sectorOptions"> </dashboard-select-dropdown>
+
 
         <!---: Location  -->
-        <select-dropdown label="Location" name="location" placeholder="Select Location" [isSearchable]="true"
-            searchPlaceholder="Search For Location..." [options]="locationOptions" [formGroup]="streetDataFormGroup"
-            [formIsSubmitting]="formIsSubmitting" (selectedValueChange)="setSelectedLocationValue($event)">
-        </select-dropdown>
+        <dashboard-select-dropdown label="Location" name="location" [formGroup]="streetDataFormGroup" bindLabel="value"
+            bindValue="id" [formIsSubmitting]="formIsSubmitting" [items]="locationOptions"
+            (changeEvent)="setSelectedLocationValue($event)"> </dashboard-select-dropdown>
+
 
         <!---: Section  -->
         @if(selectedLocationValue){
-        <select-dropdown label="Section" name="section" placeholder="Select Section" [isSearchable]="true"
-            searchPlaceholder="Search For Section..." [options]="sectionOptions" [formGroup]="streetDataFormGroup"
-            [formIsSubmitting]="formIsSubmitting">
-        </select-dropdown>
+        <dashboard-select-dropdown label="Section" name="section" [formGroup]="streetDataFormGroup" bindLabel="value"
+            bindValue="id" [formIsSubmitting]="formIsSubmitting" [items]="sectionOptions"> </dashboard-select-dropdown>
+
         }
 
+        <!---: Number of Units  -->
+        <dashboard-input-field label="Number of Units" name="numberOfUnits" [formGroup]="streetDataFormGroup"
+            [formIsSubmitting]="formIsSubmitting" type="number">
+        </dashboard-input-field>
+
         <!---: Construction Status -->
-        <select-dropdown label="Construction Status" name="constructionStatus" placeholder="Select Construction Status"
-            [options]="constructionStatusOptions" [formGroup]="streetDataFormGroup"
-            [formIsSubmitting]="formIsSubmitting">
-        </select-dropdown>
+        <dashboard-select-dropdown label="Construction Status" name="constructionStatus" [formGroup]="streetDataFormGroup"
+            bindLabel="label" bindValue="value" [formIsSubmitting]="formIsSubmitting" [items]="constructionStatusOptions">
+        </dashboard-select-dropdown>
+
 
         <!---: Description -->
         <dashboard-input-field label="Description" name="description" [formGroup]="streetDataFormGroup"
@@ -69,6 +72,6 @@
             [formIsSubmitting]="formIsSubmitting">
         </dashboard-input-field>
 
-        <button>Submit</button>
+        <dashboard-submit-btn [isLoading]="isImageLoading"> Submit </dashboard-submit-btn>
     </form>
 </div>

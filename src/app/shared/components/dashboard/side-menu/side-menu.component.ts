@@ -40,11 +40,9 @@ import { MenuItemLinkComponent } from '../menu-item-link/menu-item-link.componen
   </div>
 </aside>
   `,
-  styles: `
-    :host {
-      display: contents;
-    }
-  `
+  host: {
+    "[style.display]": "'contents'"
+  }
 })
 export class SideMenuComponent {
 

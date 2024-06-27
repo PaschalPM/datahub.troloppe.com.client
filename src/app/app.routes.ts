@@ -85,7 +85,7 @@ export const routes: Routes = [
           ),
       },
       {
-        title: 'New Street Data',
+        title: 'Create Street Data',
         path: 'street-data/new',
         loadComponent: () =>
           import('./views/dashboard/new-street-data/new-street-data.component').then(

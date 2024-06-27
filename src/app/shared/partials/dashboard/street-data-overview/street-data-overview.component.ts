@@ -6,6 +6,7 @@ import { productSales } from '../../../../fixtures/products';
 import { ChartContainerComponent } from '../../../components/chart-container/chart-container.component';
 import { UserRoles } from '../../../enums/user-roles';
 import { PermissionService } from '../../../services/permission.service';
+import { ActiveLocationIndicatorComponent } from '../../../components/dashboard/active-location-indicator/active-location-indicator.component';
 
 @Component({
   selector: 'dashboard-street-data-overview',
@@ -15,6 +16,7 @@ import { PermissionService } from '../../../services/permission.service';
     ChartComponent,
     ChartContainerComponent,
     NgxChartsModule,
+    ActiveLocationIndicatorComponent
   ],
   templateUrl: './street-data-overview.component.html',
 })

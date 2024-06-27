@@ -4,7 +4,7 @@
 
   @if (type === 'password') {
   <div class="relative">
-    <input #myInput [type]="_type" [id]="name" [name]="name" [readonly]="readonly" [formControl]="control"
+    <input autocomplete="off" #myInput [type]="_type" [id]="name" [name]="name" [readonly]="readonly" [formControl]="control"
       appKeyupIgnoreEnter (keyupIgnoreEnter)="onKeyUp()" (input)="onInput($event)"  [class]="classStyle" />
     <span (click)="toggleDisplayPassword()" [class]="
             utils.cn(
@@ -16,11 +16,11 @@
   </div>
   }
   @else if (type === 'number-list'){
-  <input #myInput type="text" [id]="name" [name]="name" [readonly]="readonly" [formControl]="control"
+  <input autocomplete="off" #myInput type="text" [id]="name" [name]="name" [readonly]="readonly" [formControl]="control"
     [class]="classStyle" appKeyupIgnoreEnter (keyupIgnoreEnter)="onKeyUp()" (input)="onInput($event)" />
   }
   @else {
-  <input #myInput [type]="type"  [id]="name" [name]="name" [readonly]="readonly" [formControl]="control"
+  <input autocomplete="off" #myInput [type]="type"  [id]="name" [name]="name" [readonly]="readonly" [formControl]="control"
     [class]="classStyle" appKeyupIgnoreEnter (keyupIgnoreEnter)="onKeyUp()" (input)="onInput($event)"   />
   }
   <!---: ERROR SECTION -->
@@ -38,6 +38,6 @@
     </div>
   </div>
 
-  <div *ngIf="!(formIsSubmitting && control.invalid)" class="mt-1 text-right text-sm"> {{currentLength}}/{{maxLength}}
+  <div *ngIf="!(formIsSubmitting && control.invalid) && type !== 'number' && !control.disabled" class="mt-1 text-right text-sm"> {{currentLength}}/{{maxLength}}
   </div>
 </div>

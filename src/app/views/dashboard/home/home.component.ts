@@ -14,7 +14,7 @@ import { ChartContainerComponent } from '../../../shared/components/chart-contai
     PaneNavigatorPanelComponent,
     StreetDataOverviewComponent,
     ChartComponent,
-    ChartContainerComponent,
+    ChartContainerComponent
   ],
   templateUrl: './home.component.html',
 })

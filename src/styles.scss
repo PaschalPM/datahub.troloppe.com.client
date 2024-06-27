@@ -1,3 +1,4 @@
+@import "@ng-select/ng-select/themes/default.theme.css";
 @import "tailwindcss/base";
 
 @import "tailwindcss/components";
@@ -24,6 +25,7 @@ g .arc {
 /* For WebKit based browsers (e.g., Chrome, Safari) */
 ::-webkit-scrollbar {
   width: 10px; /* width of the scrollbar */
+  height: 5px; /* width of the scrollbar */
 }
 
 ::-webkit-scrollbar-track {
@@ -39,4 +41,38 @@ g .arc {
 
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-gray-600;
+}
+
+.ng-select.custom {
+  border:0px;
+  min-height: 0px;
+  border-radius: 0;
+}
+
+// ng select override styles
+.ng-select.custom .ng-select-container  {    
+  @apply min-h-10 rounded-md  border outline-none border-slate-200 dark:border-slate-600 text-sm   disabled:border-gray-300 disabled:bg-slate-100 dark:disabled:bg-slate-700  bg-slate-100 dark:bg-slate-600 dark:text-gray-200;
+}
+ng-select.ng-select.custom.ng-select-focused .ng-select-container  {   
+  @apply  border-dodger-blue dark:border-orange-400 disabled:outline-none;
+}
+
+.ng-select.custom .ng-dropdown-panel-items.scroll-host div{
+  @apply dark:bg-slate-800 dark:text-white;
+}
+
+.ng-select.custom div.ng-option{
+  @apply dark:hover:bg-slate-700 capitalize;
+}
+
+.ng-select.custom div.ng-option.ng-option-disabled{
+  @apply dark:text-white/50;
+}
+
+.ng-select.custom div.ng-option.ng-option-selected{
+  @apply  dark:bg-gray-600;
+}
+
+ng-select.ng-invalid.error-on-submit .ng-select-container {
+  @apply ring-1 ring-red-500 dark:ring-red-400 border-none;
 }

@@ -29,6 +29,6 @@ type OptionType = { value: string; label: string };
 type IdAndValueType = {id: number, value: string}
 
 type NewStreetDataFormType = {
-  // unique_codes: 
+  unique_codes: IdAndValueType[]
   locations:  (IdAndValueType & {sections: Array<IdAndValueType>})[]
 }

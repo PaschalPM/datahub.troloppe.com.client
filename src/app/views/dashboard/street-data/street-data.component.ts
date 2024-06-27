@@ -7,14 +7,27 @@ import 'ag-grid-community/styles/ag-theme-quartz.css';
 import { StreetDataColType } from '../../../shared/types/street-data';
 import { TextButtonComponent } from '../../../shared/components/common/text-button/text-button.component';
 import { Router } from '@angular/router';
+import { ActiveLocationIndicatorComponent } from '../../../shared/components/dashboard/active-location-indicator/active-location-indicator.component';
+import { MyMatIconComponent } from '../../../shared/components/common/my-mat-icon.component';
 
 @Component({
   selector: 'app-street-data',
   standalone: true,
-  imports: [AgGridAngular, TextButtonComponent],
+  imports: [
+    AgGridAngular,
+    TextButtonComponent,
+    ActiveLocationIndicatorComponent,
+    MyMatIconComponent
+  ],
   template: `
-    <div class="my-4 text-right">
-      <text-button (clickEvent)="routeToNewStreetView()" text="New Street Data"></text-button>
+    <div class="my-4 flex justify-between items-center">
+      <dashboard-active-location-indicator />
+        <text-button
+          withIcon="add"
+          [isFlexed]="true"
+          (clickEvent)="routeToNewStreetView()"
+          text="New Street Data"
+        ></text-button>
     </div>
     <ag-grid-angular
       [rowData]="rowData"
@@ -63,8 +76,8 @@ export class StreetDataComponent {
     });
   }
 
-  routeToNewStreetView(){
-    this.router.navigateByUrl('/dashboard/street-data/new')
+  routeToNewStreetView() {
+    this.router.navigateByUrl('/dashboard/street-data/new');
   }
   ngOnDestroy(): void {}
 }

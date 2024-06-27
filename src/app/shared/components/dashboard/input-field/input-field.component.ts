@@ -41,7 +41,7 @@ export class InputFieldComponent {
   @Input({ required: true }) name!: string;
   @Input({ required: true }) formIsSubmitting!: boolean;
   @Input({ required: true }) formGroup!: FormGroup;
-  @Input() type: 'text' | 'email' | 'password' | 'number-list' = 'text';
+  @Input() type: 'text' | 'email' | 'password' | 'number' | 'number-list' = 'text';
   @Input() readonly = false;
   @Input() maxLength = 250;
 
@@ -53,7 +53,7 @@ export class InputFieldComponent {
 
   get classStyle() {
     return this.utils.cn(
-      'block w-full h-10 rounded-md border outline-none border-gray-400 p-3 py-1 pr-10 text-sm focus:border-none focus:ring-dodger-blue dark:focus:ring-orange-400 disabled:border-gray-300 disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:focus:outline-none dark:bg-transparent dark:text-gray-200',
+      'block w-full h-10 rounded-md  border outline-none border-slate-200 dark:border-slate-600 p-3 py-1 px-2 text-sm focus:border-none focus:ring-dodger-blue dark:focus:ring-orange-400 disabled:border-gray-300 disabled:bg-slate-100 dark:disabled:bg-slate-700 disabled:focus:outline-none bg-slate-100 dark:bg-slate-600 dark:text-gray-200',
       this.errorBorder,
       {
         'text-black/50 dark:text-white/50 border-gray-600/50': this.readonly,

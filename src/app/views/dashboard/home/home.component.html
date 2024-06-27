@@ -1,8 +1,9 @@
 <h2 class="mb-4 text-lg font-semibold">Overview</h2>
-<pane-navigator-panel [(activePane)]="activePane" [tabs]="tabs" type="pill" class="mb-8"></pane-navigator-panel>
+<pane-navigator-panel [(activePane)]="activePane" [tabs]="tabs" type="pill" class="mb-4"></pane-navigator-panel>
 
-<dashboard-home-auth-notice></dashboard-home-auth-notice>
+<dashboard-home-auth-notice />
+
 
 @if (activePane === 'street-data'){
-  <dashboard-street-data-overview></dashboard-street-data-overview>
+<dashboard-street-data-overview />
 }

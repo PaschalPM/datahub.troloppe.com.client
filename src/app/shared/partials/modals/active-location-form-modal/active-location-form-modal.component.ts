@@ -1,67 +1,105 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { StreetDataService } from '../../../services/street-data.service';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { SelectDropdownComponent } from '../../../components/select-dropdown/select-dropdown.component';
+import { NewStreetDataFormService } from '../../../services/new-street-data-form.service';
+import { TextButtonComponent } from '../../../components/common/text-button/text-button.component';
+import { ActiveLocationService } from '../../../services/active-location.service';
+import { ModalService } from '../../../services/modal.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-active-location-form-modal',
   standalone: true,
-  imports: [SelectDropdownComponent],
+  imports: [SelectDropdownComponent, TextButtonComponent],
   template: `
-    <div class="prose min-h-36 relative">
-      <h3 class="dark:text-white">Set Active Location</h3>
-      <!-- <app-seelect-dropdown
-        name="location"
+    <div class="min-h-36 py-10 relative">
+      <div class="prose">
+        <h3 class="dark:text-white">Set Active Location</h3>
+      </div>
+      <dashboard-select-dropdown
+        name="location_id"
         [formGroup]="activeLocationFormGroup"
-        [items]="cars"
         bindLabel="name"
         bindValue="id"
         [formIsSubmitting]="formIsSubmitting"
-      ></app-seelect-dropdown> -->
-
+        [items]="locationOptions"
+        placeholder="No Active Location"
+      >
+      </dashboard-select-dropdown>
+      <div class="flex justify-end gap-2 mt-5">
+        <text-button
+          [text]="btnText"
+          [disabled]="isActivationDisallowed"
+          (clickEvent)="setActiveLocation()"
+        ></text-button>
+      </div>
     </div>
-  `,
-  styles: `
-  .cdk-overlay-transparent-backdrop{
-    background-color:red
-  }
   `,
 })
 export class ActiveLocationFormModalComponent {
   activeLocationFormGroup!: FormGroup;
+  locationControl!: FormControl;
   formIsSubmitting = false;
-  locationOptions: OptionType[] = [];
+  locationOptions: IdAndNameType[] = [];
+  currentActiveLocation: LocationType | null = null;
 
-  cars = [
-    { id: 1, name: 'Volvo' },
-    { id: 2, name: 'Saab' },
-    { id: 3, name: 'Opel' },
-    { id: 4, name: 'Audi' },
-    { id: 4, name: 'Audi' },
-    { id: 4, name: 'Audi' },
-    { id: 4, name: 'Audi' },
-    { id: 4, name: 'Audi' },
-    { id: 4, name: 'Audi' },
-  ];
+  private setActiveLocationSubscription: Subscription | null = null;
+
+  // Getters
+  get isActivationDisallowed(){
+    return this.currentActiveLocation?.id === this.locationControl.value
+  }
+  get btnText() {
+    return this.locationControl.value ? 'activate' : 'deactivate';
+  }
+
   constructor(
     private fb: FormBuilder,
-    private streetDataService: StreetDataService
+    private activeLocationService: ActiveLocationService,
+    private nsdfs: NewStreetDataFormService,
+    private modalService: ModalService
   ) {
     this.activeLocationFormGroup = this.fb.group({
-      location: [''],
+      location_id: [null],
     });
+    this.locationControl = this.activeLocationFormGroup.controls?.[
+      'location_id'
+    ] as FormControl;
   }
 
   ngOnInit(): void {
-    const activeLocation = this.streetDataService.activeLocation;
-    this.activeLocationFormGroup.controls['location'].setValue(activeLocation);
+    this.retrieveLocationOptions();
+    this.retrieveActiveLocation();
   }
 
-  private transformToOptionType(data: NewStreetDataFormType, pptyKey: string) {
-    const ppty = data[pptyKey as keyof NewStreetDataFormType];
-    return ppty.map((v) => ({
-      value: v.id.toString(),
-      label: v.value,
-    }));
+  setActiveLocation() {
+    if (this.isActivationDisallowed) {
+      alert(` Location already active!!!`);
+    } else {
+      this.setActiveLocationSubscription = this.activeLocationService
+        .setActiveLocation(this.activeLocationFormGroup.value)
+        .subscribe((value) => {
+          this.modalService.close()
+        });
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.setActiveLocationSubscription?.unsubscribe();
+  }
+
+  private retrieveLocationOptions() {
+    this.nsdfs.locations().subscribe((event) => {
+      this.locationOptions = event?.value as LocationType[];
+    });
+  }
+
+  private retrieveActiveLocation() {
+    this.activeLocationService.activeLocation().subscribe((activeLocation) => {
+      if (activeLocation) {
+        this.currentActiveLocation = activeLocation;
+        this.locationControl.setValue(activeLocation.id)
+      }
+    });
   }
 }

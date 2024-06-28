@@ -69,8 +69,9 @@ export class LoginStageComponent extends BaseComponent {
     if (this.loginFormGroup.valid) {
       this.loading = true;
       this.authService.signIn(this.loginFormGroup.value).subscribe({
-        next: () => {
+        next: (value) => {
           alert('Loggin in');
+          console.log(value)
           this.css.local().remove(EMAIL_FOR_RESET_PASSWORD);
           this.activatedRoute.queryParams.subscribe((params) => {
             if (params['returnUrl']) {

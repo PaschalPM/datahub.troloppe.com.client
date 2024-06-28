@@ -13,6 +13,8 @@ import { ModalComponent } from '../../../shared/components/modal/modal.component
 import { NotificationsService } from '../../../shared/services/notifications.service';
 import { WindowFocusService } from '../../../shared/services/window-focus.service';
 import { Subscription } from 'rxjs';
+import { StreetDataService } from '../../../shared/services/street-data.service';
+import { NewStreetDataFormService } from '../../../shared/services/new-street-data-form.service';
 
 @Component({
   selector: 'app-layout',
@@ -25,8 +27,8 @@ export class LayoutComponent {
   title = 'Home';
   isProfileDropdownOpen = false;
 
-  windowFocusSubscription!: Subscription
-  fetchNotificationsSubscription!: Subscription
+  windowFocusSubscription!: Subscription;
+  fetchNotificationsSubscription!: Subscription;
 
   constructor(
     private mediaQuery: MediaQueryService,
@@ -36,7 +38,8 @@ export class LayoutComponent {
     private colorScheme: ColorSchemeService,
     private ns: NotificationsService,
     private wfs: WindowFocusService,
-    public utils: UtilsService
+    private nsdfs: NewStreetDataFormService,
+    public utils: UtilsService,
   ) {
     this.appEventEmitter.listen(TOGGLE_SIDE_MENU, (state: boolean) => {
       this.isMenuOpened = state;
@@ -44,15 +47,40 @@ export class LayoutComponent {
   }
 
   ngOnInit(): void {
-    // Sets the dashboard view for Mobile and Desktop Views
+    // Responsive Layout Observer
+    this.responsiveLayoutObserver();
+
+    //  Sets the dashboard Title
+    this.setDasboardTitle();
+
+    // Sets the color scheme of the dashboard
+    this.colorScheme.init();
+
+    // Fetches User Notifications
+    this.fetchNotificationsSubscription = this.ns.fetchNotifications();
+
+    // Revalidate ColorScheme and Notifications on Window Focus
+    this.revalidateOnWindowFocus();
+
+    // Initializes all street data needed for street data form
+    this.nsdfs.onInit()
+  }
+
+  ngOnDestroy(): void {
+    this.windowFocusSubscription.unsubscribe();
+    this.fetchNotificationsSubscription.unsubscribe();
+  }
+
+  private responsiveLayoutObserver() {
     this.mediaQuery.observe(EXTRA_LARGE).subscribe({
       next: (matches) => {
         this.isMenuOpened = matches;
         this.appEventEmitter.emit(TOGGLE_SIDE_MENU, this.isMenuOpened);
       },
     });
+  }
 
-    // Sets the dashboard Title
+  private setDasboardTitle() {
     this.title = this.pageTitle.getTitle();
     this.router.events.subscribe({
       next: (value) => {
@@ -63,27 +91,16 @@ export class LayoutComponent {
         }
       },
     });
+  }
 
-    // Sets the color scheme of the dashboard
-    this.colorScheme.init();
-
-    // Fetches User's Notifications
-    this.fetchNotificationsSubscription =  this.ns.fetchNotifications();
-    
-
-    this.windowFocusSubscription =  this.wfs.focus$.subscribe((isFocused) => {
-      if (isFocused){
-        this.colorScheme.init()
-        this.fetchNotificationsSubscription =  this.ns.fetchNotifications();
-        } else {
-        this.fetchNotificationsSubscription.unsubscribe()
+  private revalidateOnWindowFocus() {
+    this.windowFocusSubscription = this.wfs.focus$.subscribe((isFocused) => {
+      if (isFocused) {
+        this.colorScheme.init();
+        this.fetchNotificationsSubscription = this.ns.fetchNotifications();
+      } else {
+        this.fetchNotificationsSubscription.unsubscribe();
       }
-    })
+    });
   }
-
-  ngOnDestroy(): void {
-    this.windowFocusSubscription.unsubscribe()
-    this.fetchNotificationsSubscription.unsubscribe()
-  }
-
 }

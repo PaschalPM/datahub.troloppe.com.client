@@ -1,12 +1,12 @@
 <div [class]="utils.cn('my-4', class)">
 
-    <label [for]="name" class="text-base lg:text-lg text-gray-600 dark:text-white">
+    <label *ngIf="label" [for]="name" class="text-base lg:text-lg text-gray-600 dark:text-white block mb-1">
         {{ label }}
         <span class="font-bold" *ngIf="isRequired"> *</span>
     </label>
 
     <ng-select #ngSelect [id]="name" class="custom" [formControl]="control" [items]="items" [bindLabel]="bindLabel"
-        [bindValue]="bindValue" (change)="onChange($event)">
+        [bindValue]="bindValue" (change)="onChange($event)" [placeholder]="placeholder">
     </ng-select>
 
     <!---: Error Section -->

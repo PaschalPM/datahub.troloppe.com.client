@@ -1,4 +1,4 @@
-<dashboard-active-location-indicator/>
+<dashboard-active-location-indicator />
 
 <div class="w-full p-2 md:p-4 lg:w-3/4 mx-auto -mt-5">
 
@@ -10,13 +10,13 @@
             [formIsSubmitting]="formIsSubmitting" [(isLoading)]="isImageLoading"> </app-image-uploader>
 
         <!---: Property Unique Code -->
-        <dashboard-select-dropdown label="Property Unique Code" name="uniqueCode" [formGroup]="streetDataFormGroup"
+        <dashboard-select-dropdown label="Property Unique Code" name="unique_code" [formGroup]="streetDataFormGroup"
             bindLabel="value" bindValue="id" [formIsSubmitting]="formIsSubmitting" [items]="uniqueCodeOptions">
         </dashboard-select-dropdown>
 
 
         <!---: Street Address -->
-        <dashboard-input-field label="Street Address" name="streetAddress" [formGroup]="streetDataFormGroup"
+        <dashboard-input-field label="Street Address" name="street_address" [formGroup]="streetDataFormGroup"
             [formIsSubmitting]="formIsSubmitting">
         </dashboard-input-field>
 
@@ -27,26 +27,27 @@
 
 
         <!---: Location  -->
-        <dashboard-select-dropdown label="Location" name="location" [formGroup]="streetDataFormGroup" bindLabel="value"
+        <dashboard-select-dropdown label="Location" name="location" [formGroup]="streetDataFormGroup" bindLabel="name"
             bindValue="id" [formIsSubmitting]="formIsSubmitting" [items]="locationOptions"
             (changeEvent)="setSelectedLocationValue($event)"> </dashboard-select-dropdown>
 
 
         <!---: Section  -->
         @if(selectedLocationValue){
-        <dashboard-select-dropdown label="Section" name="section" [formGroup]="streetDataFormGroup" bindLabel="value"
+        <dashboard-select-dropdown label="Section" name="section" [formGroup]="streetDataFormGroup" bindLabel="name"
             bindValue="id" [formIsSubmitting]="formIsSubmitting" [items]="sectionOptions"> </dashboard-select-dropdown>
 
         }
 
         <!---: Number of Units  -->
-        <dashboard-input-field label="Number of Units" name="numberOfUnits" [formGroup]="streetDataFormGroup"
+        <dashboard-input-field label="Number of Units" name="number_of_units" [formGroup]="streetDataFormGroup"
             [formIsSubmitting]="formIsSubmitting" type="number">
         </dashboard-input-field>
 
         <!---: Construction Status -->
-        <dashboard-select-dropdown label="Construction Status" name="constructionStatus" [formGroup]="streetDataFormGroup"
-            bindLabel="label" bindValue="value" [formIsSubmitting]="formIsSubmitting" [items]="constructionStatusOptions">
+        <dashboard-select-dropdown label="Construction Status" name="construction_status"
+            [formGroup]="streetDataFormGroup" bindLabel="label" bindValue="value" [formIsSubmitting]="formIsSubmitting"
+            [items]="constructionStatusOptions">
         </dashboard-select-dropdown>
 
 
@@ -58,17 +59,17 @@
         <!---: OPTIONAL -->
 
         <!---: Contact Name -->
-        <dashboard-input-field label="Contact Name" name="contactName" [formGroup]="streetDataFormGroup"
+        <dashboard-input-field label="Contact Name" name="contact_name" [formGroup]="streetDataFormGroup"
             [formIsSubmitting]="formIsSubmitting">
         </dashboard-input-field>
 
         <!---: Contact Numbers -->
-        <dashboard-input-field type="number-list" label="Contact Number(s)" name="contactNumbers"
+        <dashboard-input-field type="number-list" label="Contact Number(s)" name="contact_numbers"
             [formGroup]="streetDataFormGroup" [formIsSubmitting]="formIsSubmitting">
         </dashboard-input-field>
 
         <!---: Contact Email -->
-        <dashboard-input-field label="Contact Email" name="contactEmail" type="email" [formGroup]="streetDataFormGroup"
+        <dashboard-input-field label="Contact Email" name="contact_email" type="email" [formGroup]="streetDataFormGroup"
             [formIsSubmitting]="formIsSubmitting">
         </dashboard-input-field>
 

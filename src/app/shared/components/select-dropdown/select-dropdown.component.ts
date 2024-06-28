@@ -18,16 +18,17 @@ import { CapitalizePipe } from '../../pipes/capitalize.pipe';
   templateUrl: './select-dropdown.component.html',
 })
 export class SelectDropdownComponent {
-  @Input({ required: true }) label!: string;
   @Input({ required: true }) name!: string;
   @Input({ required: true }) items!: Array<any>;
   @Input({ required: true }) formIsSubmitting!: boolean;
-  @Input({ required: true }) formGroup!: FormGroup;
   @Input({ required: true }) bindLabel!: string;
+  @Input({ required: true }) formGroup!: FormGroup;
   @Input({ required: true }) bindValue!: string;
-
+  
+  @Input() label = '';
   @Input() class = '';
   @Input() isRequired = true;
+  @Input() placeholder = '';
 
   @Output() changeEvent = new EventEmitter();
 

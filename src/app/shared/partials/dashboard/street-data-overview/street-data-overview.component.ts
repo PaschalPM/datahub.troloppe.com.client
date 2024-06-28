@@ -52,7 +52,7 @@ export class StreetDataOverviewComponent {
     },
   ];
 
-  constructor(public permission: PermissionService) {
+  constructor(private permission: PermissionService) {
     this.isPermitted = this.permission.isPermitted(this.allowedToView);
   }
 }

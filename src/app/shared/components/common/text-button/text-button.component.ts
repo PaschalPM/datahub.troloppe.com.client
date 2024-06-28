@@ -10,9 +10,10 @@ import { NgIf } from '@angular/common';
   template: `
     <button
       [type]="type"
+      [disabled]="disabled"
       [class]="
         utils.cn(
-          'rounded-2xl text-xs md:text-sm p-4 py-2 flex items-center gap-1 font-medium tracking-wider text-dodger-blue hover:bg-dodger-blue/10 dark:text-orange-400 dark:hover:bg-orange-400/15',
+          'rounded-2xl text-xs md:text-sm p-4 py-2 flex items-center gap-1 font-medium tracking-wider text-dodger-blue hover:bg-dodger-blue/10 dark:text-orange-400 dark:hover:bg-orange-400/15 disabled:bg-slate-300 disabled:text-slate-400 disabled:dark:bg-slate-700 disabled:dark:text-slate-800',
           class,
           {
             'p-2 py-1 text-xs font-normal': small
@@ -41,6 +42,7 @@ export class TextButtonComponent {
   @Input() small = false;
   @Input() withIcon = '';
   @Input() isFlexed = false
+  @Input() disabled = false
 
 
   @Output() clickEvent = new EventEmitter();

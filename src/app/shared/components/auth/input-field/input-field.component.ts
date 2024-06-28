@@ -65,12 +65,6 @@ export class InputFieldComponent {
     return this.control.invalid && this.formIsSubmitting;
   }
 
-  // get errorBorder() {
-  //   return this.errorCondition
-  //     ? this.classStyles.errorBorder
-  //     : 'border-light-blue';
-  // }
-
   get dynamicType() {
     return this.type === 'password'
       ? this.displayPassword

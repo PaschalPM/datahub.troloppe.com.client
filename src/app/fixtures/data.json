@@ -143,44 +143,49 @@
       {
         "id": 1,
         "value": "Ikoyi",
-        "sections": [
-          {
-            "id": 1,
-            "value": "Ikoyi Sec 1"
-          },
-          {
-            "id": 2,
-            "value": "Ikoyi Sec 2"
-          }
-        ]
+        "is_active": true
       },
       {
         "id": 2,
         "value": "Lekki",
-        "sections": [
-          {
-            "id": 3,
-            "value": "Lekki Sec 1"
-          },
-          {
-            "id": 4,
-            "value": "Lekki Sec 2"
-          }
-        ]
+        "is_active": false
       },
       {
         "id": 3,
         "value": "Victoria Island",
-        "sections": [
-          {
-            "id": 5,
-            "value": "V.I Sec 1"
-          },
-          {
-            "id": 6,
-            "value": "V.I Sec 2"
-          }
-        ]
+        "is_active": false
+      }
+    ],
+    "sections": [
+      {
+        "locationId": 1,
+        "id": 1,
+        "value": "Ikoyi Sec 1"
+      },
+      {
+        "locationId": 1,
+        "id": 2,
+        "value": "Ikoyi Sec 2"
+      },
+      {
+        "locationId": 2,
+        "id": 3,
+        "value": "Lekki Sec 1"
+      },
+      {
+        "locationId": 2,
+        "id": 4,
+        "value": "Lekki Sec 2"
+      },
+      {
+        "locationId": 3,
+        "id": 5,
+        "value": "V.I Sec 1"
+      },
+      {
+        "locationId": 3,
+        "id": 6,
+        "value": "V.I Sec 2"
       }
     ]
   }

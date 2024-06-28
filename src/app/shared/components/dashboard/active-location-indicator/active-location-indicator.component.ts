@@ -4,6 +4,9 @@ import { MyMatIconComponent } from '../../common/my-mat-icon.component';
 import { UtilsService } from '../../../services/utils.service';
 import { ModalService } from '../../../services/modal.service';
 import { ActiveLocationFormModalComponent } from '../../../partials/modals/active-location-form-modal/active-location-form-modal.component';
+import { ActiveLocationService } from '../../../services/active-location.service';
+import { PermissionService } from '../../../services/permission.service';
+import { UserRoles } from '../../../enums/user-roles';
 
 @Component({
   selector: 'dashboard-active-location-indicator',
@@ -14,11 +17,7 @@ import { ActiveLocationFormModalComponent } from '../../../partials/modals/activ
       class="my-6 mixin/base:font-bold mixin/base:font-mono mixin/base:flex mixin/base:items-center mixin/base:gap-2"
     >
       <ng-container
-        *ngIf="
-          hasActiveLocation;
-          then showActiveLocation;
-          else setActiveLocation
-        "
+        *ngIf="activeLocation; then showActiveLocation; else setActiveLocation"
       >
       </ng-container>
     </div>
@@ -27,7 +26,9 @@ import { ActiveLocationFormModalComponent } from '../../../partials/modals/activ
     <ng-template #showActiveLocation>
       <div
         [class]="
-          utils.cn('inline-flex items-center gap-2', { 'cursor-pointer': isPermitted })
+          utils.cn('inline-flex items-center gap-2', {
+            'cursor-pointer': isPermitted
+          })
         "
         (click)="isPermitted && onOpenFormModal()"
       >
@@ -36,7 +37,7 @@ import { ActiveLocationFormModalComponent } from '../../../partials/modals/activ
         >
           <my-mat-icon *ngIf="isPermitted"> edit_location_alt </my-mat-icon>
           <my-mat-icon *ngIf="!isPermitted"> location_on </my-mat-icon>
-          <div>Ikoyi</div>
+          <div>{{ activeLocation }}</div>
         </div>
       </div>
     </ng-template>
@@ -55,12 +56,36 @@ import { ActiveLocationFormModalComponent } from '../../../partials/modals/activ
   `,
 })
 export class ActiveLocationIndicatorComponent {
-  hasActiveLocation = true;
-  isPermitted = true;
+  activeLocation: string | null = null;
+  isPermitted = false;
 
-  constructor(public utils: UtilsService, private modalService: ModalService) {}
+  constructor(
+    public utils: UtilsService,
+    private modalService: ModalService,
+    private activeLocationService: ActiveLocationService,
+    private permissionService: PermissionService
+  ) {}
+
+  ngOnInit(): void {
+    this.retrieveAndSetActiveLocation();
+    this.setPermission()
+  }
 
   onOpenFormModal() {
     this.modalService.open(ActiveLocationFormModalComponent);
+  }
+
+  private retrieveAndSetActiveLocation() {
+    this.activeLocationService.activeLocation().subscribe((value) => {
+      if (value) {
+        this.activeLocation = value.name;
+      } else {
+        this.activeLocation = null;
+      }
+    });
+  }
+
+  private setPermission(){
+    this.isPermitted = this.permissionService.isPermitted([UserRoles.Admin, UserRoles.ResearchManager])
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { ClientStorageService } from './client-storage.service';
 import { HttpClient } from '@angular/common/http';
 import { BASE_API_URL, apiHttpOptions } from '../../configs/global';
@@ -12,29 +12,28 @@ const API_AUTH_URL = BASE_API_URL + '/auth';
   providedIn: 'root',
 })
 export class AuthService {
-  private _currentUser!: UserType | null;
+  private _currentUser$ = new BehaviorSubject<UserType | null>(null);
 
   // Getter to retrieve currently logged-in user
-  get currentUser() {
-    this._currentUser = this.css.local().get(CURRENT_USER_STORE_KEY);
-    return this._currentUser;
+  currentUser() {
+    return this._currentUser$.asObservable();
   }
 
   // Setter to set current user privately
-  private set currentUser(value: UserType | null) {
-    this._currentUser = value;
+  private setCurrentUser(value: UserType | null) {
     if (value) {
       this.css.local().set(CURRENT_USER_STORE_KEY, value);
     } else {
       this.css.local().remove(CURRENT_USER_STORE_KEY);
     }
+    this._currentUser$.next(value);
   }
 
   constructor(
     private css: ClientStorageService,
     private httpClient: HttpClient
   ) {
-    this.currentUser = this.css.local().get(CURRENT_USER_STORE_KEY);
+    this._currentUser$.next(this.css.local().get(CURRENT_USER_STORE_KEY));
   }
 
   getLoggedInUser(): Observable<UserType> {
@@ -57,13 +56,13 @@ export class AuthService {
       .post<UserType>(`${API_AUTH_URL}/login`, body, apiHttpOptions)
       .pipe(
         tap((value) => {
-          this.currentUser = value;
+          this.setCurrentUser(value)
         })
       );
   }
 
-  signOutOnClient(){
-    this.currentUser = null
+  signOutOnClient() {
+    this.setCurrentUser(null)
   }
 
   signOut(): Observable<{ message: string }> {
@@ -71,7 +70,7 @@ export class AuthService {
       .delete<{ message: string }>(`${API_AUTH_URL}/logout`)
       .pipe(
         tap(() => {
-          this.currentUser = null;
+          this.setCurrentUser(null)
         })
       );
   }

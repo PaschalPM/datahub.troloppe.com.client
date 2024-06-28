@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import { User } from '../../../types/user';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'signin-or-dashboard-link',
@@ -60,14 +62,23 @@ export class SigninOrDashboardLinkComponent {
   actionButtonClass =
     'bg-secondary inline-block rounded-sm px-8 py-2 text-sm text-white mt-8 lg:mt-12 lg:text-base hover:bg-secondary/80';
 
+
+  private currentUserSubscription!: Subscription;
+
   constructor(private authService: AuthService) {}
   ngOnInit(): void {
-    const currentUser = this.authService.currentUser;
-    if (currentUser) {
-      this.signInOrDashboard = 'dashboard';
-      this.currentUserName = currentUser.name;
-    } else {
-      this.signInOrDashboard = 'sign-in';
-    }
+    this.currentUserSubscription = this.authService
+      .currentUser()
+      .subscribe((currentUser) => {
+        if (currentUser) {
+          this.signInOrDashboard = 'dashboard';
+          this.currentUserName = currentUser.name;
+        } else {
+          this.signInOrDashboard = 'sign-in';
+        }
+      });
+  }
+  ngOnDestroy(): void {
+    this.currentUserSubscription.unsubscribe()
   }
 }

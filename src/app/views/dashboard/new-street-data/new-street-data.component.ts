@@ -11,7 +11,6 @@ import {
   sectorOptions,
 } from '../../../fixtures/street-data';
 import { ImageUploaderComponent } from '../../../shared/components/image-uploader/image-uploader.component';
-import { StreetDataService } from '../../../shared/services/street-data.service';
 import {
   GeolocationService,
   PERMISSION_DENIED,
@@ -20,8 +19,13 @@ import { ModalService } from '../../../shared/services/modal.service';
 import { GeolocationAlertModalComponent } from '../../../shared/partials/modals/geolocation-alert-modal/geolocation-alert-modal.component';
 import { SubmitBtnComponent } from '../../../shared/components/dashboard/submit-btn/submit-btn.component';
 import { SelectDropdownComponent } from '../../../shared/components/select-dropdown/select-dropdown.component';
-import { UtilsService } from '../../../shared/services/utils.service';
 import { ActiveLocationIndicatorComponent } from '../../../shared/components/dashboard/active-location-indicator/active-location-indicator.component';
+import {
+  LOCATIONS_KEY,
+  NewStreetDataFormService,
+  SECTIONS_KEY,
+  UNIQUE_CODES_KEY,
+} from '../../../shared/services/new-street-data-form.service';
 
 @Component({
   selector: 'app-new-street-data',
@@ -32,7 +36,7 @@ import { ActiveLocationIndicatorComponent } from '../../../shared/components/das
     ReactiveFormsModule,
     SubmitBtnComponent,
     SelectDropdownComponent,
-    ActiveLocationIndicatorComponent
+    ActiveLocationIndicatorComponent,
   ],
   templateUrl: './new-street-data.component.html',
 })
@@ -42,51 +46,38 @@ export class NewStreetDataComponent {
   selectedLocationValue!: number | null;
   isImageLoading = false;
 
-  private locationsWithSections!: (IdAndValueType & {
-    sections: Array<IdAndValueType>;
-  })[];
-
   // ----->  Property Options From API
-  locationOptions: IdAndValueType[] = [];
+  locationOptions: IdAndNameType[] = [];
   uniqueCodeOptions: IdAndValueType[] = [];
+  sectionOptions: IdAndNameType[] = [];
+  private allSectors: SectionType[] = [];
 
   // -----> Property Options From Fixtures
   sectorOptions: OptionType[] = sectorOptions;
   constructionStatusOptions: OptionType[] = constructionStatusOptions;
 
-  // -----> Getters Options
-  get sectionOptions(): IdAndValueType[] {
-    const selectedSections = this.locationsWithSections.find(
-      (value) => value.id === this.selectedLocationValue
-    )?.sections;
 
-    if (selectedSections)
-      return selectedSections
-
-    return [];
-  }
 
   constructor(
     private fb: FormBuilder,
-    private streetDataService: StreetDataService,
+    private newStreetDataFormService: NewStreetDataFormService,
     private geo: GeolocationService,
-    private modalService: ModalService,
-    private utils: UtilsService
+    private modalService: ModalService
   ) {
     // -----> Form Group
     this.streetDataFormGroup = this.fb.group(
       {
-        uniqueCode: ['', [Validators.required]],
-        streetAddress: ['', [Validators.required]],
+        unique_code: ['', [Validators.required]],
+        street_address: ['', [Validators.required]],
         description: ['', [Validators.required]], // *
         sector: ['', [Validators.required]],
         location: ['', [Validators.required]],
         section: ['', [Validators.required]],
-        numberOfUnits: [null, [Validators.required]], // *
-        contactName: [''],
-        contactNumbers: [''],
-        contactEmail: ['', [Validators.email]],
-        constructionStatus: ['', [Validators.required]],
+        number_of_units: [null, [Validators.required]], // *
+        contact_name: [''],
+        contact_numbers: [''],
+        contact_email: ['', [Validators.email]],
+        construction_status: ['', [Validators.required]],
         image: ['', [Validators.required]],
 
         geolocation: [''],
@@ -96,30 +87,26 @@ export class NewStreetDataComponent {
   }
 
   ngOnInit(): void {
+    this.getOptionsValueFromAPI();
+
     // -----> Enable Geolocation Alert
     this.geo.errorEvents$.subscribe((error) => {
       if (error === PERMISSION_DENIED) {
         setTimeout(() => {
-
           this.modalService.open(GeolocationAlertModalComponent);
-        }, 1000)
+        }, 1000);
       }
     });
     this.geo.observe();
 
-    // -----> Load Street Data For the Form
-    this.streetDataService.getNewStreetDataFormValues().subscribe((data) => {
-      this.locationsWithSections = data.locations;
-      this.locationOptions = this.capitalizeOptionLabel(data.locations)
-      this.uniqueCodeOptions = data.unique_codes
-    });
   }
 
-  setSelectedLocationValue(data: IdAndValueType) {
+  setSelectedLocationValue(data: IdAndNameType) {
     this.selectedLocationValue = null;
     this.streetDataFormGroup.get('section')?.setValue(null);
     setTimeout(() => {
       this.selectedLocationValue = data.id;
+      this.sectionOptions = this.allSectors.filter((value) => value.location_id === data.id)
     });
   }
 
@@ -139,17 +126,29 @@ export class NewStreetDataComponent {
         googleMapsUrlOrErrorMsg
       );
 
-      this.streetDataService.store(this.streetDataFormGroup.value).subscribe({
-        next: (value) => {
-          console.log(value);
-        },
-      });
+      // this.streetDataService.store(this.streetDataFormGroup.value).subscribe({
+      //   next: (value) => {
+      //     console.log(value);
+      //   },
+      // });
     } else {
       alert('Form is invalid');
     }
   }
 
-  private capitalizeOptionLabel(data: IdAndValueType[]){
-    return data.map(({id, value}) => ({id, value: this.utils.capitalize(value, true)}))
+  private getOptionsValueFromAPI() {
+    this.newStreetDataFormService.observeAllResources().subscribe((event) => {
+      switch (event?.key) {
+        case LOCATIONS_KEY:
+          this.locationOptions = event.value as LocationType[];
+          break;
+        case SECTIONS_KEY:
+          this.allSectors = event.value as SectionType[];
+          break;
+        case UNIQUE_CODES_KEY:
+          this.uniqueCodeOptions = event.value as IdAndValueType[];
+          break;
+      }
+    });
   }
 }

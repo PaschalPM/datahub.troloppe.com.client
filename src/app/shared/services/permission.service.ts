@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { UserRoles } from '../enums/user-roles';
 import { AuthService } from './auth.service';
 import { User } from '../types/user';
+import { Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PermissionService {
   private currentUser!: User | null;
+  private currentUserSubscription!: Subscription;
 
   get isAdmin() {
     return this.isPermitted(UserRoles.Admin);
@@ -20,7 +22,9 @@ export class PermissionService {
   }
 
   constructor(private authService: AuthService) {
-    this.currentUser = this.authService.currentUser;
+    this.authService.currentUser().subscribe((currentUser) => {
+      this.currentUser = currentUser;
+    });
   }
 
   // Checks if user has required roles to access some views
@@ -30,5 +34,9 @@ export class PermissionService {
       return this.currentUser?.roles.includes(roleOrRoles);
     }
     return roleOrRoles.some((role) => this.currentUser?.roles.includes(role));
+  }
+
+  ngOnDestroy(): void {
+    this.currentUserSubscription.unsubscribe();
   }
 }

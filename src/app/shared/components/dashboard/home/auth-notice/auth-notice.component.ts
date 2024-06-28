@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MyMatIconComponent } from '../../../common/my-mat-icon.component';
 import { CommonModule } from '@angular/common';
 import { PermissionService } from '../../../../services/permission.service';
+import { UserRoles } from '../../../../enums/user-roles';
 
 @Component({
   selector: 'dashboard-home-auth-notice',
@@ -14,9 +15,9 @@ import { PermissionService } from '../../../../services/permission.service';
       <my-mat-icon class="shrink-0 text-dodger-blue dark:text-orange-400">
         help
       </my-mat-icon>
-      @if(permission.isAdmin){
+      @if(isAdmin){
       <ng-container *ngTemplateOutlet="admin"></ng-container>
-      } @else if (permission.isResearchManager) {
+      } @else if (isResearchManager) {
       <ng-container *ngTemplateOutlet="researchManager"></ng-container>
       } @else {
       <ng-container *ngTemplateOutlet="researchStaff"></ng-container>
@@ -53,5 +54,17 @@ import { PermissionService } from '../../../../services/permission.service';
   `,
 })
 export class AuthNoticeComponent {
-  constructor(public permission: PermissionService) {}
+  isAdmin = false;
+  isResearchManager = false;
+
+  constructor(private permission: PermissionService) {}
+
+  ngOnInit(): void {
+    this.setPermissions()
+  }
+
+  private setPermissions(){
+    this.isAdmin = this.permission.isAdmin
+    this.isResearchManager = this.permission.isResearchManager
+  }
 }

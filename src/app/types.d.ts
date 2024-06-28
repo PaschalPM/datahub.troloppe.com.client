@@ -18,17 +18,25 @@ type NotificationType = {
 };
 
 type OverviewWidgetItem = {
-  id: number,
+  id: number;
   totalSum: number;
   overviewTitle: string;
   myMatIcon: string;
 };
 
+// New Street Data Form Types
 type OptionType = { value: string; label: string };
 
-type IdAndValueType = {id: number, value: string}
+type IdAndNameType = { id: number; name: string };
+type IdAndValueType = { id: number; value: string };
+
+type SectionType = IdAndNameType & {location_id: number}
+type LocationType = IdAndNameType & {is_active: boolean}
 
 type NewStreetDataFormType = {
-  unique_codes: IdAndValueType[]
-  locations:  (IdAndValueType & {sections: Array<IdAndValueType>})[]
-}
+  unique_codes: IdAndValueType[];
+  locations: LocationType[];
+  sections: SectionType[];
+};
+
+type NewStreetDataFormEventType<T> = { key: string; value: T[] };

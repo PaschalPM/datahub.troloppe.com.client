@@ -6,14 +6,16 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { ColorSchemeService } from '../../../services/color-scheme.service';
-import { ModalService } from '../../../services/modal.service';
-import { CapitalizePipe } from '../../../pipes/capitalize.pipe';
-import { ClickOutsideDirective } from '../../../directives/click-outside.directive';
-import { ProfileModalComponent } from '../../../partials/modals/profile-modal/profile-modal.component';
-import { ColorSchemeModalComponent } from '../../../partials/modals/color-scheme-modal/color-scheme-modal.component';
-import { AuthService } from '../../../services/auth.service';
+import { ColorSchemeService } from '@services/color-scheme.service';
+import { ModalService } from '@services/modal.service';
+import { CapitalizePipe } from '@pipes/capitalize.pipe';
+import { ClickOutsideDirective } from '@directives/click-outside.directive';
+import { ProfileModalComponent } from '@partials/modals/profile-modal/profile-modal.component';
+import { ColorSchemeModalComponent } from '@partials/modals/color-scheme-modal/color-scheme-modal.component';
+import { AuthService } from '@services/auth.service';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { LoaderService } from '@services/loader.service';
 
 @Component({
   selector: 'dashboard-profile-dropdown',
@@ -30,7 +32,9 @@ export class ProfileDropdownComponent {
     private modalService: ModalService,
     public colorScheme: ColorSchemeService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService,
+    private loader: LoaderService
   ) {}
 
   openProfileModal() {
@@ -50,8 +54,10 @@ export class ProfileDropdownComponent {
   }
 
   signOut() {
+    this.loader.start()
     this.authService.signOut().subscribe(() => {
-      alert('Logged out');
+      this.toastr.success('Successfully logged out.', 'Success')
+      this.loader.stop()
       this.router.navigateByUrl('/')
     });
   }

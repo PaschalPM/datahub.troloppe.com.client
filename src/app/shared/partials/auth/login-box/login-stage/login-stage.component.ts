@@ -8,6 +8,7 @@ import { ReadonlyInputFieldComponent } from '../../../../components/auth/readonl
 import { ClientStorageService } from '../../../../services/client-storage.service';
 import { EMAIL_FOR_RESET_PASSWORD } from '../../../../constants';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'auth-login-stage',
@@ -50,7 +51,8 @@ export class LoginStageComponent extends BaseComponent {
     private authService: AuthService,
     private css: ClientStorageService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private toastr: ToastrService
   ) {
     super();
   }
@@ -69,9 +71,8 @@ export class LoginStageComponent extends BaseComponent {
     if (this.loginFormGroup.valid) {
       this.loading = true;
       this.authService.signIn(this.loginFormGroup.value).subscribe({
-        next: (value) => {
-          alert('Loggin in');
-          console.log(value)
+        next: () => {
+          this.toastr.success('Successfully logged in.', 'Success')
           this.css.local().remove(EMAIL_FOR_RESET_PASSWORD);
           this.activatedRoute.queryParams.subscribe((params) => {
             if (params['returnUrl']) {

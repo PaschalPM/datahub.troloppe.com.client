@@ -13,7 +13,6 @@ import { ModalComponent } from '../../../shared/components/modal/modal.component
 import { NotificationsService } from '../../../shared/services/notifications.service';
 import { WindowFocusService } from '../../../shared/services/window-focus.service';
 import { Subscription } from 'rxjs';
-import { StreetDataService } from '../../../shared/services/street-data.service';
 import { NewStreetDataFormService } from '../../../shared/services/new-street-data-form.service';
 
 @Component({

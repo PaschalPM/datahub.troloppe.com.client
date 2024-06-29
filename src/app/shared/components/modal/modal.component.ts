@@ -3,7 +3,6 @@ import { Component, Type } from '@angular/core';
 import { ModalService } from '../../services/modal.service';
 import { ClickSelfDirective } from '../../directives/click-self.directive';
 import { KeyupEscapeDirective } from '../../directives/keyup-escape.directive';
-import { Router } from '@angular/router';
 import { MyMatIconComponent } from '../common/my-mat-icon.component';
 
 @Component({
@@ -43,7 +42,7 @@ export class ModalComponent {
   template!: Type<any>;
   inputs!: Record<string, unknown> | undefined;
 
-  constructor(public modalService: ModalService, private router: Router) {
+  constructor(public modalService: ModalService) {
     this.modalService.listen((template, inputs) => {
       this.template = template;
       this.inputs = inputs;

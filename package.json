@@ -26,6 +26,7 @@
     "clsx": "^2.1.1",
     "jquery": "^3.6.0",
     "ngx-cookie-service": "^17.1.0",
+    "ngx-toastr": "^19.0.0",
     "rxjs": "~7.8.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-mixins": "^0.0.11",

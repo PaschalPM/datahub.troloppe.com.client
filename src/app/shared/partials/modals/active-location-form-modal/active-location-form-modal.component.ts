@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { SelectDropdownComponent } from '../../../components/select-dropdown/select-dropdown.component';
-import { NewStreetDataFormService } from '../../../services/new-street-data-form.service';
-import { TextButtonComponent } from '../../../components/common/text-button/text-button.component';
-import { ActiveLocationService } from '../../../services/active-location.service';
-import { ModalService } from '../../../services/modal.service';
+import { SelectDropdownComponent } from '@components/select-dropdown/select-dropdown.component';
+import { NewStreetDataFormService } from '@services/new-street-data-form.service';
+import { TextButtonComponent } from '@components/common/text-button/text-button.component';
+import { ActiveLocationService } from '@services/active-location.service';
+import { ModalService } from '@services/modal.service';
 import { Subscription } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+import { LoaderService } from '@services/loader.service';
 
 @Component({
   selector: 'app-active-location-form-modal',
@@ -46,8 +48,8 @@ export class ActiveLocationFormModalComponent {
   private setActiveLocationSubscription: Subscription | null = null;
 
   // Getters
-  get isActivationDisallowed(){
-    return this.currentActiveLocation?.id === this.locationControl.value
+  get isActivationDisallowed() {
+    return this.currentActiveLocation?.id === this.locationControl.value;
   }
   get btnText() {
     return this.locationControl.value ? 'activate' : 'deactivate';
@@ -57,7 +59,9 @@ export class ActiveLocationFormModalComponent {
     private fb: FormBuilder,
     private activeLocationService: ActiveLocationService,
     private nsdfs: NewStreetDataFormService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private toastr: ToastrService,
+    private loader: LoaderService
   ) {
     this.activeLocationFormGroup = this.fb.group({
       location_id: [null],
@@ -73,15 +77,14 @@ export class ActiveLocationFormModalComponent {
   }
 
   setActiveLocation() {
-    if (this.isActivationDisallowed) {
-      alert(` Location already active!!!`);
-    } else {
-      this.setActiveLocationSubscription = this.activeLocationService
-        .setActiveLocation(this.activeLocationFormGroup.value)
-        .subscribe((value) => {
-          this.modalService.close()
-        });
-    }
+    this.loader.start();
+    this.setActiveLocationSubscription = this.activeLocationService
+      .setActiveLocation(this.activeLocationFormGroup.value)
+      .subscribe(() => {
+        this.toastr.success('New location activated.', 'Success');
+        this.loader.stop()
+        this.modalService.close();
+      });
   }
 
   ngOnDestroy(): void {
@@ -98,8 +101,10 @@ export class ActiveLocationFormModalComponent {
     this.activeLocationService.activeLocation().subscribe((activeLocation) => {
       if (activeLocation) {
         this.currentActiveLocation = activeLocation;
-        this.locationControl.setValue(activeLocation.id)
+        this.locationControl.setValue(activeLocation.id);
       }
     });
   }
+
+  
 }

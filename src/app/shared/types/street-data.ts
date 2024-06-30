@@ -1,5 +1,5 @@
 export type StreetData = {
-  id: number;
+  id?: number;
   unique_code: string; // *
   street_address: string; // *
   description: string;
@@ -11,9 +11,10 @@ export type StreetData = {
   contact_number: string;
   contact_email: string;
   construction_status: string; // enum
-  comment: string;
   is_verified: boolean; // *
   image_path: string; // *
+  geolocation: string;
+  creator: string;
   created_at: string;
   updated_at: string;
 };

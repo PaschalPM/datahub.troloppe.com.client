@@ -1,0 +1,101 @@
+<div class="my-4 flex justify-between items-center">
+    <dashboard-active-location-indicator />
+    <text-button withIcon="edit" [isFlexed]="true" (clickEvent)="routeToEditStreetView()"
+        text="Edit Street Data"></text-button>
+</div>
+
+<div class="w-full p-2 md:p-4 lg:w-3/4 mx-auto -mt-5">
+
+    <form [formGroup]="streetDataFormGroup" *ngIf="true"
+        class="rounded-lg bg-white p-4 md:p-8 text-sm shadow-md backdrop-blur-md my-6 dark:border-white/50 dark:bg-white/5  dark:shadow-sm dark:shadow-white/35 ">
+
+        <div class="flex justify-between items-center relative">
+
+            <!---: Image URL -->
+            <app-image-uploader label="Photo Preview" name="image_path" [formGroup]="streetDataFormGroup">
+            </app-image-uploader>
+
+            <div
+                [class]="utils.cn('text-right md:text-left text-sm md:text-base flex flex-col justify-evenly items-end md:items-start absolute right-0 top-0 bottom-0 w-1/3')">
+                <div>
+                    @if(isPermitted){
+                    <!---: Creator  -->
+                    <h2 class="font-semibold"> By {{ creator}} </h2>
+                    }
+                    <h3 class="font-medium" *ngIf="isPermitted">{{'@'+createdAt}}</h3>
+                    <h3 class="font-medium" *ngIf="!isPermitted">{{createdAt}}</h3>
+                </div>
+                <div class="font-medium">
+                    <dashboard-input-field label="Is Verified?" name="is_verified" type="checkbox"
+                        [formGroup]="streetDataFormGroup"></dashboard-input-field>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!---: Property Unique Code -->
+        <dashboard-input-field label="Property Unique Code" name="unique_code" [formGroup]="streetDataFormGroup">
+        </dashboard-input-field>
+
+        <!---: Street Address -->
+        <dashboard-input-field label="Street Address" name="street_address" [formGroup]="streetDataFormGroup">
+        </dashboard-input-field>
+
+        <!---: Sector  -->
+        <dashboard-input-field label="Sector" name="sector" [formGroup]="streetDataFormGroup">
+        </dashboard-input-field>
+
+        <!---: Location  -->
+        <dashboard-input-field label="Location" name="location" [formGroup]="streetDataFormGroup">
+        </dashboard-input-field>
+
+
+        <!---: Section  -->
+
+        <dashboard-input-field label="Section" name="section" [formGroup]="streetDataFormGroup">
+        </dashboard-input-field>
+
+        <!---: Number of Units  -->
+        <dashboard-input-field label="Number of Units" name="number_of_units" [formGroup]="streetDataFormGroup"
+            type="number">
+        </dashboard-input-field>
+
+
+        <!---: Construction Status -->
+        <dashboard-input-field label="Construction Status" name="construction_status" [formGroup]="streetDataFormGroup">
+        </dashboard-input-field>
+
+        <!---: Description -->
+        <dashboard-input-field label="Description" name="description" [formGroup]="streetDataFormGroup"
+            type="textarea"></dashboard-input-field>
+
+        <!---: Contact Name -->
+        <dashboard-input-field label="Contact Name" name="contact_name" [formGroup]="streetDataFormGroup">
+        </dashboard-input-field>
+
+        <!---: Contact Numbers -->
+        <dashboard-input-field type="number-list" label="Contact Number(s)" name="contact_numbers"
+            [formGroup]="streetDataFormGroup">
+        </dashboard-input-field>
+
+        <!---: Contact Email -->
+        <dashboard-input-field label="Contact Email" name="contact_email" type="email"
+            [formGroup]="streetDataFormGroup">
+        </dashboard-input-field>
+
+        @if(isPermitted){
+        <!---: Google URL and Is Verified -->
+        <div [class]="utils.cn('flex justify-end text-sm')">
+
+            <a *ngIf="geolocation" [attr.href]="geolocation" class="underline !text-sm md:text-base">
+                Google Map URL
+            </a>
+            <span *ngIf="!geolocation" [attr.href]="geolocation"
+                class="inline-flex items-center dark:text-red-300 text-red-500">
+                <my-mat-icon>warning</my-mat-icon> Geolocation not available
+            </span>
+        </div>
+        }
+    </form>
+</div>

@@ -39,9 +39,9 @@ export class InputFieldComponent {
   @ViewChild('myInput') inputElement!: ElementRef<HTMLInputElement>;
   @Input({ required: true }) label!: string;
   @Input({ required: true }) name!: string;
-  @Input({ required: true }) formIsSubmitting!: boolean;
   @Input({ required: true }) formGroup!: FormGroup;
-  @Input() type: 'text' | 'email' | 'password' | 'number' | 'number-list' = 'text';
+  @Input() formIsSubmitting!: boolean;
+  @Input() type: 'text' | 'email' | 'password' | 'number' | 'number-list' | 'checkbox' | 'textarea' = 'text';
   @Input() readonly = false;
   @Input() maxLength = 250;
 

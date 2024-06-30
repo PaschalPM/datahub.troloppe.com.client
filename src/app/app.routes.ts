@@ -93,6 +93,22 @@ export const routes: Routes = [
           ),
       },
       {
+        title: 'Street Data',
+        path: 'street-data/:id',
+        loadComponent: () =>
+          import('./views/dashboard/view-street-data/view-street-data.component').then(
+            (c) => c.ViewStreetDataComponent,
+          ),
+      },
+      {
+        title: 'Edit Street Data',
+        path: 'street-data/edit/:id',
+        loadComponent: () =>
+          import('./views/dashboard/edit-street-data/edit-street-data.component').then(
+            (c) => c.EditStreetDataComponent,
+          ),
+      },
+      {
         title: 'Notifications',
         path: 'notifications',
         loadComponent: () =>

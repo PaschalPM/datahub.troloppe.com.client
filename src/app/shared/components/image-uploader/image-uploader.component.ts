@@ -9,9 +9,9 @@ import {
 import { MyMatIconComponent } from '../common/my-mat-icon.component';
 import { NgIf } from '@angular/common';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { TempImageUploaderService } from '../../services/temp-image-uploader.service';
-import { UtilsService } from '../../services/utils.service';
-import { CapitalizePipe } from '../../pipes/capitalize.pipe';
+import { TempImageUploaderService } from '@services/temp-image-uploader.service';
+import { UtilsService } from '@services/utils.service';
+import { CapitalizePipe } from '@pipes/capitalize.pipe';
 
 @Component({
   selector: 'app-image-uploader',
@@ -24,7 +24,7 @@ import { CapitalizePipe } from '../../pipes/capitalize.pipe';
           {{ label }}<span class="font-bold" *ngIf="isRequired"> *</span></label
         >
         <!---: Image Uploader -->
-        <div class="relative size-32" *ngIf="!imageUrl">
+        <div class="relative size-32" *ngIf="!imageUrl && !viewOnly">
           <div
             [class]="
               utils.cn(
@@ -56,6 +56,7 @@ import { CapitalizePipe } from '../../pipes/capitalize.pipe';
           <!---: Cancel Button -->
           <button
             type="button"
+            *ngIf="!control.disabled"
             (click)="deleteImage()"
             class="text-3xl absolute -top-1 right-1 font-medium text-red-500/50 dark:text-red-400/50 hover:text-red-500 hover:dark:text-red-400"
           >
@@ -89,9 +90,10 @@ import { CapitalizePipe } from '../../pipes/capitalize.pipe';
 export class ImageUploaderComponent {
   @Input({ required: true }) label!: string;
   @Input({ required: true }) name!: string;
-  @Input({ required: true }) formIsSubmitting!: boolean;
   @Input({ required: true }) formGroup!: FormGroup;
-  @Input({ required: true }) isLoading = false;
+  @Input() viewOnly = false;
+  @Input() formIsSubmitting!: boolean;
+  @Input() isLoading = false;
 
   @Output() isLoadingChange = new EventEmitter();
 
@@ -121,6 +123,10 @@ export class ImageUploaderComponent {
   ngOnInit(): void {
     this.control = this.formGroup.controls?.[this.name] as FormControl;
     this.isRequired = this.control.hasValidator(Validators.required);
+    this.control.valueChanges.subscribe((value) => {
+      this.imageUrl = value;
+      console.log(value)
+    });
   }
 
   deleteImage() {

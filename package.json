@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "start:dev": "npx concurrently \"ng serve --hmr\" \"npx json-server ./src/app/fixtures/data.json\""
+    "start:dev": "npx concurrently \"ng serve --hmr\" \"npx json-server --watch ./src/app/fixtures/data.json\""
   },
   "private": true,
   "dependencies": {

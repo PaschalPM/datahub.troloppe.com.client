@@ -60,7 +60,7 @@ export class InputFieldComponent {
 
   get classStyle() {
     return this.utils.cn(
-      'block w-full h-10 rounded-md  border outline-none border-slate-200 dark:border-slate-600 p-3 py-1 px-2 text-sm focus:border-none focus:ring-dodger-blue dark:focus:ring-orange-400 disabled:border-gray-300 disabled:bg-slate-100 dark:disabled:bg-slate-700 disabled:focus:outline-none bg-slate-100 dark:bg-slate-600 dark:text-gray-200',
+      'block w-full h-10 rounded-md  border outline-none border-slate-200 dark:border-slate-600 p-3 py-1 px-2 text-sm focus:border-none focus:ring-dodger-blue dark:focus:ring-orange-400 disabled:border-gray-300 disabled:bg-slate-200 dark:disabled:bg-slate-700 disabled:focus:outline-none bg-slate-100 dark:bg-slate-600 dark:text-gray-200',
       this.errorBorder,
       {
         'text-black/50 dark:text-white/50 border-gray-600/50': this.readonly,

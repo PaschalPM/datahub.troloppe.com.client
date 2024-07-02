@@ -30,8 +30,8 @@ type OptionType = { value: string; label: string };
 type IdAndNameType = { id: number; name: string };
 type IdAndValueType = { id: number; value: string };
 
-type SectionType = IdAndNameType & {location_id: number}
-type LocationType = IdAndNameType & {is_active: boolean}
+type SectionType = IdAndNameType & { location_id: number };
+type LocationType = IdAndNameType & { is_active: boolean };
 
 type NewStreetDataFormType = {
   unique_codes: IdAndValueType[];
@@ -40,3 +40,12 @@ type NewStreetDataFormType = {
 };
 
 type NewStreetDataFormEventType<T> = { key: string; value: T[] };
+
+// Confirmation Modal
+type ConfirmModalPropsType = {
+  matIconName: string;
+  title: string;
+  message: string;
+  severity?: 'error' | 'warning';
+  ok: () => void;
+};

@@ -50,8 +50,8 @@
       "contact_email": "john.doe@example.com",
       "construction_status": "completed",
       "is_verified": true,
-      "image_path": "http://localhost:8000/storage/tmp/1719689815-activitylog.jpg",
-      "created_at": "2023-01-15T08:00:00Z"
+      "image_path": "https://picsum.photos/200/300",
+      "created_at": "2023-01-15 08:00:00"
     },
     {
       "creator": "Paschal",
@@ -69,8 +69,8 @@
       "contact_email": "jane.smith@example.com",
       "construction_status": "under_construction",
       "is_verified": true,
-      "image_path": "http://localhost:8000/storage/tmp/1719689815-activitylog.jpg",
-      "created_at": "2023-05-20T08:00:00Z"
+      "image_path": "https://picsum.photos/200/300",
+      "created_at": "2023-05-20 08:00:00"
     },
     {
       "creator": "Paschal",
@@ -88,8 +88,8 @@
       "contact_email": "robert.brown@example.com",
       "construction_status": "under_construction",
       "is_verified": false,
-      "image_path": "http://localhost:8000/storage/tmp/1719689815-activitylog.jpg",
-      "created_at": "2023-09-10T08:00:00Z"
+      "image_path": "https://picsum.photos/200/300",
+      "created_at": "2023-09-10 08:00:00"
     },
     {
       "creator": "Paschal",
@@ -107,8 +107,8 @@
       "contact_email": "emily.davis@example.com",
       "construction_status": "completed",
       "is_verified": false,
-      "image_path": "http://localhost:8000/storage/tmp/1719689815-activitylog.jpg",
-      "created_at": "2023-12-01T08:00:00Z"
+      "image_path": "https://picsum.photos/200/300",
+      "created_at": "2023-12-01 08:00:00"
     },
     {
       "creator": "Paschal",
@@ -126,8 +126,8 @@
       "contact_email": "michael.johnson@example.com",
       "construction_status": "under_construction",
       "is_verified": true,
-      "image_path": "http://localhost:8000/storage/tmp/1719689815-activitylog.jpg",
-      "created_at": "2024-02-28T08:00:00Z"
+      "image_path": "https://picsum.photos/200/300",
+      "created_at": "2024-02-28 08:00:00"
     }
   ],
   "new-street-data-form": {

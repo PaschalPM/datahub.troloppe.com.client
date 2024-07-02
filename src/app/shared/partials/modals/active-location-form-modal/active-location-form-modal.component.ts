@@ -25,6 +25,8 @@ import { LoaderService } from '@services/loader.service';
         bindValue="id"
         [formIsSubmitting]="formIsSubmitting"
         [items]="locationOptions"
+        [clearable]="true"
+        appendTo="body"
         placeholder="No Active Location"
       >
       </dashboard-select-dropdown>
@@ -84,7 +86,7 @@ export class ActiveLocationFormModalComponent {
     this.setActiveLocationSubscription = this.activeLocationService
       .setActiveLocation(this.activeLocationFormGroup.value)
       .subscribe((value) => {
-        let msg = 'New location activated.'
+        let msg = 'New location activated and notifications sent out.'
         if (!value){
           msg = 'No active location available'
         }

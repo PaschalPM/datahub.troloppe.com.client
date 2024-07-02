@@ -88,6 +88,9 @@ div.ng-option.ng-option-marked[role=option]{
 div.ng-option.ng-option-marked.ng-option-selected[role=option]{
   @apply dark:text-orange-400;
 }
+.custom.ng-select.ng-select-disabled .ng-select-container{
+  @apply bg-slate-300 dark:bg-slate-800;
+}
 
 div:is(.loader-spinner) {
   animation: spin 1s ease infinite;

@@ -7,7 +7,7 @@
 
     <ng-select #ngSelect [id]="name" class="custom" [formControl]="control" [items]="items" [bindLabel]="bindLabel"
         [virtualScroll]="true" [bindValue]="bindValue" (change)="onChange($event)" [placeholder]="placeholder"
-        [notFoundText]="notFoundText" appendTo="body">
+        [notFoundText]="notFoundText" [appendTo]="appendTo" [clearable]="clearable" >
     </ng-select>
 
 

@@ -30,6 +30,8 @@ export class SelectDropdownComponent {
   @Input() isRequired = true;
   @Input() placeholder = '';
   @Input() notFoundText = 'No Items Found';
+  @Input() clearable = false;
+  @Input() appendTo = '';
 
   @Output() changeEvent = new EventEmitter();
 

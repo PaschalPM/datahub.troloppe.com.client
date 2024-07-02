@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TextButtonComponent } from '@components/common/text-button/text-button.component';
 import { ActiveLocationIndicatorComponent } from '@components/dashboard/active-location-indicator/active-location-indicator.component';
-import { DeleteStreetDataModalComponent } from '@partials/modals/delete-street-data-modal/delete-street-data-modal.component';
+import { ConfirmModalComponent } from '@partials/modals/confirm-modal/confirm-modal.component';
 import { ModalService } from '@services/modal.service';
 import { StreetDataService } from '@services/street-data.service';
 import { StreetDataDetails } from 'app/shared/classes/street-data-details';
@@ -20,6 +20,15 @@ import { NotFoundComponent } from 'app/views/not-found/not-found.component';
   templateUrl: './edit-street-data.component.html',
 })
 export class EditStreetDataComponent extends StreetDataDetails {
+  confirmModalPropsData: ConfirmModalPropsType = {
+    matIconName: 'delete',
+    title: 'Confirm Delete',
+    message: 'Are you sure you want to delete this street data record?',
+    ok() {
+      alert('Hello World');
+    },
+  };
+
   constructor(private modalService: ModalService, private fb: FormBuilder) {
     super();
     this.streetDataFormGroup = this.fb.group(
@@ -53,6 +62,6 @@ export class EditStreetDataComponent extends StreetDataDetails {
   }
 
   onDeleteStreetData() {
-    this.modalService.open(DeleteStreetDataModalComponent, { streetDataId: 1 });
+    this.modalService.open(ConfirmModalComponent, this.confirmModalPropsData);
   }
 }

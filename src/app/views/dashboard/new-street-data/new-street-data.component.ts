@@ -5,31 +5,30 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { InputFieldComponent } from '../../../shared/components/dashboard/input-field/input-field.component';
+import { InputFieldComponent } from '@components/dashboard/input-field/input-field.component';
 import {
   constructionStatusOptions,
   sectorOptions,
 } from '../../../fixtures/street-data';
-import { ImageUploaderComponent } from '../../../shared/components/image-uploader/image-uploader.component';
+import { ImageUploaderComponent } from '@components/image-uploader/image-uploader.component';
 import {
   GeolocationService,
   PERMISSION_DENIED,
-} from '../../../shared/services/geolocation.service';
-import { ModalService } from '../../../shared/services/modal.service';
-import { GeolocationAlertModalComponent } from '../../../shared/partials/modals/geolocation-alert-modal/geolocation-alert-modal.component';
-import { SubmitBtnComponent } from '../../../shared/components/dashboard/submit-btn/submit-btn.component';
-import { SelectDropdownComponent } from '../../../shared/components/select-dropdown/select-dropdown.component';
-import { ActiveLocationIndicatorComponent } from '../../../shared/components/dashboard/active-location-indicator/active-location-indicator.component';
+} from '@services/geolocation.service';
+import { ModalService } from '@services/modal.service';
+import { GeolocationAlertModalComponent } from '@partials/modals/geolocation-alert-modal/geolocation-alert-modal.component';
+import { SubmitBtnComponent } from '@components/dashboard/submit-btn/submit-btn.component';
+import { SelectDropdownComponent } from '@components/select-dropdown/select-dropdown.component';
+import { ActiveLocationIndicatorComponent } from '@components/dashboard/active-location-indicator/active-location-indicator.component';
 import {
   LOCATIONS_KEY,
   NewStreetDataFormService,
   SECTIONS_KEY,
   UNIQUE_CODES_KEY,
-} from '../../../shared/services/new-street-data-form.service';
+} from '@services/new-street-data-form.service';
 import { StreetDataService } from '@services/street-data.service';
 import { LoaderService } from '@services/loader.service';
 import { ActiveLocationService } from '@services/active-location.service';
-import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -119,6 +118,7 @@ export class NewStreetDataComponent {
   }
 
   getStreetData(optionValue: IdAndValueType) {
+    console.log(optionValue)
     if (optionValue) {
       if (optionValue.id) {
         this.loader.start();
@@ -153,9 +153,7 @@ export class NewStreetDataComponent {
             this.loader.stop();
           });
       }
-    } else {
-      this.streetDataFormGroup.reset();
-    }
+    } 
   }
 
   async onSubmit() {

@@ -29,6 +29,7 @@ export class SelectDropdownComponent {
   @Input() class = '';
   @Input() isRequired = true;
   @Input() placeholder = '';
+  @Input() notFoundText = 'No Items Found';
 
   @Output() changeEvent = new EventEmitter();
 
@@ -48,6 +49,7 @@ export class SelectDropdownComponent {
   }
 
   onChange(value: Event) {
+    this.ngSelect.close()
     this.control.setErrors(null);
     this.changeEvent.emit(value);
   }

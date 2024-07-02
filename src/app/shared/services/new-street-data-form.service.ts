@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription, map, merge } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, merge } from 'rxjs';
 import { apiUrlFactory } from '../../configs/global';
 
 export const LOCATIONS_KEY = 'locations';

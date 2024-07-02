@@ -14,7 +14,7 @@ import { LoaderService } from '@services/loader.service';
   standalone: true,
   imports: [SelectDropdownComponent, TextButtonComponent],
   template: `
-    <div class="min-h-36 py-10 relative">
+    <div class="min-h-36 relative">
       <div class="prose">
         <h3 class="dark:text-white">Set Active Location</h3>
       </div>
@@ -28,6 +28,7 @@ import { LoaderService } from '@services/loader.service';
         placeholder="No Active Location"
       >
       </dashboard-select-dropdown>
+   
       <div class="flex justify-end gap-2 mt-5">
         <text-button
           [text]="btnText"
@@ -49,7 +50,9 @@ export class ActiveLocationFormModalComponent {
 
   // Getters
   get isActivationDisallowed() {
-    return this.currentActiveLocation?.id === this.locationControl.value;
+    const cond1 = this.currentActiveLocation?.id === this.locationControl.value
+    const cond2 = this.currentActiveLocation === null && !this.locationControl.value
+    return cond1 || cond2;
   }
   get btnText() {
     return this.locationControl.value ? 'activate' : 'deactivate';
@@ -80,8 +83,12 @@ export class ActiveLocationFormModalComponent {
     this.loader.start();
     this.setActiveLocationSubscription = this.activeLocationService
       .setActiveLocation(this.activeLocationFormGroup.value)
-      .subscribe(() => {
-        this.toastr.success('New location activated.', 'Success');
+      .subscribe((value) => {
+        let msg = 'New location activated.'
+        if (!value){
+          msg = 'No active location available'
+        }
+        this.toastr.success(msg, 'Success');
         this.loader.stop()
         this.modalService.close();
       });

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, tap } from 'rxjs';
+import { BehaviorSubject, map, of, switchMap, tap } from 'rxjs';
 import { NewStreetDataFormService } from './new-street-data-form.service';
 import { apiUrlFactory } from '../../configs/global';
 import { HttpClient } from '@angular/common/http';
@@ -38,6 +38,15 @@ export class ActiveLocationService {
       );
   }
 
+  public forGuard() {
+    return this.httpClient
+      .get<NewStreetDataFormType>(apiUrlFactory('/street-data/form-data'))
+      .pipe(
+        map((value) => value.locations.find((location) => location.is_active)),
+        switchMap((value) => (value ? of(true) : of(false)))
+      );
+  }
+
   private retrieveActiveLocation() {
     this.nsdfs
       .locations()
@@ -46,4 +55,5 @@ export class ActiveLocationService {
         this.activeLocation$.next(value as LocationType);
       });
   }
+
 }

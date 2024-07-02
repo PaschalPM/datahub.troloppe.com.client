@@ -1,4 +1,4 @@
-<dashboard-active-location-indicator />
+<dashboard-active-location-indicator [nonEditable]="true"/>
 
 <div class="w-full p-2 md:p-4 lg:w-3/4 mx-auto -mt-5">
 
@@ -11,7 +11,8 @@
 
         <!---: Property Unique Code -->
         <dashboard-select-dropdown label="Property Unique Code" name="unique_code" [formGroup]="streetDataFormGroup"
-            bindLabel="value" bindValue="id" [formIsSubmitting]="formIsSubmitting" [items]="uniqueCodeOptions">
+            bindLabel="value" bindValue="id" [formIsSubmitting]="formIsSubmitting" [items]="uniqueCodeOptions"
+            (changeEvent)="getStreetData($event)">
         </dashboard-select-dropdown>
 
 
@@ -22,8 +23,8 @@
 
 
         <!---: Sector  -->
-        <dashboard-select-dropdown label="Sector" name="sector" [formGroup]="streetDataFormGroup" bindLabel="value"
-            bindValue="id" [formIsSubmitting]="formIsSubmitting" [items]="sectorOptions"> </dashboard-select-dropdown>
+        <dashboard-select-dropdown label="Sector" name="sector" [formGroup]="streetDataFormGroup" bindLabel="label"
+            bindValue="value" [formIsSubmitting]="formIsSubmitting" [items]="sectorOptions"> </dashboard-select-dropdown>
 
 
         <!---: Location  -->
@@ -33,11 +34,8 @@
 
 
         <!---: Section  -->
-        @if(selectedLocationValue){
         <dashboard-select-dropdown label="Section" name="section" [formGroup]="streetDataFormGroup" bindLabel="name"
-            bindValue="id" [formIsSubmitting]="formIsSubmitting" [items]="sectionOptions"> </dashboard-select-dropdown>
-
-        }
+            bindValue="id" [formIsSubmitting]="formIsSubmitting" notFoundText="Set a location first" [items]="sectionOptions"> </dashboard-select-dropdown>
 
         <!---: Number of Units  -->
         <dashboard-input-field label="Number of Units" name="number_of_units" [formGroup]="streetDataFormGroup"

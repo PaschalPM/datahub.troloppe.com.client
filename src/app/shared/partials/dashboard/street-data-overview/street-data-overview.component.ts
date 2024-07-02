@@ -7,6 +7,8 @@ import { ChartContainerComponent } from '../../../components/chart-container/cha
 import { UserRoles } from '../../../enums/user-roles';
 import { PermissionService } from '../../../services/permission.service';
 import { ActiveLocationIndicatorComponent } from '../../../components/dashboard/active-location-indicator/active-location-indicator.component';
+import { Router } from '@angular/router';
+import { TextButtonComponent } from '@components/common/text-button/text-button.component';
 
 @Component({
   selector: 'dashboard-street-data-overview',
@@ -16,7 +18,8 @@ import { ActiveLocationIndicatorComponent } from '../../../components/dashboard/
     ChartComponent,
     ChartContainerComponent,
     NgxChartsModule,
-    ActiveLocationIndicatorComponent
+    ActiveLocationIndicatorComponent,
+    TextButtonComponent
   ],
   templateUrl: './street-data-overview.component.html',
 })
@@ -52,7 +55,11 @@ export class StreetDataOverviewComponent {
     },
   ];
 
-  constructor(private permission: PermissionService) {
+  constructor(private permission: PermissionService, private router:Router) {
     this.isPermitted = this.permission.isPermitted(this.allowedToView);
+  }
+
+  routeToNewStreetView() {
+    this.router.navigateByUrl('/dashboard/street-data/new');
   }
 }

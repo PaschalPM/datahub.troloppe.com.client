@@ -26,6 +26,11 @@ import {
   SECTIONS_KEY,
   UNIQUE_CODES_KEY,
 } from '../../../shared/services/new-street-data-form.service';
+import { StreetDataService } from '@services/street-data.service';
+import { LoaderService } from '@services/loader.service';
+import { ActiveLocationService } from '@services/active-location.service';
+import { ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-new-street-data',
@@ -43,26 +48,29 @@ import {
 export class NewStreetDataComponent {
   formIsSubmitting = false;
   streetDataFormGroup!: FormGroup;
-  selectedLocationValue!: number | null;
   isImageLoading = false;
 
   // ----->  Property Options From API
   locationOptions: IdAndNameType[] = [];
   uniqueCodeOptions: IdAndValueType[] = [];
   sectionOptions: IdAndNameType[] = [];
-  private allSectors: SectionType[] = [];
+
+  private staticLocationId!: number;
+  private allSections: SectionType[] = [];
 
   // -----> Property Options From Fixtures
   sectorOptions: OptionType[] = sectorOptions;
   constructionStatusOptions: OptionType[] = constructionStatusOptions;
 
-
-
   constructor(
     private fb: FormBuilder,
     private newStreetDataFormService: NewStreetDataFormService,
     private geo: GeolocationService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private streetDataService: StreetDataService,
+    private loader: LoaderService,
+    private activeLocationService: ActiveLocationService,
+    private toaster: ToastrService
   ) {
     // -----> Form Group
     this.streetDataFormGroup = this.fb.group(
@@ -71,7 +79,7 @@ export class NewStreetDataComponent {
         street_address: ['', [Validators.required]],
         description: ['', [Validators.required]], // *
         sector: ['', [Validators.required]],
-        location: ['', [Validators.required]],
+        location: [{ value: '', disabled: true }, [Validators.required]],
         section: ['', [Validators.required]],
         number_of_units: [null, [Validators.required]], // *
         contact_name: [''],
@@ -88,6 +96,7 @@ export class NewStreetDataComponent {
 
   ngOnInit(): void {
     this.getOptionsValueFromAPI();
+    this.getActiveLocationAndSetSection();
 
     // -----> Enable Geolocation Alert
     this.geo.errorEvents$.subscribe((error) => {
@@ -98,16 +107,55 @@ export class NewStreetDataComponent {
       }
     });
     this.geo.observe();
-
   }
 
   setSelectedLocationValue(data: IdAndNameType) {
-    this.selectedLocationValue = null;
     this.streetDataFormGroup.get('section')?.setValue(null);
     setTimeout(() => {
-      this.selectedLocationValue = data.id;
-      this.sectionOptions = this.allSectors.filter((value) => value.location_id === data.id)
+      this.sectionOptions = this.allSections.filter(
+        (value) => value.location_id === data.id
+      );
     });
+  }
+
+  getStreetData(optionValue: IdAndValueType) {
+    if (optionValue) {
+      if (optionValue.id) {
+        this.loader.start();
+        this.streetDataService
+          .getStreetDataDetails(optionValue.id)
+          .subscribe((streetData) => {
+            const selectedUniqueCode = this.uniqueCodeOptions.find(
+              (uniqueCode) =>
+                uniqueCode.value.toLowerCase() ===
+                streetData.unique_code.toLowerCase()
+            );
+            const selectedSection = this.allSections.find(
+              (value) => value.location_id === this.staticLocationId
+            );
+
+            this.streetDataFormGroup.setValue({
+              unique_code: selectedUniqueCode ? selectedUniqueCode.id : null, // Take Note
+              street_address: streetData.street_address,
+              description: streetData.description,
+              sector: streetData.sector,
+              location: this.staticLocationId,
+              section: selectedSection ? selectedSection.id : null,
+              number_of_units: streetData.number_of_units,
+              contact_name: streetData.contact_name,
+              contact_numbers: streetData.contact_numbers,
+              contact_email: streetData.contact_email,
+              construction_status: streetData.construction_status,
+              image: '',
+              geolocation: streetData.geolocation,
+            });
+            this.setSections(this.staticLocationId);
+            this.loader.stop();
+          });
+      }
+    } else {
+      this.streetDataFormGroup.reset();
+    }
   }
 
   async onSubmit() {
@@ -115,7 +163,6 @@ export class NewStreetDataComponent {
 
     if (this.streetDataFormGroup.valid) {
       let googleMapsUrlOrErrorMsg;
-
       try {
         googleMapsUrlOrErrorMsg = await this.geo.getGoogleMapsUrl();
       } catch (error) {
@@ -132,7 +179,10 @@ export class NewStreetDataComponent {
       //   },
       // });
     } else {
-      alert('Form is invalid');
+      this.toaster.error(
+        'Check that all fields are correctly filled.',
+        'Form Error'
+      );
     }
   }
 
@@ -143,12 +193,30 @@ export class NewStreetDataComponent {
           this.locationOptions = event.value as LocationType[];
           break;
         case SECTIONS_KEY:
-          this.allSectors = event.value as SectionType[];
+          this.allSections = event.value as SectionType[];
           break;
         case UNIQUE_CODES_KEY:
           this.uniqueCodeOptions = event.value as IdAndValueType[];
           break;
       }
+    });
+  }
+
+  private getActiveLocationAndSetSection() {
+    this.activeLocationService.activeLocation().subscribe((activeLocation) => {
+      this.staticLocationId = activeLocation?.id as number;
+      this.streetDataFormGroup.controls['location'].setValue(
+        activeLocation?.id
+      );
+      this.setSections(activeLocation?.id as number);
+    });
+  }
+
+  private setSections(staticLocationId: number) {
+    setTimeout(() => {
+      this.sectionOptions = this.allSections.filter(
+        (value) => value.location_id === staticLocationId
+      );
     });
   }
 }

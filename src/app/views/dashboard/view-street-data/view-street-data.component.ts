@@ -1,17 +1,16 @@
 import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MyMatIconComponent } from '@components/common/my-mat-icon.component';
 import { TextButtonComponent } from '@components/common/text-button/text-button.component';
 import { ActiveLocationIndicatorComponent } from '@components/dashboard/active-location-indicator/active-location-indicator.component';
 import { InputFieldComponent } from '@components/dashboard/input-field/input-field.component';
 import { ImageUploaderComponent } from '@components/image-uploader/image-uploader.component';
-import { PermissionService } from '@services/permission.service';
-import { StreetDataService } from '@services/street-data.service';
 import { UtilsService } from '@services/utils.service';
-import { UserRoles } from 'app/shared/enums/user-roles';
-import { StreetData } from 'app/shared/types/street-data';
+import { StreetDataDetails } from 'app/shared/classes/street-data-details';
+
+import { NotFoundComponent } from 'app/views/not-found/not-found.component';
 
 @Component({
   selector: 'app-view-street-data',
@@ -24,28 +23,17 @@ import { StreetData } from 'app/shared/types/street-data';
     TextButtonComponent,
     NgIf,
     MyMatIconComponent,
+    NotFoundComponent,
   ],
   templateUrl: './view-street-data.component.html',
 })
-export class ViewStreetDataComponent {
-  streetDataFormGroup!: FormGroup;
-  isPermitted = false;
-  streetData!: StreetData;
-  geolocation = '';
-  creator = '';
-  createdAt = '';
-  dataIsLoaded = false;
-
-  private streetDataId!: number;
-
+export class ViewStreetDataComponent extends StreetDataDetails {
   constructor(
     public utils: UtilsService,
     private fb: FormBuilder,
-    private permissionService: PermissionService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private streetDataService: StreetDataService
+    private router: Router
   ) {
+    super();
     this.streetDataFormGroup = this.fb.group(
       {
         id: [''],
@@ -105,33 +93,5 @@ export class ViewStreetDataComponent {
     this.router.navigateByUrl(
       `/dashboard/street-data/edit/${this.streetDataId}`
     );
-  }
-
-  private setStreetDataId() {
-    const id = this.activatedRoute.snapshot.paramMap.get('id');
-
-    if (id) {
-      this.streetDataId = +id;
-    }
-  }
-
-  private setFormDataAndSomeProperties() {
-    this.streetDataService
-      .getStreetDataDetails(this.streetDataId)
-      .subscribe((value) => {
-        this.streetData = value;
-        this.streetDataFormGroup.setValue(value);
-        this.geolocation = value.geolocation;
-        this.creator = value.creator;
-        this.createdAt = value.created_at;
-        this.dataIsLoaded = true;
-      });
-  }
-
-  private setPermission() {
-    this.isPermitted = this.permissionService.isPermitted([
-      UserRoles.Admin,
-      UserRoles.ResearchManager,
-    ]);
   }
 }

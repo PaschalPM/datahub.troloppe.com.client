@@ -62,7 +62,7 @@ ng-select.ng-select.custom.ng-select-focused .ng-select-container {
 }
 
 .ng-select.custom div.ng-option {
-  @apply dark:hover:bg-slate-700 capitalize;
+  @apply dark:hover:bg-slate-700;
 }
 
 .ng-select.custom div.ng-option.ng-option-disabled {
@@ -75,6 +75,18 @@ ng-select.ng-select.custom.ng-select-focused .ng-select-container {
 
 ng-select.ng-invalid.error-on-submit .ng-select-container {
   @apply ring-1 ring-red-500 dark:ring-red-400 border-none;
+}
+
+div.ng-option[role=option]{
+  @apply dark:bg-slate-800 dark:text-white;
+}
+
+div.ng-option.ng-option-marked[role=option]{
+  @apply dark:bg-gray-500 dark:text-white;
+}
+
+div.ng-option.ng-option-marked.ng-option-selected[role=option]{
+  @apply dark:text-orange-400;
 }
 
 div:is(.loader-spinner) {

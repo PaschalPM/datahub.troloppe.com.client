@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MyMatIconComponent } from '../../common/my-mat-icon.component';
 import { UtilsService } from '../../../services/utils.service';
 import { ModalService } from '../../../services/modal.service';
@@ -27,16 +27,16 @@ import { UserRoles } from '../../../enums/user-roles';
       <div
         [class]="
           utils.cn('inline-flex items-center gap-2', {
-            'cursor-pointer': isPermitted
+            'cursor-pointer': isPermitted && !nonEditable
           })
         "
-        (click)="isPermitted && onOpenFormModal()"
+        (click)="isPermitted && !nonEditable && onOpenFormModal()"
       >
         <div
           class="mixin/base text-green-700 dark:text-green-300 animate-pulse"
         >
-          <my-mat-icon *ngIf="isPermitted"> edit_location_alt </my-mat-icon>
-          <my-mat-icon *ngIf="!isPermitted"> location_on </my-mat-icon>
+          <my-mat-icon *ngIf="isPermitted && !nonEditable"> edit_location_alt </my-mat-icon>
+          <my-mat-icon *ngIf="!isPermitted || nonEditable"> location_on </my-mat-icon>
           <div>{{ activeLocation }}</div>
         </div>
       </div>
@@ -56,6 +56,7 @@ import { UserRoles } from '../../../enums/user-roles';
   `,
 })
 export class ActiveLocationIndicatorComponent {
+  @Input() nonEditable = false
   activeLocation: string | null = null;
   isPermitted = false;
 

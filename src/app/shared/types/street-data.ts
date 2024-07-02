@@ -8,7 +8,7 @@ export type StreetData = {
   location: string; // *
   number_of_units: number;
   contact_name: string;
-  contact_number: string;
+  contact_numbers: string;
   contact_email: string;
   construction_status: string; // enum
   is_verified: boolean; // *

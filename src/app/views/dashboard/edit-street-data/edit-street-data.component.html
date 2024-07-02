@@ -1,1 +1,11 @@
-<p>edit-street-data works!</p>
+@if(dataIsLoaded){
+
+<div class="my-4 flex justify-between items-center">
+    <dashboard-active-location-indicator [nonEditable]="true"/>
+    <text-button withIcon="delete" [isFlexed]="true" [isError]="true" text="Delete Street Data"
+        (clickEvent)="onDeleteStreetData()"></text-button>
+</div>
+}
+@else if (dataNotFound) {
+<app-not-found [insideDashboardView]="true" resourceName="Street Data" />
+}

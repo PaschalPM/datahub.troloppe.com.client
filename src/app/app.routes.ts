@@ -7,6 +7,7 @@ import { resetPasswordGuard } from './shared/guards/reset-password.guard';
 import { dashboardGuard } from './shared/guards/dashboard.guard';
 import { authGuard } from './shared/guards/auth.guard';
 import { StreetDataComponent } from './views/dashboard/street-data/street-data.component';
+import { newStreetDataFormGuard } from '@guards/new-street-data-form.guard';
 
 export const routes: Routes = [
   {
@@ -87,6 +88,7 @@ export const routes: Routes = [
       {
         title: 'Create Street Data',
         path: 'street-data/new',
+        canActivate: [newStreetDataFormGuard],
         loadComponent: () =>
           import('./views/dashboard/new-street-data/new-street-data.component').then(
             (c) => c.NewStreetDataComponent,

@@ -1,11 +1,58 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { TextButtonComponent } from '@components/common/text-button/text-button.component';
+import { ActiveLocationIndicatorComponent } from '@components/dashboard/active-location-indicator/active-location-indicator.component';
+import { DeleteStreetDataModalComponent } from '@partials/modals/delete-street-data-modal/delete-street-data-modal.component';
+import { ModalService } from '@services/modal.service';
+import { StreetDataService } from '@services/street-data.service';
+import { StreetDataDetails } from 'app/shared/classes/street-data-details';
+import { StreetData } from 'app/shared/types/street-data';
+import { NotFoundComponent } from 'app/views/not-found/not-found.component';
 
 @Component({
   selector: 'app-edit-street-data',
   standalone: true,
-  imports: [],
-  templateUrl: './edit-street-data.component.html'
+  imports: [
+    ActiveLocationIndicatorComponent,
+    TextButtonComponent,
+    NotFoundComponent,
+  ],
+  templateUrl: './edit-street-data.component.html',
 })
-export class EditStreetDataComponent {
+export class EditStreetDataComponent extends StreetDataDetails {
+  constructor(private modalService: ModalService, private fb: FormBuilder) {
+    super();
+    this.streetDataFormGroup = this.fb.group(
+      {
+        id: [''],
+        image_path: [''],
+        unique_code: [''],
+        street_address: [''],
+        sector: [''],
+        location: [''],
+        section: [''],
+        number_of_units: [''], // *
+        contact_name: [''],
+        contact_numbers: [''],
+        contact_email: [''],
+        construction_status: [''],
+        is_verified: [false],
+        description: [''],
+        geolocation: [''],
+        creator: [''],
+        created_at: [''],
+      },
+      { updateOn: 'submit' }
+    );
+  }
 
+  ngOnInit(): void {
+    this.setStreetDataId();
+    this.setFormDataAndSomeProperties();
+    this.setPermission();
+  }
+
+  onDeleteStreetData() {
+    this.modalService.open(DeleteStreetDataModalComponent, { streetDataId: 1 });
+  }
 }

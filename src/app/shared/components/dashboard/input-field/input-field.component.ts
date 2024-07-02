@@ -41,7 +41,14 @@ export class InputFieldComponent {
   @Input({ required: true }) name!: string;
   @Input({ required: true }) formGroup!: FormGroup;
   @Input() formIsSubmitting!: boolean;
-  @Input() type: 'text' | 'email' | 'password' | 'number' | 'number-list' | 'checkbox' | 'textarea' = 'text';
+  @Input() type:
+    | 'text'
+    | 'email'
+    | 'password'
+    | 'number'
+    | 'number-list'
+    | 'checkbox'
+    | 'textarea' = 'text';
   @Input() readonly = false;
   @Input() maxLength = 250;
 
@@ -81,7 +88,16 @@ export class InputFieldComponent {
   ngOnInit(): void {
     this.control = this.formGroup.controls?.[this.name] as FormControl;
     this.isRequired = this.control.hasValidator(Validators.required);
+    this.control.valueChanges.subscribe((value) => {
+      if (value) {
+        const valueLength = value.length;
+        if (valueLength) {
+          this.currentLength = valueLength;
+        }
+      }
+    });
   }
+
   toggleDisplayPassword() {
     const input = this.inputElement?.nativeElement;
     this.displayPassword = !this.displayPassword;
@@ -108,7 +124,7 @@ export class InputFieldComponent {
       }
     }
 
-    if (this.currentLength >= this.maxLength) {
+    if (this.currentLength > this.maxLength) {
       this.control.setValue(target.value.slice(0, -1));
     }
   }

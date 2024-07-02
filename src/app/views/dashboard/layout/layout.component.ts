@@ -1,19 +1,19 @@
 import { Component } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
-import { UtilsService } from '../../../shared/services/utils.service';
-import { SideMenuComponent } from '../../../shared/components/dashboard/side-menu/side-menu.component';
-import { NavbarComponent } from '../../../shared/components/dashboard/navbar/navbar.component';
-import { MediaQueryService } from '../../../shared/services/media-query.service';
+import { UtilsService } from '@services/utils.service';
+import { SideMenuComponent } from '@components/dashboard/side-menu/side-menu.component';
+import { NavbarComponent } from '@components/dashboard/navbar/navbar.component';
+import { MediaQueryService } from '@services/media-query.service';
 import { Title } from '@angular/platform-browser';
-import { AppEventEmitterService } from '../../../shared/services/app-event-emitter.service';
-import { ColorSchemeService } from '../../../shared/services/color-scheme.service';
+import { AppEventEmitterService } from '@services/app-event-emitter.service';
+import { ColorSchemeService } from '@services/color-scheme.service';
 import { TOGGLE_SIDE_MENU } from '../../../shared/constants/event-keys';
 import { EXTRA_LARGE } from '../../../shared/constants/media-query';
-import { ModalComponent } from '../../../shared/components/modal/modal.component';
-import { NotificationsService } from '../../../shared/services/notifications.service';
-import { WindowFocusService } from '../../../shared/services/window-focus.service';
+import { ModalComponent } from '@components/modal/modal.component';
+import { NotificationsService } from '@services/notifications.service';
+import { WindowFocusService } from '@services/window-focus.service';
 import { Subscription } from 'rxjs';
-import { NewStreetDataFormService } from '../../../shared/services/new-street-data-form.service';
+import { NewStreetDataFormService } from '@services/new-street-data-form.service';
 
 @Component({
   selector: 'app-layout',
@@ -63,6 +63,8 @@ export class LayoutComponent {
 
     // Initializes all street data needed for street data form
     this.nsdfs.onInit()
+
+    console.log('LAYOUT....')
   }
 
   ngOnDestroy(): void {
@@ -102,4 +104,5 @@ export class LayoutComponent {
       }
     });
   }
+
 }

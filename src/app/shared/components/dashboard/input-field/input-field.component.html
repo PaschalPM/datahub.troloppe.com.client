@@ -1,7 +1,7 @@
 <div class="relative my-5 space-y-1 justify-center items-center gap-2 text-gray-600 dark:text-white"
   [class.flex]="type==='checkbox'">
-  <label [for]="name" [class]="utils.cn('text-base lg:text-lg', {'text-sm lg:text-sm': type === 'checkbox'})"> {{ label }}<span
-      class="font-bold" *ngIf="isRequired">
+  <label [for]="name" [class]="utils.cn('text-base lg:text-lg', {'text-sm lg:text-sm': type === 'checkbox'})"> {{ label
+    }}<span class="font-bold" *ngIf="isRequired">
       *</span></label>
 
   @if (type === 'password') {
@@ -27,7 +27,8 @@
     class="text-dodger-blue dark:text-orange-400 bg-transparent " />
   }
   @else if (type === 'textarea') {
-  <textarea [id]="name" [name]="name" [formControl]="control"  class="h-24" [class]="classStyle"></textarea>
+  <textarea [id]="name" [name]="name" [formControl]="control" class="h-24" [class]="classStyle"
+    (input)="onInput($event)"></textarea>
   }
   @else {
   <input autocomplete="off" #myInput [type]="type" [id]="name" [name]="name" [readonly]="readonly"
@@ -51,6 +52,6 @@
   </div>
 
   <div *ngIf="!(formIsSubmitting && control.invalid) && type !== 'number' && type !== 'checkbox' && !control.disabled"
-    class="mt-1 text-right text-sm"> {{currentLength}}/{{maxLength}}
+    class="mt-1 text-right text-sm"> {{ currentLength }}/{{ maxLength }}
   </div>
 </div>

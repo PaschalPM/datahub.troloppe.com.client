@@ -71,6 +71,17 @@ import { CapitalizePipe } from '@pipes/capitalize.pipe';
           </div>
         </div>
         <!---: End Image Viewer -->
+        
+        <!---: Image View Only Spinner -->
+        <div class="relative size-32" *ngIf="viewOnly && viewOnlyLoading">
+          <!---: Uploading Spinner -->
+          <div
+            class="absolute inset-0 bg-black/50 flex justify-center items-center"
+          >
+            <my-mat-icon class="animate-spin"> settings </my-mat-icon>
+          </div>
+        </div>
+        <!---: End Image View Only Spinner  -->
       </div>
       <div
         [class]="
@@ -103,6 +114,7 @@ export class ImageUploaderComponent {
   isRequired = false;
   control!: FormControl;
   imageUrl = '';
+  viewOnlyLoading = false
 
   get errorBorder() {
     return this.formIsSubmitting && this.control.invalid
@@ -123,10 +135,13 @@ export class ImageUploaderComponent {
   ngOnInit(): void {
     this.control = this.formGroup.controls?.[this.name] as FormControl;
     this.isRequired = this.control.hasValidator(Validators.required);
+    if (this.viewOnly){
+      this.viewOnlyLoading = true
+    }
     this.control.valueChanges.subscribe((value) => {
-      this.imageUrl = value;
-      console.log(value)
-    });
+      this.imageUrl = value
+      this.viewOnlyLoading = false
+    })
   }
 
   deleteImage() {

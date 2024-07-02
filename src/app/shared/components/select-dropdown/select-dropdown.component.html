@@ -6,8 +6,10 @@
     </label>
 
     <ng-select #ngSelect [id]="name" class="custom" [formControl]="control" [items]="items" [bindLabel]="bindLabel"
-        [bindValue]="bindValue" (change)="onChange($event)" [placeholder]="placeholder">
+        [virtualScroll]="true" [bindValue]="bindValue" (change)="onChange($event)" [placeholder]="placeholder"
+        [notFoundText]="notFoundText" appendTo="body">
     </ng-select>
+
 
     <!---: Error Section -->
     <div [class]="

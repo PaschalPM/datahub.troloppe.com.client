@@ -17,6 +17,9 @@ import { NgIf } from '@angular/common';
           class,
           {
             'p-2 py-1 text-xs font-normal': small
+          },
+          {
+            'text-red-500 dark:text-red-400 dark:hover:bg-red-400/15 hover:bg-red-500/15': isError
           }
         )
       "
@@ -25,7 +28,7 @@ import { NgIf } from '@angular/common';
       <my-mat-icon *ngIf="withIcon" class="font-black">{{
         withIcon
       }}</my-mat-icon>
-      <span [class]="utils.cn({'hidden md:inline': isFlexed})">
+      <span [class]="utils.cn({ 'hidden md:inline': isFlexed })">
         @if (small) {
         {{ text }}
         } @else {
@@ -41,9 +44,9 @@ export class TextButtonComponent {
   @Input() type: 'button' | 'submit' | 'reset' | 'menu' = 'button';
   @Input() small = false;
   @Input() withIcon = '';
-  @Input() isFlexed = false
-  @Input() disabled = false
-
+  @Input() isFlexed = false;
+  @Input() disabled = false;
+  @Input() isError = false;
 
   @Output() clickEvent = new EventEmitter();
 

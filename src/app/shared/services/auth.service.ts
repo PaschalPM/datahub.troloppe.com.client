@@ -2,11 +2,9 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { ClientStorageService } from './client-storage.service';
 import { HttpClient } from '@angular/common/http';
-import { BASE_API_URL, apiHttpOptions } from '../../configs/global';
+import { apiHttpOptions, apiUrlFactory } from '../../configs/global';
 import { User as UserType } from '../types/user';
 import { CURRENT_USER_STORE_KEY } from '../constants';
-
-const API_AUTH_URL = BASE_API_URL + '/auth';
 
 @Injectable({
   providedIn: 'root',
@@ -38,14 +36,14 @@ export class AuthService {
 
   getLoggedInUser(): Observable<UserType> {
     return this.httpClient.get<UserType>(
-      `${API_AUTH_URL}/user`,
+      apiUrlFactory('/auth/user'),
       apiHttpOptions
     );
   }
 
   verifyUserByEmail(body: Pick<AuthType, 'email'>): Observable<void> {
     return this.httpClient.post<void>(
-      `${API_AUTH_URL}/verify-user`,
+      apiUrlFactory('/auth/verify-user'),
       body,
       apiHttpOptions
     );
@@ -53,7 +51,7 @@ export class AuthService {
 
   signIn(body: Pick<AuthType, 'email' | 'password'>): Observable<UserType> {
     return this.httpClient
-      .post<UserType>(`${API_AUTH_URL}/login`, body, apiHttpOptions)
+      .post<UserType>(apiUrlFactory('/auth/login'), body, apiHttpOptions)
       .pipe(
         tap((value) => {
           this.setCurrentUser(value)
@@ -67,7 +65,7 @@ export class AuthService {
 
   signOut(): Observable<{ message: string }> {
     return this.httpClient
-      .delete<{ message: string }>(`${API_AUTH_URL}/logout`)
+      .delete<{ message: string }>(apiUrlFactory('/auth/logout'))
       .pipe(
         tap(() => {
           this.setCurrentUser(null)
@@ -79,7 +77,7 @@ export class AuthService {
     body: Pick<AuthType, 'email' | 'password'>
   ): Observable<{ message: string }> {
     return this.httpClient.post<{ message: string }>(
-      `${API_AUTH_URL}/change-password`,
+      apiUrlFactory('/auth/change-password'),
       body,
       apiHttpOptions
     );
@@ -89,7 +87,7 @@ export class AuthService {
     body: Pick<AuthType, 'email'>
   ): Observable<{ message: string }> {
     return this.httpClient.post<{ message: string }>(
-      `${API_AUTH_URL}/forgot-password`,
+      apiUrlFactory('/auth/forgot-password'),
       body,
       apiHttpOptions
     );
@@ -97,7 +95,7 @@ export class AuthService {
 
   resetPassword(body: AuthType): Observable<{ message: string }> {
     return this.httpClient.post<{ message: string }>(
-      `${API_AUTH_URL}/reset-password`,
+      apiUrlFactory('/auth/reset-password'),
       body,
       apiHttpOptions
     );

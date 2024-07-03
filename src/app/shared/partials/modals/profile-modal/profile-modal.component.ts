@@ -8,6 +8,10 @@ import {
 } from '@angular/forms';
 import { InputFieldComponent } from '../../../components/dashboard/input-field/input-field.component';
 import { TextButtonComponent } from '../../../components/common/text-button/text-button.component';
+import { AuthService } from '@services/auth.service';
+import { ToastrService } from 'ngx-toastr';
+import { LoaderService } from '@services/loader.service';
+import { ModalService } from '@services/modal.service';
 
 @Component({
   selector: 'dashboard-profile-modal',
@@ -17,23 +21,50 @@ import { TextButtonComponent } from '../../../components/common/text-button/text
   styles: ``,
 })
 export class ProfileModalComponent {
-  profileFormGroup!: FormGroup
+  profileFormGroup!: FormGroup;
   formIsSubmitting = false;
 
-  constructor(private fb: FormBuilder){
-    this.profileFormGroup = this.fb.group(  {
-      name: [{value: 'Paschal', disabled: true}],
-      email: [{value: 'paschal.okafor@troloppe.com', disabled: true}],
-      role: [{value: 'Admin', disabled: true}],
-      newPassword: ['', [Validators.required, Validators.minLength(8)]],
-    },
-    { updateOn: 'submit'})
+  nameController = new FormControl({ value: '', disabled: true });
+  emailController = new FormControl({ value: '', disabled: true });
+  roleController = new FormControl({ value: '', disabled: true });
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private toastr: ToastrService,
+    private loader: LoaderService,
+    private modal: ModalService
+  ) {
+    this.profileFormGroup = this.fb.group(
+      {
+        name: this.nameController,
+        email: this.emailController,
+        role: this.roleController,
+        newPassword: ['', [Validators.required, Validators.minLength(8)]],
+      },
+      { updateOn: 'submit' }
+    );
+  }
+
+  ngOnInit(): void {
+    this.auth.currentUser().subscribe((currentUser) => {
+      this.nameController.setValue(currentUser?.name as string);
+      this.emailController.setValue(currentUser?.email as string);
+      this.roleController.setValue(currentUser?.roles[0] as string);
+    });
   }
   onSubmit() {
     this.formIsSubmitting = true;
     if (this.profileFormGroup.valid) {
-
-      alert('ok');
+      this.loader.start();
+      const body = {
+        email: this.emailController.value as string,
+        password: this.profileFormGroup.value.newPassword,
+      };
+      this.auth.changePassword(body).subscribe((value) => {
+        this.toastr.success(value.message, 'Success');
+        this.loader.stop();
+        this.modal.close();
+      });
     }
   }
 }

@@ -12,6 +12,10 @@ import { MyMatIconComponent } from '@components/common/my-mat-icon.component';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { ActionsComponent } from '@components/ag-grid/street-data/actions/actions.component';
+import { UtilsService } from '@services/utils.service';
+import { PermissionService } from '@services/permission.service';
+import { ImagePreviewComponent } from '@components/ag-grid/street-data/image-preview/image-preview.component';
+import { ColorSchemeService } from '@services/color-scheme.service';
 
 @Component({
   selector: 'app-street-data',
@@ -33,20 +37,12 @@ import { ActionsComponent } from '@components/ag-grid/street-data/actions/action
         text="New Street Data"
       ></text-button>
     </div>
-    <ag-grid-angular
-      [rowData]="rowData | async"
-      class="ag-theme-quartz !bg-transparent dark:hidden h-[calc(100vh-250px)] md:h-[375px]"
-      [columnDefs]="colDefs"
-      style="height: 400px"
-      [defaultColDef]="defaultColDefs"
-      [animateRows]="true"
-      (cellClicked)="onCellClick($event)"
-      rowClass="cursor-pointer"
-    ></ag-grid-angular>
 
     <ag-grid-angular
       [rowData]="rowData | async"
-      class="ag-theme-quartz-dark !bg-transparent hidden dark:block h-[calc(100vh-250px)] md:h-[375px]"
+      class="!bg-transparent h-[calc(100vh-250px)] md:h-[375px]"
+      [class.ag-theme-quartz-dark]="colorScheme.actualScheme === 'dark'"
+      [class.ag-theme-quartz]="colorScheme.actualScheme === 'light'"
       [columnDefs]="colDefs"
       [defaultColDef]="defaultColDefs"
       [animateRows]="true"
@@ -64,38 +60,70 @@ export class StreetDataComponent {
   rowData!: Observable<StreetDataColType[]>;
 
   colDefs: ColDef<StreetDataColType>[] = [
-    { field: 'unique_code' },
-    { field: 'street_address' },
+    { headerName: 'S/N', width: 75,valueGetter: "node.rowIndex + 1"},
+    { field: 'unique_code', headerName: 'Unique Code', width: 150 },
+    { field: 'street_address', headerName: ' Street Address' },
     { field: 'sector' },
     { field: 'section' },
     { field: 'location' },
-    { field: 'image_path', sortable: false, filter: false },
-    { field: 'is_verified', filter: false },
+    {
+      field: 'image_path',
+      headerName: 'Image Preview',
+      cellRenderer: ImagePreviewComponent,
+      filter: false,
+      sortable: false,
+      headerClass: '!flex !justify-center',
+    },
+    {
+      field: 'is_verified',
+      headerName: 'Is Verified',
+      width: 150,
+    },
+    {
+      field: 'created_at',
+      headerName: 'Creation Date',
+      valueFormatter: (params) => this.utils.utcToFormattedDate(params.value),
+      filter: false,
+    },
+    {
+      field: 'creator',
+      width: 150,
+      hide: !(this.permission.isAdmin || this.permission.isResearchManager),
+    },
     {
       headerName: 'Actions',
       cellRenderer: ActionsComponent,
       cellRendererParams: { onClick: this.onEditClick.bind(this) },
+      width: 150,
     },
   ];
 
   defaultColDefs: ColDef<StreetDataColType> = {
     sortable: true,
     filter: true,
+    autoHeight: true,
+    cellClass: '!flex !items-center',
   };
-  constructor(private sd: StreetDataService, private router: Router) {}
+  constructor(
+    private sd: StreetDataService,
+    private router: Router,
+    private utils: UtilsService,
+    private permission: PermissionService,
+    public colorScheme: ColorSchemeService
+  ) {}
 
   ngOnInit(): void {
     this.streetData();
   }
 
   onCellClick(event: CellClickedEvent) {
-    if (event.colDef.headerName !== 'Actions') {
+    if (!(event.colDef.headerName === 'Actions')) {
       const streetDataId = event.data.id;
       this.router.navigateByUrl(`/dashboard/street-data/${streetDataId}`);
     }
   }
 
-  onEditClick({rowData:{id}}: any) {
+  onEditClick({ rowData: { id } }: any) {
     this.router.navigateByUrl(`/dashboard/street-data/edit/${id}`);
   }
 

@@ -21,6 +21,7 @@ export type StreetData = {
 
 export type StreetDataColType = Pick<
   StreetData,
+  | 'id'
   | 'unique_code'
   | 'street_address'
   | 'sector'
@@ -28,4 +29,6 @@ export type StreetDataColType = Pick<
   | 'location'
   | 'is_verified'
   | 'image_path'
+  | 'created_at'
+  | 'creator'
 >;

@@ -77,21 +77,22 @@ ng-select.ng-invalid.error-on-submit .ng-select-container {
   @apply ring-1 ring-red-500 dark:ring-red-400 border-none;
 }
 
-div.ng-option[role=option]{
+div.ng-option[role="option"] {
   @apply dark:bg-slate-800 dark:text-white;
 }
 
-div.ng-option.ng-option-marked[role=option]{
+div.ng-option.ng-option-marked[role="option"] {
   @apply dark:bg-gray-500 dark:text-white;
 }
 
-div.ng-option.ng-option-marked.ng-option-selected[role=option]{
+div.ng-option.ng-option-marked.ng-option-selected[role="option"] {
   @apply dark:text-orange-400;
 }
-.custom.ng-select.ng-select-disabled .ng-select-container{
+.custom.ng-select.ng-select-disabled .ng-select-container {
   @apply bg-slate-300 dark:bg-slate-800;
 }
 
+// Loader Spinner
 div:is(.loader-spinner) {
   animation: spin 1s ease infinite;
 }
@@ -100,4 +101,16 @@ div:is(.loader-spinner) {
   to {
     transform: rotateZ(360deg);
   }
+}
+
+// AG GRID
+
+.ag-cell[col-id="image_path"],
+.ag-cell[col-id="is_verified"] {
+  @apply justify-center;
+}
+
+.ag-header-cell:nth-child(7) .ag-header-cell-label,
+.ag-header-cell:nth-child(8) .ag-header-cell-label {
+  justify-content: center;
 }

@@ -32,6 +32,7 @@ type IdAndValueType = { id: number; value: string };
 
 type SectionType = IdAndNameType & { location_id: number };
 type LocationType = IdAndNameType & { is_active: boolean };
+type UniqueCodeType = IdAndValueType & { location_id?: number };
 
 type NewStreetDataFormType = {
   unique_codes: IdAndValueType[];

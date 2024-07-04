@@ -49,7 +49,7 @@ export class NewStreetDataFormService {
   ngOnDestroy(): void {
     this.getNewStreetDataFormValuesSubscription.unsubscribe();
   }
-  
+
   private retrieveAllData() {
     this.getNewStreetDataFormValues$ =
       this.httpClient.get<NewStreetDataFormType>(

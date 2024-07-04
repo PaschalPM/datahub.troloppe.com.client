@@ -39,7 +39,7 @@ export class StreetDataService {
 
   getStreetDataDetails(streetDataId: number) {
     return this.httpClient.get<StreetData>(
-      `http://localhost:3000/street-data/${streetDataId}`
+      apiUrlFactory(`/street-data/${streetDataId}`)
     );
   }
   // store(body: any) {

@@ -30,6 +30,8 @@ import { StreetDataService } from '@services/street-data.service';
 import { LoaderService } from '@services/loader.service';
 import { ActiveLocationService } from '@services/active-location.service';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
+import { ThisReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'app-new-street-data',
@@ -56,10 +58,13 @@ export class NewStreetDataComponent {
 
   private staticLocationId!: number;
   private allSections: SectionType[] = [];
+  private allUniqueCodes: UniqueCodeType[] = [];
 
   // -----> Property Options From Fixtures
   sectorOptions: OptionType[] = sectorOptions;
   constructionStatusOptions: OptionType[] = constructionStatusOptions;
+
+  private observeAllSDRSubscription!: Subscription
 
   constructor(
     private fb: FormBuilder,
@@ -95,7 +100,7 @@ export class NewStreetDataComponent {
 
   ngOnInit(): void {
     this.getOptionsValueFromAPI();
-    this.getActiveLocationAndSetSection();
+    this.setKeyFieldsFromActiveLocation();
 
     // -----> Enable Geolocation Alert
     this.geo.errorEvents$.subscribe((error) => {
@@ -149,7 +154,7 @@ export class NewStreetDataComponent {
               image: '',
               geolocation: streetData.geolocation,
             });
-            this.setSections(this.staticLocationId);
+            this.setUniqueCodeAndSections(this.staticLocationId);
             this.loader.stop();
           });
       }
@@ -184,8 +189,12 @@ export class NewStreetDataComponent {
     }
   }
 
+  ngOnDestroy(): void {
+    this.observeAllSDRSubscription.unsubscribe()
+  }
+
   private getOptionsValueFromAPI() {
-    this.newStreetDataFormService.observeAllResources().subscribe((event) => {
+    this.observeAllSDRSubscription = this.newStreetDataFormService.observeAllResources().subscribe((event) => {
       switch (event?.key) {
         case LOCATIONS_KEY:
           this.locationOptions = event.value as LocationType[];
@@ -194,24 +203,32 @@ export class NewStreetDataComponent {
           this.allSections = event.value as SectionType[];
           break;
         case UNIQUE_CODES_KEY:
-          this.uniqueCodeOptions = event.value as IdAndValueType[];
+          this.allUniqueCodes = event.value as UniqueCodeType[];
           break;
       }
     });
   }
 
-  private getActiveLocationAndSetSection() {
+  /**
+   * Sets the values for Location, Section and UniqueCode fields
+   */
+  private setKeyFieldsFromActiveLocation() {
     this.activeLocationService.activeLocation().subscribe((activeLocation) => {
       this.staticLocationId = activeLocation?.id as number;
       this.streetDataFormGroup.controls['location'].setValue(
         activeLocation?.id
       );
-      this.setSections(activeLocation?.id as number);
+      this.setUniqueCodeAndSections(activeLocation?.id as number);
     });
   }
 
-  private setSections(staticLocationId: number) {
+  private setUniqueCodeAndSections(staticLocationId: number) {
     setTimeout(() => {
+      
+      this.uniqueCodeOptions = this.allUniqueCodes.filter(
+        (value) => value.location_id === staticLocationId || !value.location_id
+      );
+
       this.sectionOptions = this.allSections.filter(
         (value) => value.location_id === staticLocationId
       );

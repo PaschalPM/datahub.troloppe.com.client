@@ -15,7 +15,7 @@ export class UtilsService {
 
   capitalize(str: string, onlyFirstWord = false) {
     str = str
-      .replace(/[-_]/, ' ')
+      .replace(/[-_]/g, ' ')
       .replace(/[A-Z]./g, (m) => ` ${m}`)
       .trim();
     const pattern = onlyFirstWord ? /\b\w/ : /\b\w/g;

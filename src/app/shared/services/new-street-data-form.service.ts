@@ -11,14 +11,15 @@ export const UNIQUE_CODES_KEY = 'unique-codes';
   providedIn: 'root',
 })
 export class NewStreetDataFormService {
-  private locations$ =
-    new BehaviorSubject<NewStreetDataFormEventType<LocationType> | null>(null);
-  private sections$ =
-    new BehaviorSubject<NewStreetDataFormEventType<SectionType> | null>(null);
   private propertyUniqueCodes$ =
     new BehaviorSubject<NewStreetDataFormEventType<IdAndValueType> | null>(
       null
     );
+  private locations$ =
+    new BehaviorSubject<NewStreetDataFormEventType<LocationType> | null>(null);
+  private sections$ =
+    new BehaviorSubject<NewStreetDataFormEventType<SectionType> | null>(null);
+
   private getNewStreetDataFormValues$!: Observable<NewStreetDataFormType>;
   private getNewStreetDataFormValuesSubscription!: Subscription;
 
@@ -48,6 +49,17 @@ export class NewStreetDataFormService {
 
   ngOnDestroy(): void {
     this.getNewStreetDataFormValuesSubscription.unsubscribe();
+  }
+
+  public retrieveOnlyUniqueCodes() {
+    this.httpClient
+      .get<NewStreetDataFormType>(apiUrlFactory('/street-data/form-data'))
+      .subscribe((value) => {
+        this.propertyUniqueCodes$.next({
+          key: UNIQUE_CODES_KEY,
+          value: value.unique_codes,
+        });
+      });
   }
 
   private retrieveAllData() {

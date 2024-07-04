@@ -30,8 +30,7 @@ import { StreetDataService } from '@services/street-data.service';
 import { LoaderService } from '@services/loader.service';
 import { ActiveLocationService } from '@services/active-location.service';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription } from 'rxjs';
-import { ThisReceiver } from '@angular/compiler';
+import { ConfirmModalComponent } from '@partials/modals/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-new-street-data',
@@ -64,8 +63,6 @@ export class NewStreetDataComponent {
   sectorOptions: OptionType[] = sectorOptions;
   constructionStatusOptions: OptionType[] = constructionStatusOptions;
 
-  private observeAllSDRSubscription!: Subscription
-
   constructor(
     private fb: FormBuilder,
     private newStreetDataFormService: NewStreetDataFormService,
@@ -85,7 +82,7 @@ export class NewStreetDataComponent {
         sector: ['', [Validators.required]],
         location: [{ value: '', disabled: true }, [Validators.required]],
         section: ['', [Validators.required]],
-        number_of_units: [null, [Validators.required]], // *
+        number_of_units: [null, [Validators.required, Validators.max(1000)]], // *
         contact_name: [''],
         contact_numbers: [''],
         contact_email: ['', [Validators.email]],
@@ -123,14 +120,14 @@ export class NewStreetDataComponent {
   }
 
   getStreetData(optionValue: IdAndValueType) {
-    console.log(optionValue)
+    console.log(this.allUniqueCodes, optionValue);
     if (optionValue) {
       if (optionValue.id) {
         this.loader.start();
         this.streetDataService
           .getStreetDataDetails(optionValue.id)
           .subscribe((streetData) => {
-            const selectedUniqueCode = this.uniqueCodeOptions.find(
+            const selectedUniqueCode = this.allUniqueCodes.find(
               (uniqueCode) =>
                 uniqueCode.value.toLowerCase() ===
                 streetData.unique_code.toLowerCase()
@@ -151,20 +148,29 @@ export class NewStreetDataComponent {
               contact_numbers: streetData.contact_numbers,
               contact_email: streetData.contact_email,
               construction_status: streetData.construction_status,
-              image: '',
+              image: streetData.image_path,
               geolocation: streetData.geolocation,
             });
-            this.setUniqueCodeAndSections(this.staticLocationId);
+
             this.loader.stop();
           });
       }
-    } 
+    }
   }
 
   async onSubmit() {
     this.formIsSubmitting = true;
 
     if (this.streetDataFormGroup.valid) {
+      const body = this.streetDataFormGroup.value;
+      const uniqueCodeStreetDataId = this.streetDataFormGroup.value.unique_code;
+      body.unique_code = this.allUniqueCodes.find(
+        (uniqueCode) => uniqueCode.id === uniqueCodeStreetDataId
+      )?.value;
+      body.location = this.streetDataFormGroup.controls['location'].value;
+      if (body.unique_code === 'New Entry') {
+        body.unique_code = null;
+      }
       let googleMapsUrlOrErrorMsg;
       try {
         googleMapsUrlOrErrorMsg = await this.geo.getGoogleMapsUrl();
@@ -175,26 +181,42 @@ export class NewStreetDataComponent {
       this.streetDataFormGroup.controls['geolocation'].setValue(
         googleMapsUrlOrErrorMsg
       );
-
-      // this.streetDataService.store(this.streetDataFormGroup.value).subscribe({
-      //   next: (value) => {
-      //     console.log(value);
-      //   },
-      // });
+      this.modalService.open(ConfirmModalComponent, {
+        matIconName: 'confirm',
+        title: 'Confirm Data Submission',
+        message: 'Proceed if you are sure this form was correctly filled.',
+        severity: 'warning',
+        ok: () => {
+          this.loader.start();
+          this.streetDataService.store(body).subscribe({
+            next: (value) => {
+              console.log(value);
+              this.streetDataFormGroup.reset();
+              this.formIsSubmitting = false;
+              this.newStreetDataFormService.retrieveOnlyUniqueCodes();
+              this.toaster.success(
+                'Street Data successfully saved.',
+                'Success'
+              );
+              this.loader.stop();
+            },
+          });
+        },
+      });
     } else {
+      console.log(
+        this.streetDataFormGroup.get('number_of_units')?.hasError('max')
+      );
       this.toaster.error(
         'Check that all fields are correctly filled.',
         'Form Error'
       );
+      this.loader.stop();
     }
   }
 
-  ngOnDestroy(): void {
-    this.observeAllSDRSubscription.unsubscribe()
-  }
-
   private getOptionsValueFromAPI() {
-    this.observeAllSDRSubscription = this.newStreetDataFormService.observeAllResources().subscribe((event) => {
+    this.newStreetDataFormService.observeAllResources().subscribe((event) => {
       switch (event?.key) {
         case LOCATIONS_KEY:
           this.locationOptions = event.value as LocationType[];
@@ -206,6 +228,7 @@ export class NewStreetDataComponent {
           this.allUniqueCodes = event.value as UniqueCodeType[];
           break;
       }
+      this.setUniqueCodeAndSections(this.staticLocationId);
     });
   }
 
@@ -224,7 +247,6 @@ export class NewStreetDataComponent {
 
   private setUniqueCodeAndSections(staticLocationId: number) {
     setTimeout(() => {
-      
       this.uniqueCodeOptions = this.allUniqueCodes.filter(
         (value) => value.location_id === staticLocationId || !value.location_id
       );

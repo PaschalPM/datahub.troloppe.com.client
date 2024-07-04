@@ -47,6 +47,8 @@ export class SelectDropdownComponent {
   ngAfterViewChecked(): void {
     if (this.formIsSubmitting) {
       this.ngSelect.element.classList.add('error-on-submit');
+    } else {
+      this.ngSelect.element.classList.remove('error-on-submit');
     }
   }
 

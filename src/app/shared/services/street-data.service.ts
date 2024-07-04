@@ -42,11 +42,11 @@ export class StreetDataService {
       apiUrlFactory(`/street-data/${streetDataId}`)
     );
   }
-  // store(body: any) {
-  //   return this.httpClient.post(
-  //     BASE_API_URL + '/street-data',
-  //     body,
-  //     apiHttpOptions
-  //   );
-  // }
+  store(body: any) {
+    return this.httpClient.post(
+      apiUrlFactory(`/street-data`),
+      body,
+      apiHttpOptions
+    );
+  }
 }

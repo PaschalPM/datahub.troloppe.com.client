@@ -33,7 +33,7 @@
   @else {
   <input autocomplete="off" #myInput [type]="type" [id]="name" [name]="name" [readonly]="readonly"
     [formControl]="control" [class]="classStyle" appKeyupIgnoreEnter (keyupIgnoreEnter)="onKeyUp()"
-    (input)="onInput($event)"/>
+    (input)="onInput($event)" />
   }
 
   <!---: ERROR SECTION -->
@@ -45,6 +45,9 @@
       ">
     <div *ngIf="control.errors?.['required'] && formIsSubmitting">
       {{ name | capitalize:true }} is a required field.
+    </div>
+    <div *ngIf="control.hasError('max') && formIsSubmitting">
+      {{ name | capitalize:true }} can't be greater than 1000.
     </div>
     <div *ngIf="control.errors?.['minlength'] && formIsSubmitting">
       {{ name | capitalize:true }} must be at least 8 characters long.

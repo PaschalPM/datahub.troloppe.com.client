@@ -12,6 +12,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TempImageUploaderService } from '@services/temp-image-uploader.service';
 import { UtilsService } from '@services/utils.service';
 import { CapitalizePipe } from '@pipes/capitalize.pipe';
+import { ImageViewerModalService } from '@services/image-viewer-modal.service';
 
 @Component({
   selector: 'app-image-uploader',
@@ -46,12 +47,13 @@ import { CapitalizePipe } from '@pipes/capitalize.pipe';
         <!-- End Image Uploader -->
 
         <!---: Image Viewer -->
-        <div class="relative size-32" *ngIf="imageUrl">
+        <div class="relative size-32" *ngIf="imageUrl" >
           <img
             [src]="imageUrl"
             alt=""
             #thumbnail
-            class="size-32 rounded-lg object-cover"
+            (click)="viewImage()"
+            class="size-32 rounded-lg object-cover cursor-pointer"
           />
           <!---: Cancel Button -->
           <button
@@ -71,7 +73,7 @@ import { CapitalizePipe } from '@pipes/capitalize.pipe';
           </div>
         </div>
         <!---: End Image Viewer -->
-        
+
         <!---: Image View Only Spinner -->
         <div class="relative size-32" *ngIf="viewOnly && viewOnlyLoading">
           <!---: Uploading Spinner -->
@@ -114,7 +116,7 @@ export class ImageUploaderComponent {
   isRequired = false;
   control!: FormControl;
   imageUrl = '';
-  viewOnlyLoading = false
+  viewOnlyLoading = false;
 
   get errorBorder() {
     return this.formIsSubmitting && this.control.invalid
@@ -129,19 +131,20 @@ export class ImageUploaderComponent {
 
   constructor(
     private tempImgUploader: TempImageUploaderService,
-    public utils: UtilsService
+    public utils: UtilsService,
+    private imageViewerService: ImageViewerModalService
   ) {}
 
   ngOnInit(): void {
     this.control = this.formGroup.controls?.[this.name] as FormControl;
     this.isRequired = this.control.hasValidator(Validators.required);
-    if (this.viewOnly){
-      this.viewOnlyLoading = true
+    if (this.viewOnly) {
+      this.viewOnlyLoading = true;
     }
     this.control.valueChanges.subscribe((value) => {
-      this.imageUrl = value
-      this.viewOnlyLoading = false
-    })
+      this.imageUrl = value;
+      this.viewOnlyLoading = false;
+    });
   }
 
   deleteImage() {
@@ -190,6 +193,10 @@ export class ImageUploaderComponent {
     });
   }
 
+  viewImage(){
+   
+    this.imageViewerService.open(this.imageUrl)
+  }
   private resetImage() {
     this.imageUrl = '';
     this.loadingState = false;

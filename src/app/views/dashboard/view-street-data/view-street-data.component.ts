@@ -7,7 +7,6 @@ import { TextButtonComponent } from '@components/common/text-button/text-button.
 import { ActiveLocationIndicatorComponent } from '@components/dashboard/active-location-indicator/active-location-indicator.component';
 import { InputFieldComponent } from '@components/dashboard/input-field/input-field.component';
 import { ImageUploaderComponent } from '@components/image-uploader/image-uploader.component';
-import { UtilsService } from '@services/utils.service';
 import { StreetDataDetails } from 'app/shared/classes/street-data-details';
 
 import { NotFoundComponent } from 'app/views/not-found/not-found.component';
@@ -28,11 +27,7 @@ import { NotFoundComponent } from 'app/views/not-found/not-found.component';
   templateUrl: './view-street-data.component.html',
 })
 export class ViewStreetDataComponent extends StreetDataDetails {
-  constructor(
-    public utils: UtilsService,
-    private fb: FormBuilder,
-    private router: Router
-  ) {
+  constructor(private fb: FormBuilder, private router: Router) {
     super();
     this.streetDataFormGroup = this.fb.group(
       {
@@ -87,6 +82,7 @@ export class ViewStreetDataComponent extends StreetDataDetails {
     this.setStreetDataId();
     this.setFormDataAndSomeProperties();
     this.setPermission();
+    this.checkDataIsLoaded();
   }
 
   routeToEditStreetView() {

@@ -1,0 +1,32 @@
+:root {
+  --side-nav-width: 200px;
+  --dashboard-margin-left: -200px;
+
+  @media screen and (width < 768px) {
+    --side-nav-width: 55px;
+    --dashboard-margin-left: -55px;
+  }
+}
+
+.dashboard {
+    position: relative;
+  &-menu-open {
+    --dashboard-margin-left: 0px;
+  }
+
+  display: flex;
+  min-height: 100vh;
+  margin-left: var(--dashboard-margin-left);
+  transition: all 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  & .sidenav {
+    min-width: var(--side-nav-width);
+    height: 100vh;
+    position: sticky;
+    top: 0; bottom: 0;
+  }
+
+  & .content {
+    width: calc(100% - var(--side-nav-width));
+  }
+}

@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import { CanActivateFn, NavigationStart, Router } from '@angular/router';
 import { ActiveLocationService } from '@services/active-location.service';
 import { LoaderService } from '@services/loader.service';
 import { PermissionService } from '@services/permission.service';
@@ -14,18 +14,26 @@ export const newStreetDataFormGuard: CanActivateFn = (route, state) => {
   const loader = inject(LoaderService);
   const permission = inject(PermissionService);
 
-  console.log(state.url, currentPath);
+  let isNavigated = false;
   let subMsg = '';
   if (permission.isResearchStaff) {
     subMsg = ' Contact your upline.';
   }
+
+  router.events.subscribe((value) => {
+    if (value instanceof NavigationStart) {
+      isNavigated = true;
+    }
+  });
 
   return activeLocationService.forGuard().pipe(
     tap({
       next: (value) => {
         if (!value) {
           toaster.error(`No active location set. ${subMsg}`, 'Error');
-          router.navigateByUrl('/dashboard');
+          if (!router.navigated) {
+            router.navigateByUrl('/dashboard');
+          }
           loader.stop();
         }
       },

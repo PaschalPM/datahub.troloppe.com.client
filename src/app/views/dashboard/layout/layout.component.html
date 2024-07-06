@@ -1,8 +1,6 @@
-<div
-    [class]="utils.cn('flex overflow-y-hidden max-h-screen transition-all duration-500', {'-ml-[55px] md:-ml-[200px]': !isMenuOpened})">
-    <dashboard-side-menu></dashboard-side-menu>
-    <div
-        [class]="utils.cn('flex grow flex-col max-w-[calc(100%-56px)] md:max-w-[calc(100%-200px)]')">
+<div class="dashboard">
+    <dashboard-side-menu cls="sidenav"></dashboard-side-menu>
+    <div class="content">
         <dashboard-navbar [title]="title"></dashboard-navbar>
         <main class="grow overflow-auto max-w-full bg-lighter-blue p-4 dark:bg-gray-800 dark:text-white">
             <router-outlet></router-outlet>
@@ -10,3 +8,4 @@
     </div>
 </div>
 <app-modal></app-modal>
+<app-image-viewer-modal></app-image-viewer-modal>

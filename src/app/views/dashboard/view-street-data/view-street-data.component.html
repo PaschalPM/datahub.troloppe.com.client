@@ -1,19 +1,19 @@
 @if(dataIsLoaded){
 <div class="my-4 flex justify-between items-center">
-    <dashboard-active-location-indicator [nonEditable]="true"/>
+    <dashboard-active-location-indicator [nonEditable]="true" />
     <text-button withIcon="edit" [isFlexed]="true" (clickEvent)="routeToEditStreetView()"
         text="Edit Street Data"></text-button>
 </div>
 
 <div class="w-full p-2 md:p-4 lg:w-3/4 mx-auto -mt-5">
 
-    <form [formGroup]="streetDataFormGroup" *ngIf="true"
+    <form [formGroup]="streetDataFormGroup"
         class="rounded-lg bg-white p-4 md:p-8 text-sm shadow-md backdrop-blur-md my-6 dark:border-white/50 dark:bg-white/5  dark:shadow-sm dark:shadow-white/35 ">
 
         <div class="flex justify-between items-center relative">
 
             <!---: Image URL -->
-            <app-image-uploader label="Photo Preview" name="image_path" [viewOnly]="true"
+            <app-image-uploader label="Photo Preview" name="image_path" [viewOnly]="true" 
                 [formGroup]="streetDataFormGroup">
             </app-image-uploader>
 

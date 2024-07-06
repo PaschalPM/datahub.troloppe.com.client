@@ -46,18 +46,31 @@ export class ColorSchemeService {
     });
   }
 
+  private setMode(mode: 'dark' | 'light') {
+    const colorModeFuncts: { [key: string]: () => void } = {
+      dark: () => {
+        this.document.body.classList.add('dark', 'bg-slate-800');
+        this.document.body.classList.remove('bg-lighter-blue');
+      },
+      light: () => {
+        this.document.body.classList.remove('dark', 'bg-slate-800');
+        this.document.body.classList.add('bg-lighter-blue');
+      },
+    };
+    return colorModeFuncts[mode]()
+  }
   private setColorScheme(value: ColorSchemeType) {
     if (value === 'dark' || value === 'light') {
       this.actualScheme = value;
     }
-    if (value === 'light') this.document.body.classList.remove('dark');
-    else if (value === 'dark') this.document.body.classList.add('dark');
-    else {
+    if (value === 'light') this.setMode("light")
+     else if (value === 'dark') this.setMode("dark")
+     else {
       this.actualScheme = 'light';
       this.mediaQuery.observe(SYSTEM_COLOR_SCHEME).subscribe({
         next: (matches) => {
           if (matches) {
-            this.document.body.classList.add('dark');
+            this.setMode("dark")
             this.actualScheme = 'dark';
           }
         },

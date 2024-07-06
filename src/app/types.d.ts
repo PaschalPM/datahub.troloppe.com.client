@@ -50,3 +50,8 @@ type ConfirmModalPropsType = {
   severity?: 'error' | 'warning';
   ok: () => void;
 };
+
+// MODAL TYPES
+type InputsType = Record<string, unknown> | undefined;
+type ModalValueType = { template: Type<any>; inputs: InputsType };
+type ImageModalValueType = { template: Type<any>; imageUrl: string };

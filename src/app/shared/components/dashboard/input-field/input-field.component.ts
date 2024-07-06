@@ -50,6 +50,7 @@ export class InputFieldComponent {
     | 'checkbox'
     | 'textarea' = 'text';
   @Input() readonly = false;
+  @Input() dataList: string[] = [];
   @Input() maxLength = 250;
 
   @Output() formIsSubmittingChange = new EventEmitter();

@@ -24,16 +24,21 @@
   }
   @else if (type === 'checkbox') {
   <input type="checkbox" [id]="name" [name]="name" [formControl]="control"
-    class="text-dodger-blue dark:text-orange-400 bg-transparent " />
+    class="text-dodger-blue dark:text-orange-400 bg-transparent" />
   }
   @else if (type === 'textarea') {
   <textarea [id]="name" [name]="name" [formControl]="control" class="h-24" [class]="classStyle"
     (input)="onInput($event)"></textarea>
   }
   @else {
-  <input autocomplete="off" #myInput [type]="type" [id]="name" [name]="name" [readonly]="readonly"
+  <input autocomplete="off" [attr.list]="dataList.length && name+'options'" #myInput [type]="type" [id]="name" [name]="name" [readonly]="readonly"
     [formControl]="control" [class]="classStyle" appKeyupIgnoreEnter (keyupIgnoreEnter)="onKeyUp()"
     (input)="onInput($event)" />
+    <datalist [id]="name+'options'" *ngIf="dataList.length">
+      @for(data of dataList; track data){
+        <option [value]="data">
+      }
+    </datalist>
   }
 
   <!---: ERROR SECTION -->

@@ -61,7 +61,7 @@ export class StreetDataComponent {
 
   colDefs: ColDef<StreetDataColType>[] = [
     { headerName: 'S/N', width: 75,valueGetter: "node.rowIndex + 1"},
-    { field: 'unique_code', headerName: 'Unique Code', width: 150, valueGetter: (params) => params.data?.unique_code || 'Not Set' },
+    { field: 'unique_code', headerName: 'Unique Code', width: 150, valueGetter: (params) => params.data?.unique_code || 'New Entry' },
     { field: 'street_address', headerName: ' Street Address' },
     { field: 'sector' },
     { field: 'section' },

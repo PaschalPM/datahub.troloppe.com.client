@@ -182,7 +182,7 @@ export class NewStreetDataComponent {
         googleMapsUrlOrErrorMsg
       );
       this.modalService.open(ConfirmModalComponent, {
-        matIconName: 'confirm',
+        matIconName: 'description',
         title: 'Confirm Data Submission',
         message: 'Proceed if you are sure this form was correctly filled.',
         severity: 'warning',

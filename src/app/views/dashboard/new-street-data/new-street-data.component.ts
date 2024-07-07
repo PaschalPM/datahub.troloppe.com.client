@@ -19,7 +19,6 @@ import { ModalService } from '@services/modal.service';
 import { GeolocationAlertModalComponent } from '@partials/modals/geolocation-alert-modal/geolocation-alert-modal.component';
 import { SubmitBtnComponent } from '@components/dashboard/submit-btn/submit-btn.component';
 import { SelectDropdownComponent } from '@components/select-dropdown/select-dropdown.component';
-import { ActiveLocationIndicatorComponent } from '@components/dashboard/active-location-indicator/active-location-indicator.component';
 import {
   LOCATIONS_KEY,
   NewStreetDataFormService,
@@ -41,7 +40,6 @@ import { ConfirmModalComponent } from '@partials/modals/confirm-modal/confirm-mo
     ReactiveFormsModule,
     SubmitBtnComponent,
     SelectDropdownComponent,
-    ActiveLocationIndicatorComponent,
   ],
   templateUrl: './new-street-data.component.html',
 })
@@ -110,14 +108,6 @@ export class NewStreetDataComponent {
     this.geo.observe();
   }
 
-  setSelectedLocationValue(data: IdAndNameType) {
-    this.streetDataFormGroup.get('section')?.setValue(null);
-    setTimeout(() => {
-      this.sectionOptions = this.allSections.filter(
-        (value) => value.location_id === data.id
-      );
-    });
-  }
 
   getStreetData(optionValue: IdAndValueType) {
     console.log(this.allUniqueCodes, optionValue);
@@ -204,9 +194,6 @@ export class NewStreetDataComponent {
         },
       });
     } else {
-      console.log(
-        this.streetDataFormGroup.get('number_of_units')?.hasError('max')
-      );
       this.toaster.error(
         'Check that all fields are correctly filled.',
         'Form Error'

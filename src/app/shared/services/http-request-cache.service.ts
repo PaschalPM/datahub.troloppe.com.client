@@ -19,6 +19,7 @@ export class HttpRequestCacheService {
 
   reset() {
     this.expMinutes = 5;
+    this.cache = {}
   }
 
   get(key: string) {
@@ -27,7 +28,7 @@ export class HttpRequestCacheService {
       if (this.isFresh(cachedData.exp)) {
         return cachedData.httpResponse;
       }
-      this.pop(key);
+      this.invalidate(key);
       return null;
     }
     return null;
@@ -40,6 +41,10 @@ export class HttpRequestCacheService {
     };
   }
 
+  invalidate(key: string) {
+    delete this.cache[key];
+  }
+
   private getCacheExpirationTime() {
     const currentDate = new Date();
     const milliseconds = this.expMinutes * 60 * 1000;
@@ -49,11 +54,5 @@ export class HttpRequestCacheService {
   private isFresh(expTime: Date) {
     const currentDate = new Date();
     return expTime > currentDate;
-  }
-
-  private pop(key: string) {
-    const httpResponse = this.cache[key].httpResponse;
-    delete this.cache[key];
-    return httpResponse;
   }
 }

@@ -20,11 +20,11 @@ export class StreetDataDetails {
 
   protected streetDataId!: number;
 
+  public utils = inject(UtilsService);
+  protected streetDataService = inject(StreetDataService);
+  protected loader = inject(LoaderService);
   private permissionService = inject(PermissionService);
   private activatedRoute = inject(ActivatedRoute);
-  private streetDataService = inject(StreetDataService);
-  public utils = inject(UtilsService);
-  public loader = inject(LoaderService);
 
   dataLoadedEvent = new EventEmitter();
 
@@ -37,12 +37,20 @@ export class StreetDataDetails {
     }
   }
 
-  protected setFormDataAndSomeProperties() {
+  protected setFormDataAndSomeProperties(forEditForm: boolean = false) {
     this.loader.start();
     this.streetDataService.getStreetDataDetails(this.streetDataId).subscribe({
       next: (value) => {
         setTimeout(() => {
-          this.streetData = value;
+          if (forEditForm) {
+            const newValue = {...value}
+            newValue.section = value.section_id as any;
+            this.streetData = newValue;
+          } else {
+            const newValue = {...value}
+            newValue.sector = this.utils.capitalize(value.sector)
+            this.streetData = newValue;
+          }
           this.streetData.unique_code = value.unique_code || 'New Entry';
           this.streetDataFormGroup.setValue(this.streetData);
           this.geolocation = value.geolocation;

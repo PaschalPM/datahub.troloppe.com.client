@@ -1,13 +1,13 @@
 @if(dataIsLoaded){
 
 <div class="my-4 flex justify-between items-center">
-    <dashboard-active-location-indicator [nonEditable]="true" />
+    back key
     <text-button withIcon="delete" [isFlexed]="true" [isError]="true" text="Delete Street Data"
         (clickEvent)="onDeleteStreetData()"></text-button>
 </div>
 
 <div class="w-full p-2 md:p-4 lg:w-3/4 mx-auto -mt-5">
-    <form [formGroup]="streetDataFormGroup"
+    <form [formGroup]="streetDataFormGroup" (ngSubmit)="onEditStreetData()"
         class="rounded-lg bg-white p-4 md:p-8 text-sm shadow-md backdrop-blur-md my-6 dark:border-white/50 dark:bg-white/5  dark:shadow-sm dark:shadow-white/35 ">
 
         <div class="flex justify-between items-center relative">
@@ -27,17 +27,20 @@
                     <h3 class="font-medium" *ngIf="isPermitted">{{'@'+createdAt}}</h3>
                     <h3 class="font-medium" *ngIf="!isPermitted">{{createdAt}}</h3>
                 </div>
+                @if(isPermitted){
                 <div class="font-medium">
                     <dashboard-input-field label="Is Verified?" name="is_verified" type="checkbox"
                         [formGroup]="streetDataFormGroup"></dashboard-input-field>
                 </div>
+                }
             </div>
         </div>
-
+        @if(isPermitted){
         <!---: Property Unique Code -->
         <dashboard-input-field label="Property Unique Code" name="unique_code" [formGroup]="streetDataFormGroup"
             [dataList]="uniqueCodeDataList">
         </dashboard-input-field>
+        }
 
         <!---: Street Address -->
         <dashboard-input-field label="Street Address" name="street_address" [formGroup]="streetDataFormGroup">
@@ -48,6 +51,60 @@
             bindValue="value" [formIsSubmitting]="formIsSubmitting" [items]="sectorOptions">
         </dashboard-select-dropdown>
 
+        <!---: Location  -->
+        <dashboard-input-field label="Location" name="location" [formGroup]="streetDataFormGroup">
+        </dashboard-input-field>
+
+        <!---: Section  -->
+        <dashboard-select-dropdown label="Section" name="section" [formGroup]="streetDataFormGroup" bindLabel="name"
+            bindValue="id" [formIsSubmitting]="formIsSubmitting" notFoundText="Set a location first"
+            [items]="sectionOptions"> </dashboard-select-dropdown>
+
+        <!---: Number of Units  -->
+        <dashboard-input-field label="Number of Units" name="number_of_units" [formGroup]="streetDataFormGroup"
+            [formIsSubmitting]="formIsSubmitting" type="number">
+        </dashboard-input-field>
+
+        <!---: Construction Status -->
+        <dashboard-select-dropdown label="Construction Status" name="construction_status"
+            [formGroup]="streetDataFormGroup" bindLabel="label" bindValue="value" [formIsSubmitting]="formIsSubmitting"
+            [items]="constructionStatusOptions">
+        </dashboard-select-dropdown>
+
+        <!---: Description -->
+        <dashboard-input-field label="Description" name="description" [formGroup]="streetDataFormGroup"
+            [formIsSubmitting]="formIsSubmitting" type="textarea" [maxLength]="1000"></dashboard-input-field>
+
+        <!---: Contact Name -->
+        <dashboard-input-field label="Contact Name" name="contact_name" [formGroup]="streetDataFormGroup"
+            [formIsSubmitting]="formIsSubmitting">
+        </dashboard-input-field>
+
+        <!---: Contact Numbers -->
+        <dashboard-input-field type="number-list" label="Contact Number(s)" name="contact_numbers"
+            [formGroup]="streetDataFormGroup" [formIsSubmitting]="formIsSubmitting">
+        </dashboard-input-field>
+
+        <!---: Contact Email -->
+        <dashboard-input-field label="Contact Email" name="contact_email" type="email" [formGroup]="streetDataFormGroup"
+            [formIsSubmitting]="formIsSubmitting">
+        </dashboard-input-field>
+
+        @if(isPermitted){
+        <!---: Google URL -->
+        <div [class]="utils.cn('flex justify-end text-sm')">
+
+            <a *ngIf="geolocation" [attr.href]="geolocation" class="underline !text-sm md:text-base">
+                Google Map URL
+            </a>
+            <span *ngIf="!geolocation" [attr.href]="geolocation"
+                class="inline-flex items-center dark:text-red-300 text-red-500">
+                <my-mat-icon>warning</my-mat-icon> Geolocation not available
+            </span>
+        </div>
+        }
+
+        <dashboard-submit-btn [isLoading]="isImageLoading"> Edit </dashboard-submit-btn>
     </form>
 
 </div>

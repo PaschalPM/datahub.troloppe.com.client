@@ -5,6 +5,8 @@ import { apiUrlFactory, apiHttpOptions } from '../../configs/global';
 import { BehaviorSubject, Observable, map, switchMap, tap } from 'rxjs';
 import { AuthService } from './auth.service';
 import { PermissionService } from './permission.service';
+import { HttpRequestCacheService } from './http-request-cache.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -13,10 +15,11 @@ export class StreetDataService {
   constructor(
     private httpClient: HttpClient,
     private auth: AuthService,
-    private permission: PermissionService
+    private permission: PermissionService,
+    private httpReqCacheService: HttpRequestCacheService,
+    private router: Router,
   ) {}
 
-  // REMOVE SOON
   getStreetData() {
     return this.auth.currentUser().pipe(
       switchMap((currentUser) => {
@@ -47,6 +50,31 @@ export class StreetDataService {
       apiUrlFactory(`/street-data`),
       body,
       apiHttpOptions
-    );
+    ).pipe(
+      tap(() => {
+        this.httpReqCacheService.reset();
+      })
+    );;
+  }
+
+  edit(body: any, streetDataId: number) {
+    return this.httpClient
+      .put(apiUrlFactory(`/street-data/${streetDataId}`), body, apiHttpOptions)
+      .pipe(
+        tap(() => {
+          this.httpReqCacheService.reset();
+        })
+      );
+  }
+  
+  delete(streetDataId: number) {
+    return this.httpClient
+      .delete(apiUrlFactory(`/street-data/${streetDataId}`), apiHttpOptions)
+      .pipe(
+        tap(() => {
+          this.httpReqCacheService.reset();
+          this.router.navigateByUrl('/dashboard/street-data')
+        })
+      );
   }
 }

@@ -5,7 +5,9 @@ export type StreetData = {
   description: string;
   sector: string; // enum // *
   section: string; // *
+  section_id: number; // *
   location: string; // *
+  location_id: number; // *
   number_of_units: number;
   contact_name: string;
   contact_numbers: string;

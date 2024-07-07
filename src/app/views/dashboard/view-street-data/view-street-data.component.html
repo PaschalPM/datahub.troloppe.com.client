@@ -1,6 +1,6 @@
 @if(dataIsLoaded){
 <div class="my-4 flex justify-between items-center">
-    <dashboard-active-location-indicator [nonEditable]="true" />
+    back key
     <text-button withIcon="edit" [isFlexed]="true" (clickEvent)="routeToEditStreetView()"
         text="Edit Street Data"></text-button>
 </div>
@@ -87,7 +87,7 @@
         </dashboard-input-field>
 
         @if(isPermitted){
-        <!---: Google URL and Is Verified -->
+        <!---: Google URL -->
         <div [class]="utils.cn('flex justify-end text-sm')">
 
             <a *ngIf="geolocation" [attr.href]="geolocation" class="underline !text-sm md:text-base">

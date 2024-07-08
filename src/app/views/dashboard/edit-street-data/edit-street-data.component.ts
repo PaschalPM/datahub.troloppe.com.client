@@ -21,6 +21,7 @@ import {
 import { SubmitBtnComponent } from '@components/dashboard/submit-btn/submit-btn.component';
 import { MyMatIconComponent } from '@components/common/my-mat-icon.component';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-edit-street-data',
@@ -97,7 +98,8 @@ export class EditStreetDataComponent extends StreetDataDetails {
     private modalService: ModalService,
     private fb: FormBuilder,
     private newStreetDataFormService: NewStreetDataFormService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) {
     super();
     this.streetDataFormGroup = this.fb.group(
@@ -148,7 +150,9 @@ export class EditStreetDataComponent extends StreetDataDetails {
       );
     });
   }
-
+  goBack() {
+    this.router.navigateByUrl(`/dashboard/street-data/${this.streetData.id}`)
+  }
   onDeleteStreetData() {
     this.modalService.open(
       ConfirmModalComponent,

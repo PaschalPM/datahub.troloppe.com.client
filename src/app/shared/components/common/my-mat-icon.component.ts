@@ -32,7 +32,7 @@ import { UtilsService } from '../../services/utils.service';
   `,
 })
 export class MyMatIconComponent {
-  @Input() badge!: number | string | undefined;
+  @Input() badge!: number | null;
   @Input() badgeHidden = false;
   @Input() class = '';
 

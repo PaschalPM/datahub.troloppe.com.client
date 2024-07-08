@@ -1,6 +1,6 @@
 @if(dataIsLoaded){
 <div class="my-4 flex justify-between items-center">
-    back key
+    <text-button text="Back" state="neutral" withIcon="arrow_back" [small]="true" (clickEvent)="goBack()" />
     <text-button withIcon="edit" [isFlexed]="true" (clickEvent)="routeToEditStreetView()"
         text="Edit Street Data"></text-button>
 </div>

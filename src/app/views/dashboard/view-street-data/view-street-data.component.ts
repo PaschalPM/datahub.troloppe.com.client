@@ -85,6 +85,10 @@ export class ViewStreetDataComponent extends StreetDataDetails {
     this.checkDataIsLoaded();
   }
 
+  goBack(){
+    this.router.navigateByUrl('/dashboard/street-data')
+  }
+  
   routeToEditStreetView() {
     this.router.navigateByUrl(
       `/dashboard/street-data/edit/${this.streetDataId}`

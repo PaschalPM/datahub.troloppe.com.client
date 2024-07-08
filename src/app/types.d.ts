@@ -9,7 +9,7 @@ type AuthType = {
 };
 
 type NotificationType = {
-  id: number;
+  id: string;
   label: string;
   message: string;
   sendAt: string;

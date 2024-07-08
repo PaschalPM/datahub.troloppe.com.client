@@ -7,10 +7,11 @@ import { CookieService } from 'ngx-cookie-service';
 export const csrfInterceptor: HttpInterceptorFn = (req, next) => {
   const cookiesService = inject(CookieService);
   const condition =
-    ['POST', 'PUT', 'DELETE'].includes(req.method) ||
-    req.url.endsWith('/api/auth/user') ||
-    (req.url.includes('/api/street-data') &&
-      !req.url.startsWith('http://localhost:3000'));
+    ['POST', 'PUT', 'DELETE'].includes(req.method) 
+    || req.url.includes('/api/notifications')
+    || req.url.endsWith('/api/auth/user') 
+    || (req.url.includes('/api/street-data') 
+    && !req.url.startsWith('http://localhost:3000'));
 
   if (condition) {
     return csrfRequest().pipe(

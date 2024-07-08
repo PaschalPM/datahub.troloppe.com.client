@@ -7,9 +7,10 @@ export const requestInterceptor: HttpInterceptorFn = (req, next) => {
   const reqCacheService = inject(HttpRequestCacheService);
 
   const conditions =
-    req.method === 'GET' &&
-    !req.url.endsWith('/sanctum/csrf-cookie') &&
-    !req.url.endsWith('/api/auth/user');
+    req.method === 'GET' 
+    && !req.url.endsWith('/sanctum/csrf-cookie') 
+    && !req.url.endsWith('/api/auth/user')
+    && !req.url.includes('/api/notifications');
 
   if (conditions) {
     const cachedResponse = reqCacheService.get(req.url);

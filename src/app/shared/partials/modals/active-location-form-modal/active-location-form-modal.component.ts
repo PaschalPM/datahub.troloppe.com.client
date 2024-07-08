@@ -30,7 +30,7 @@ import { LoaderService } from '@services/loader.service';
         placeholder="No Active Location"
       >
       </dashboard-select-dropdown>
-   
+
       <div class="flex justify-end gap-2 mt-5">
         <text-button
           [text]="btnText"
@@ -52,8 +52,9 @@ export class ActiveLocationFormModalComponent {
 
   // Getters
   get isActivationDisallowed() {
-    const cond1 = this.currentActiveLocation?.id === this.locationControl.value
-    const cond2 = this.currentActiveLocation === null && !this.locationControl.value
+    const cond1 = this.currentActiveLocation?.id === this.locationControl.value;
+    const cond2 =
+      this.currentActiveLocation === null && !this.locationControl.value;
     return cond1 || cond2;
   }
   get btnText() {
@@ -82,18 +83,20 @@ export class ActiveLocationFormModalComponent {
   }
 
   setActiveLocation() {
-    this.loader.start();
-    this.setActiveLocationSubscription = this.activeLocationService
-      .setActiveLocation(this.activeLocationFormGroup.value)
-      .subscribe((value) => {
-        let msg = 'New location activated and notifications sent out.'
-        if (!value){
-          msg = 'No active location available'
-        }
-        this.toastr.success(msg, 'Success');
-        this.loader.stop()
-        this.modalService.close();
-      });
+    if (confirm('Are you sure you want to set a new active location?')) {
+      this.loader.start();
+      this.setActiveLocationSubscription = this.activeLocationService
+        .setActiveLocation(this.activeLocationFormGroup.value)
+        .subscribe((value) => {
+          let msg = 'New location activated and notifications sent out.';
+          if (!value) {
+            msg = 'No active location available';
+          }
+          this.toastr.success(msg, 'Success');
+          this.loader.stop();
+          this.modalService.close();
+        });
+    }
   }
 
   ngOnDestroy(): void {
@@ -114,6 +117,4 @@ export class ActiveLocationFormModalComponent {
       }
     });
   }
-
-  
 }

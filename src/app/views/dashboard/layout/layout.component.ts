@@ -59,7 +59,7 @@ export class LayoutComponent {
     this.colorScheme.init();
 
     // Fetches User Notifications
-    this.fetchNotificationsSubscription = this.ns.fetchNotifications();
+    this.fetchNotificationsSubscription = this.ns.fetchNotifications().subscribe();
 
     // Revalidate ColorScheme and Notifications on Window Focus
     this.revalidateOnWindowFocus();
@@ -103,7 +103,7 @@ export class LayoutComponent {
     this.windowFocusSubscription = this.wfs.focus$.subscribe((isFocused) => {
       if (isFocused) {
         this.colorScheme.init();
-        this.fetchNotificationsSubscription = this.ns.fetchNotifications();
+        this.fetchNotificationsSubscription = this.ns.fetchNotifications().subscribe();
       } else {
         this.fetchNotificationsSubscription.unsubscribe();
       }

@@ -1,4 +1,7 @@
-<div class="divider-y container mx-auto max-w-[800px] bg-white px-2 py-4 dark:bg-gray-700">
+<div class="divider-y relative container mx-auto max-w-[800px] bg-white px-2 py-4 dark:bg-gray-700">
+    <button (click)="deleteAll()" class="absolute top-9 right-9" title="Delete all notifications">
+        <my-mat-icon>delete</my-mat-icon>
+    </button>
     <pane-navigator-panel [(activePane)]="activePane" [tabs]="tabs"> </pane-navigator-panel>
     <div class="divide-y dark:divide-gray-600">
         @if(activeNotifications){

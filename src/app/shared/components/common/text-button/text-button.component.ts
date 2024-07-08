@@ -19,7 +19,10 @@ import { NgIf } from '@angular/common';
             'p-2 py-1 text-xs font-normal': small
           },
           {
-            'text-red-500 dark:text-red-400 dark:hover:bg-red-400/15 hover:bg-red-500/15': isError
+            'text-red-500 dark:text-red-400 dark:hover:bg-red-400/15 hover:bg-red-500/15': state === 'error'
+          }, 
+          {
+            'text-slate-800 dark:text-slate-200 dark:hover:bg-slate-400/15 hover:bg-slate-500/15': state === 'neutral'
           }
         )
       "
@@ -46,7 +49,7 @@ export class TextButtonComponent {
   @Input() withIcon = '';
   @Input() isFlexed = false;
   @Input() disabled = false;
-  @Input() isError = false;
+  @Input() state!: 'error' | 'neutral';
 
   @Output() clickEvent = new EventEmitter();
 

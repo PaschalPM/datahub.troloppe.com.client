@@ -30,6 +30,8 @@ import { LoaderService } from '@services/loader.service';
 import { ActiveLocationService } from '@services/active-location.service';
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmModalComponent } from '@partials/modals/confirm-modal/confirm-modal.component';
+import { TextButtonComponent } from '@components/common/text-button/text-button.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-street-data',
@@ -40,6 +42,7 @@ import { ConfirmModalComponent } from '@partials/modals/confirm-modal/confirm-mo
     ReactiveFormsModule,
     SubmitBtnComponent,
     SelectDropdownComponent,
+    TextButtonComponent
   ],
   templateUrl: './new-street-data.component.html',
 })
@@ -69,7 +72,8 @@ export class NewStreetDataComponent {
     private streetDataService: StreetDataService,
     private loader: LoaderService,
     private activeLocationService: ActiveLocationService,
-    private toaster: ToastrService
+    private toaster: ToastrService,
+    private router: Router
   ) {
     // -----> Form Group
     this.streetDataFormGroup = this.fb.group(
@@ -108,7 +112,9 @@ export class NewStreetDataComponent {
     this.geo.observe();
   }
 
-
+  goBack(){
+    this.router.navigateByUrl('/dashboard/street-data')
+  }
   getStreetData(optionValue: IdAndValueType) {
     console.log(this.allUniqueCodes, optionValue);
     if (optionValue) {

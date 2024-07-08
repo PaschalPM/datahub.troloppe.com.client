@@ -40,6 +40,9 @@ export class ColorSchemeService {
     this.currentChange.unsubscribe();
   }
 
+  reset(){
+    this.setMode('light')
+  }
   private listen() {
     this.currentChange.subscribe((value) => {
       this.setColorScheme(value);

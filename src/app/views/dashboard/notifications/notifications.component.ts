@@ -4,8 +4,11 @@ import { NotificationsService } from '../../../shared/services/notifications.ser
 import { NotificationItemComponent } from '../../../shared/components/dashboard/notification-item/notification-item.component';
 import { AsyncPipe, NgIf } from '@angular/common';
 import { PaneNavigatorPanelComponent } from '../../../shared/components/pane-navigator-panel/pane-navigator-panel.component';
-import {  Subscription } from 'rxjs';
 import { SpinnerComponent } from '../../../shared/components/svgs/spinner.component';
+import { MyMatIconComponent } from '@components/common/my-mat-icon.component';
+import { ModalService } from '@services/modal.service';
+import { ConfirmModalComponent } from '@partials/modals/confirm-modal/confirm-modal.component';
+import { LoaderService } from '@services/loader.service';
 
 type PaneType = 'unreadNotifications' | 'allNotifications';
 
@@ -18,6 +21,7 @@ type PaneType = 'unreadNotifications' | 'allNotifications';
     AsyncPipe,
     PaneNavigatorPanelComponent,
     SpinnerComponent,
+    MyMatIconComponent,
   ],
   templateUrl: './notifications.component.html',
   styles: `
@@ -30,6 +34,14 @@ export class NotificationsComponent {
   allNotifications: NotificationType[] | undefined = undefined;
   error: string | null = null;
   activePane: PaneType = 'unreadNotifications';
+  confirmDeleteAllNotificationsModalPropsData: ConfirmModalPropsType = {
+    matIconName: 'delete',
+    title: 'Confirm Delete',
+    message: 'Are you sure you want to delete all notifications?',
+    ok: () => {
+      this.ns.deleteAll().subscribe();
+    },
+  };
 
   get unreadNotifications(): NotificationType[] | undefined {
     return this.allNotifications?.filter((value) => !value.isRead);
@@ -41,10 +53,10 @@ export class NotificationsComponent {
       : this.allNotifications;
   }
 
-  get noNotificationText(){
+  get noNotificationText() {
     return this.activePane === 'unreadNotifications'
       ? 'No Unread Notifications...'
-      : 'No Notifications...'
+      : 'No Notifications...';
   }
 
   get tabs() {
@@ -70,12 +82,16 @@ export class NotificationsComponent {
     return unreadNotifications ? unreadNotifications.length : 0;
   }
 
-  constructor(public utils: UtilsService, private ns: NotificationsService) {}
+  constructor(
+    public utils: UtilsService,
+    private ns: NotificationsService,
+    private modalService: ModalService,
+    private loader: LoaderService
+  ) {}
 
   ngOnInit(): void {
     this.ns.observe().subscribe({
       next: (notifications) => {
-        console.log('SUCCESS');
         this.error = null;
         this.allNotifications = notifications;
       },
@@ -88,7 +104,13 @@ export class NotificationsComponent {
   }
 
   markAsRead(notification: NotificationType) {
-    notification.isRead = true;
-    this.ns.updateNotification(notification);
+    this.ns.updateNotification(notification).subscribe();
+  }
+
+  deleteAll() {
+    this.modalService.open(
+      ConfirmModalComponent,
+      this.confirmDeleteAllNotificationsModalPropsData
+    );
   }
 }

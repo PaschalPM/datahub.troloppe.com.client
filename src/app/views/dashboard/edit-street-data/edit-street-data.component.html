@@ -1,8 +1,8 @@
 @if(dataIsLoaded){
 
 <div class="my-4 flex justify-between items-center">
-    back key
-    <text-button withIcon="delete" [isFlexed]="true" [isError]="true" text="Delete Street Data"
+    <text-button text="Back" state="neutral" withIcon="arrow_back" [small]="true" (clickEvent)="goBack()" />
+    <text-button withIcon="delete" [isFlexed]="true" state="error" text="Delete Street Data"
         (clickEvent)="onDeleteStreetData()"></text-button>
 </div>
 

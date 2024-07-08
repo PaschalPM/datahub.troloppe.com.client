@@ -15,7 +15,7 @@ import { RouterModule } from '@angular/router';
     MyMatIconComponent,
     NgIf,
     RouterModule,
-    AsyncPipe
+    AsyncPipe,
   ],
   templateUrl: './navbar.component.html',
   styles: `
@@ -27,13 +27,8 @@ import { RouterModule } from '@angular/router';
 export class NavbarComponent {
   @Input({ required: true }) title = 'Home';
   isProfileDropdownOpen = false;
-  unreadNotificationsCount = 0
 
-  constructor(public ns: NotificationsService) {
-    ns.observe().subscribe((value) => {
-      this.unreadNotificationsCount = value?.filter((value) => !value.isRead).length ?? 0
-    })
-  }
+  constructor(public ns: NotificationsService) {}
 
   toggleProfileDropdown() {
     this.isProfileDropdownOpen = !this.isProfileDropdownOpen;

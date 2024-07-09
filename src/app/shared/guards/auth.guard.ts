@@ -7,7 +7,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  return authService.currentUser().pipe(
+  return authService.onCurrentUser().pipe(
     tap((currentUser) => {
       if (currentUser) {
         router.navigateByUrl('/dashboard');

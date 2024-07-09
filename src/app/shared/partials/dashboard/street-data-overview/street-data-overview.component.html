@@ -1,12 +1,8 @@
 <div class="my-4 flex justify-between items-center">
     <dashboard-active-location-indicator />
-    <text-button
-      withIcon="add"
-      [isFlexed]="true"
-      (clickEvent)="routeToNewStreetView()"
-      text="New Street Data"
-    ></text-button>
-  </div>
+    <text-button withIcon="add" [isFlexed]="true" (clickEvent)="routeToNewStreetView()"
+        text="New Street Data"></text-button>
+</div>
 
 <div class="my-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
     @for (overview of overviewItems; track overview.id) {
@@ -15,15 +11,28 @@
     }
 </div>
 
-<dashboard-chart-container class="flex flex-wrap md:flex-nowrap justify-center md:justify-between ">
-
-    <dashboard-chart type="pie" [results]="results" title="Verified Street Data Per Locality"> </dashboard-chart>
-    <dashboard-chart type="pie" [results]="results" title="Verified Street Data Per Property Type"> </dashboard-chart>
-
+<dashboard-chart-container class="flex flex-wrap md:flex-nowrap justify-center md:justify-between min-h-60">
+    @if(isLoadingVisualSet){
+    <app-spinner class="size-12 m-auto" />
+    <app-spinner class="size-12 m-auto" />
+    }
+    @else {
+    <dashboard-chart type="pie" [results]="verifiedStreetDataByLocation" title="Verified Street Data By Location">
+    </dashboard-chart>
+    <dashboard-chart type="pie" [results]="verifiedStreetDataBySector" title="Verified Street Data By Sector">
+    </dashboard-chart>
+    }
 </dashboard-chart-container>
 
 @if (isPermitted) {
-<dashboard-chart-container class="justify-center">
-    <dashboard-chart [results]="results" title="Verified Street Data Uploads By Staff"></dashboard-chart>
+<dashboard-chart-container class="justify-center min-h-52">
+    @if(isLoadingUserPerformance){
+    <app-spinner class="size-12 m-auto" />
+    }
+    @else {
+    <dashboard-chart [results]="verifiedStreetDataUploadedByStaff"
+        title="Verified Street Data Uploads By Staff"></dashboard-chart>
+    }
 </dashboard-chart-container>
+
 }

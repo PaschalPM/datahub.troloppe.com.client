@@ -29,6 +29,7 @@ type OptionType = { value: string; label: string };
 
 type IdAndNameType = { id: number; name: string };
 type IdAndValueType = { id: number; value: string };
+type NameAndValueType = { name: string; value: number };
 
 type SectionType = IdAndNameType & { location_id: number };
 type LocationType = IdAndNameType & { is_active: boolean };

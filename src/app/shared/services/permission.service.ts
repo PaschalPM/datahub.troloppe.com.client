@@ -22,7 +22,7 @@ export class PermissionService {
   }
 
   constructor(private authService: AuthService) {
-    this.authService.currentUser().subscribe((currentUser) => {
+    this.authService.onCurrentUser().subscribe((currentUser) => {
       this.currentUser = currentUser;
     });
   }

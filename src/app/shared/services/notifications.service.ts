@@ -3,6 +3,7 @@ import {
   BehaviorSubject,
   catchError,
   interval,
+  map,
   Observable,
   startWith,
   switchMap,
@@ -11,34 +12,39 @@ import {
 } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { apiUrlFactory } from 'app/configs/global';
-import { UtilsService } from './utils.service';
 import { LoaderService } from './loader.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationsService {
-  private notificationsObservable$ = new BehaviorSubject<
+  private notificationsObservable = new BehaviorSubject<
     NotificationType[] | undefined
   >(undefined);
 
-  private unnotificationsCountObservable$ = new BehaviorSubject<number>(0);
-
   constructor(private httpClient: HttpClient, private loader: LoaderService) {}
 
-  observe() {
-    return this.notificationsObservable$.asObservable();
-  }
-  
-  get unreadCount() {
-    return this.unnotificationsCountObservable$.asObservable();
+  get notifications$() {
+    return this.notificationsObservable.asObservable();
   }
 
-  private getUnreadCount(notifications: NotificationType[]){
-    return notifications?.filter((value) => !value.isRead).length
+  get unreadCount$() {
+    return this.notificationsObservable
+      .asObservable()
+      .pipe(
+        map((notifications) =>
+          this.getUnreadCount(notifications as NotificationType[])
+        )
+      );
   }
 
-  public fetchNotifications(): Observable<NotificationType[]> {
+  get count$() {
+    return this.notificationsObservable
+      .asObservable()
+      .pipe(map((notifications) => notifications?.length));
+  }
+
+  fetchNotifications(): Observable<NotificationType[]> {
     return interval(1000 * 60 * 10).pipe(
       startWith(0),
       switchMap(() => {
@@ -47,12 +53,10 @@ export class NotificationsService {
           .pipe(
             tap({
               next: (value) => {
-                this.notificationsObservable$.next(value);
-                this.unnotificationsCountObservable$.next(this.getUnreadCount(value))
+                this.notificationsObservable.next(value);
               },
               error: (err) => {
-                this.notificationsObservable$.error(err);
-                this.unnotificationsCountObservable$.next(0)
+                this.notificationsObservable.error(err);
               },
             }),
             catchError((error) => {
@@ -75,13 +79,11 @@ export class NotificationsService {
       .pipe(
         tap({
           next: (value) => {
-            this.notificationsObservable$.next(value);
-            this.unnotificationsCountObservable$.next(this.getUnreadCount(value))
+            this.notificationsObservable.next(value);
             this.loader.stop();
           },
           error: (err) => {
-            this.notificationsObservable$.error(err);
-            this.unnotificationsCountObservable$.next(0)
+            this.notificationsObservable.error(err);
             this.loader.stop();
           },
         })
@@ -95,14 +97,19 @@ export class NotificationsService {
       .pipe(
         tap({
           next: () => {
-            this.notificationsObservable$.next([]);
+            this.notificationsObservable.next([]);
             this.loader.stop();
           },
           error: (err) => {
-            this.notificationsObservable$.error(err);
+            this.notificationsObservable.error(err);
             this.loader.stop();
           },
         })
       );
+  }
+
+
+  private getUnreadCount(notifications: NotificationType[]) {
+    return notifications?.filter((value) => !value.isRead).length;
   }
 }

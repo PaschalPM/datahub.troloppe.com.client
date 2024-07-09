@@ -46,7 +46,7 @@ export class ProfileModalComponent {
   }
 
   ngOnInit(): void {
-    this.auth.currentUser().subscribe((currentUser) => {
+    this.auth.onCurrentUser().subscribe((currentUser) => {
       this.nameController.setValue(currentUser?.name as string);
       this.emailController.setValue(currentUser?.email as string);
       this.roleController.setValue(currentUser?.roles[0] as string);

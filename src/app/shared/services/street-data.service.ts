@@ -7,6 +7,7 @@ import { AuthService } from './auth.service';
 import { PermissionService } from './permission.service';
 import { HttpRequestCacheService } from './http-request-cache.service';
 import { Router } from '@angular/router';
+import { LoaderService } from './loader.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,14 +19,16 @@ export class StreetDataService {
     private permission: PermissionService,
     private httpReqCacheService: HttpRequestCacheService,
     private router: Router,
+    private loader: LoaderService
   ) {}
 
   getStreetData() {
-    return this.auth.currentUser().pipe(
+    return this.auth.onCurrentUser().pipe(
       switchMap((currentUser) => {
         return this.httpClient
           .get<StreetDataColType[]>(apiUrlFactory('/street-data'))
           .pipe(
+            tap((value) => { this.loader.stop()}),
             map((streetDataList) =>
               this.permission.isResearchStaff
                 ? streetDataList.filter(
@@ -41,20 +44,19 @@ export class StreetDataService {
   }
 
   getStreetDataDetails(streetDataId: number) {
-    return this.httpClient.get<StreetData>(
-      apiUrlFactory(`/street-data/${streetDataId}`)
-    );
+    return this.httpClient
+      .get<StreetData>(apiUrlFactory(`/street-data/${streetDataId}`))
+      .pipe(tap(() => this.loader.stop()));
   }
   store(body: any) {
-    return this.httpClient.post(
-      apiUrlFactory(`/street-data`),
-      body,
-      apiHttpOptions
-    ).pipe(
-      tap(() => {
-        this.httpReqCacheService.reset();
-      })
-    );;
+    return this.httpClient
+      .post(apiUrlFactory(`/street-data`), body, apiHttpOptions)
+      .pipe(
+        tap(() => {
+          this.httpReqCacheService.reset();
+          this.loader.stop();
+        })
+      );
   }
 
   edit(body: any, streetDataId: number) {
@@ -63,17 +65,19 @@ export class StreetDataService {
       .pipe(
         tap(() => {
           this.httpReqCacheService.reset();
+          this.loader.stop();
         })
       );
   }
-  
+
   delete(streetDataId: number) {
     return this.httpClient
       .delete(apiUrlFactory(`/street-data/${streetDataId}`), apiHttpOptions)
       .pipe(
         tap(() => {
           this.httpReqCacheService.reset();
-          this.router.navigateByUrl('/dashboard/street-data')
+          this.router.navigateByUrl('/dashboard/street-data');
+          this.loader.stop();
         })
       );
   }

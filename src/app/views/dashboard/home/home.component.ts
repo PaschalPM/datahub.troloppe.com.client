@@ -3,7 +3,6 @@ import { AuthNoticeComponent } from '../../../shared/components/dashboard/home/a
 import { PaneNavigatorPanelComponent } from '../../../shared/components/pane-navigator-panel/pane-navigator-panel.component';
 import { StreetDataOverviewComponent } from '../../../shared/partials/dashboard/street-data-overview/street-data-overview.component';
 import { ChartComponent } from '../../../shared/components/dashboard/chart/chart.component';
-import { productSales } from '../../../fixtures/products';
 import { ChartContainerComponent } from '../../../shared/components/chart-container/chart-container.component';
 
 @Component({
@@ -20,8 +19,6 @@ import { ChartContainerComponent } from '../../../shared/components/chart-contai
 })
 export class HomeComponent {
   activePane: 'street-data' | 'investment-data' = 'street-data';
-
-  results = productSales;
   tabs = [
     {
       pane: 'street-data',

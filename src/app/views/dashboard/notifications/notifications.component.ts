@@ -84,19 +84,17 @@ export class NotificationsComponent {
 
   constructor(
     public utils: UtilsService,
-    private ns: NotificationsService,
+    public ns: NotificationsService,
     private modalService: ModalService,
-    private loader: LoaderService
   ) {}
 
   ngOnInit(): void {
-    this.ns.observe().subscribe({
+    this.ns.notifications$.subscribe({
       next: (notifications) => {
         this.error = null;
         this.allNotifications = notifications;
       },
       error: (err) => {
-        console.log('ERROR');
         this.error = err;
         this.allNotifications = undefined;
       },

@@ -151,7 +151,7 @@ export class EditStreetDataComponent extends StreetDataDetails {
     });
   }
   goBack() {
-    this.router.navigateByUrl(`/dashboard/street-data/${this.streetData.id}`)
+    this.router.navigateByUrl(`/dashboard/street-data/${this.streetData.id}`);
   }
   onDeleteStreetData() {
     this.modalService.open(

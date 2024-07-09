@@ -42,7 +42,7 @@ import { Router } from '@angular/router';
     ReactiveFormsModule,
     SubmitBtnComponent,
     SelectDropdownComponent,
-    TextButtonComponent
+    TextButtonComponent,
   ],
   templateUrl: './new-street-data.component.html',
 })
@@ -112,8 +112,8 @@ export class NewStreetDataComponent {
     this.geo.observe();
   }
 
-  goBack(){
-    this.router.navigateByUrl('/dashboard/street-data')
+  goBack() {
+    this.router.navigateByUrl('/dashboard/street-data');
   }
   getStreetData(optionValue: IdAndValueType) {
     console.log(this.allUniqueCodes, optionValue);
@@ -147,8 +147,6 @@ export class NewStreetDataComponent {
               image: streetData.image_path,
               geolocation: streetData.geolocation,
             });
-
-            this.loader.stop();
           });
       }
     }
@@ -194,7 +192,6 @@ export class NewStreetDataComponent {
                 'Street Data successfully saved.',
                 'Success'
               );
-              this.loader.stop();
             },
           });
         },
@@ -204,7 +201,6 @@ export class NewStreetDataComponent {
         'Check that all fields are correctly filled.',
         'Form Error'
       );
-      this.loader.stop();
     }
   }
 

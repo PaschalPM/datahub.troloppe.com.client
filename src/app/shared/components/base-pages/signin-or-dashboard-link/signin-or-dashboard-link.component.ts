@@ -68,7 +68,7 @@ export class SigninOrDashboardLinkComponent {
   constructor(private authService: AuthService) {}
   ngOnInit(): void {
     this.currentUserSubscription = this.authService
-      .currentUser()
+      .onCurrentUser()
       .subscribe((currentUser) => {
         if (currentUser) {
           this.signInOrDashboard = 'dashboard';

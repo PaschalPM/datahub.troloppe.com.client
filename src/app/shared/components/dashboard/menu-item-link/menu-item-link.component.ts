@@ -22,8 +22,8 @@ import { UtilsService } from '@services/utils.service';
         @if(isNotification){
         <my-mat-icon
           aria-hidden="false"
-          [badge]="ns.unreadCount | async"
-          [badgeHidden]="(ns.unreadCount | async) === 0"
+          [badge]="ns.unreadCount$ | async"
+          [badgeHidden]="(ns.unreadCount$ | async) === 0"
         >
           notifications
         </my-mat-icon>

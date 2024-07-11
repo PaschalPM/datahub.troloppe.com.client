@@ -15,14 +15,14 @@
             <span class="md:hidden">
                 <my-mat-icon> person </my-mat-icon>
             </span>
-            <div class="hidden items-center md:flex">
-                <span> Paschal </span>
+            <div class="hidden items-center md:flex font-medium tracking-wider">
+                <span> {{ (currentUser$ | async)?.name | titlecase}} </span>
                 <my-mat-icon> keyboard_arrow_down </my-mat-icon>
             </div>
         </button>
     </div>
 </nav>
 
-<dashboard-profile-dropdown name="Paschal" *ngIf="isProfileDropdownOpen"
+<dashboard-profile-dropdown *ngIf="isProfileDropdownOpen"
     (isProfileDropdownOpenChange)="isProfileDropdownOpen = false">
 </dashboard-profile-dropdown>

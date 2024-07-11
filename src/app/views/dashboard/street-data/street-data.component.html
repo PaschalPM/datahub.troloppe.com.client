@@ -1,30 +1,11 @@
-<div class="container mx-auto w-full p-4 max-h-full overflow-auto">
-    <!-- <table
-        class="min-w-full bg-white border border-gray-300 dark:shadow-white/35 dark:shadow-sm shadow-md backdrop-blur-md dark:border-white/50 dark:bg-white/20">
-        <thead>
-            <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                <th> ID</th>
-                <th> Name</th>
-                <th> Username</th>
-                <th> Email</th>
-                <th> Phone number</th>
-                <th> Address</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let user of allUsers" class="text-gray-700 dark:text-white">
-                <td class="py-3 px-6 text-center "> {{user.id }}</td>
-                <td class="py-3 px-6 text-center"> {{user.name }}</td>
-                <td class="py-3 px-6 text-center"> {{user.username }}</td>
-                <td class="py-3 px-6 text-center"> {{user.email }}</td>
-                <td class="py-3 px-6 text-center"> {{user.phone }}</td>
-                <td class="py-3 px-6 text-center"> {{user.address.street }}</td>
-            </tr>
-        </tbody>
-    </table> -->
-    <!-- <ag-grid-angular [rowData]="rowData" [columnDefs]="colDefs">
-
-    </ag-grid-angular> -->
+<div class="my-4 flex justify-between items-center">
+    <dashboard-active-location-indicator />
+    <text-button withIcon="add" [isFlexed]="true" (clickEvent)="routeToNewStreetView()"
+        text="New Street Data"></text-button>
 </div>
 
-
+<ag-grid-angular [rowData]="rowData | async" class="!bg-transparent h-[calc(100vh-225px)]"
+    [class.ag-theme-quartz-dark]="colorScheme.actualScheme === 'dark'"
+    [class.ag-theme-quartz]="colorScheme.actualScheme === 'light'" [columnDefs]="colDefs"
+    [defaultColDef]="defaultColDefs" [animateRows]="true" (cellClicked)="onCellClick($event)"
+    rowClass="cursor-pointer"></ag-grid-angular>

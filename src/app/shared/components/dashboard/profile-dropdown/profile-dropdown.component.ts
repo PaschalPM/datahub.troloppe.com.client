@@ -16,27 +16,45 @@ import { AuthService } from '@services/auth.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { LoaderService } from '@services/loader.service';
+import { Observable, Subscription } from 'rxjs';
+import { User } from 'app/shared/types/user';
+import { AsyncPipe, TitleCasePipe } from '@angular/common';
+import { MyMatIconComponent } from "../../common/my-mat-icon.component";
+import { UtilsService } from '@services/utils.service';
+import { TextButtonComponent } from '@components/common/text-button/text-button.component';
 
 @Component({
   selector: 'dashboard-profile-dropdown',
   standalone: true,
-  imports: [CapitalizePipe, ClickOutsideDirective],
+  imports: [CapitalizePipe, ClickOutsideDirective, AsyncPipe, TitleCasePipe, MyMatIconComponent, TextButtonComponent],
   templateUrl: './profile-dropdown.component.html',
 })
 export class ProfileDropdownComponent {
-  @Input({ required: true }) name!: string;
   @Output() isProfileDropdownOpenChange = new EventEmitter();
   @ViewChild('profileDropdown') profileDropdownElement!: ElementRef;
 
+  name = ''
+  firstRole = ''
+  currentUserSubscription!: Subscription;
+  
   constructor(
     private modalService: ModalService,
     public colorScheme: ColorSchemeService,
     private authService: AuthService,
     private router: Router,
     private toastr: ToastrService,
-    private loader: LoaderService
-  ) {}
+    private loader: LoaderService,
+    public utils: UtilsService
+  ) {
+   
+  }
 
+  ngOnInit(): void {
+    this.currentUserSubscription = this.authService.onCurrentUser().subscribe((currentUser) => {
+      this.name = currentUser?.name as string
+      this.firstRole = currentUser?.roles[0] as string
+    })
+  }
   openProfileModal() {
     const template = ProfileModalComponent;
     this.modalService.open(template);
@@ -60,5 +78,9 @@ export class ProfileDropdownComponent {
       this.loader.stop()
       this.router.navigateByUrl('/')
     });
+  }
+
+  ngOnDestroy(): void {
+    this.currentUserSubscription.unsubscribe()
   }
 }

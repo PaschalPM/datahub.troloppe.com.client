@@ -50,7 +50,7 @@ export class StreetDataService {
   }
   store(body: any) {
     return this.httpClient
-      .post(apiUrlFactory(`/street-data`), body, apiHttpOptions)
+      .post<{id: number}>(apiUrlFactory(`/street-data`), body, apiHttpOptions)
       .pipe(
         tap(() => {
           this.httpReqCacheService.reset();

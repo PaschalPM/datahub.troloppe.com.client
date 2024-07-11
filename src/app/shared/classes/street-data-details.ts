@@ -53,7 +53,7 @@ export class StreetDataDetails {
           }
           this.streetData.unique_code = value.unique_code || 'New Entry';
           this.streetDataFormGroup.setValue(this.streetData);
-          this.geolocation = value.geolocation;
+          this.geolocation = decodeURIComponent(value.geolocation);
           this.creator = value.creator;
           this.createdAt = this.utils.utcToFormattedDate(value.created_at);
         });

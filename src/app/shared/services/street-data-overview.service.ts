@@ -3,15 +3,15 @@ import { Injectable } from '@angular/core';
 import { apiHttpOptions, apiUrlFactory } from 'app/configs/global';
 
 type WidgetSetType = {
-  totalStreetData: number;
-  totalVerifiedStreetData: number;
-  userStreetData: number;
-  userVerifiedStreetData: number;
+  total_street_data: number;
+  total_verified_street_data: number;
+  user_street_data: number;
+  user_verified_street_data: number;
 };
 
 type VisualSetType = {
-  verifiedStreetDataByLocation: Array<{name:string, value: number}>,
-  verifiedStreetDataBySector: Array<{name:string, value: number}>,
+  verified_street_data_by_location: Array<{name:string, value: number}>,
+  verified_street_data_by_sector: Array<{name:string, value: number}>,
 }
 @Injectable({
   providedIn: 'root',
@@ -34,7 +34,7 @@ export class StreetDataOverviewService {
   }
   
   getUserPerformanceVisual(){
-    return this.httpClient.get<{verifiedStreetDataByStaff:Array<NameAndValueType>}>(
+    return this.httpClient.get<{verified_street_data_by_staff:Array<NameAndValueType>}>(
       apiUrlFactory('/street-data/overview/user-performance'),
       apiHttpOptions
     );

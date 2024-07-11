@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { BaseComponent } from '../base.component';
 import { SubmitBtnComponent } from '../../../../components/auth/submit-btn/submit-btn.component';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -24,6 +24,9 @@ import { AuthService } from '../../../../services/auth.service';
   `,
 })
 export class VerifyEmailStageComponent extends BaseComponent {
+  @ViewChild(InputFieldComponent)
+  inputFieldComponent!: InputFieldComponent;
+
   emailControl!: FormControl;
 
   constructor(private authService: AuthService) {
@@ -33,16 +36,18 @@ export class VerifyEmailStageComponent extends BaseComponent {
   ngOnInit(): void {
     this.emailControl = this.loginFormGroup.get('email') as FormControl;
   }
-  
+  ngAfterViewInit(): void {
+    this.inputFieldComponent.inputFocus();
+  }
   onVerifyEmail() {
-    this.formIsSubmitting = true
+    this.formIsSubmitting = true;
     if (this.emailControl.valid) {
       this.loading = true;
       this.authService.verifyUserByEmail(this.loginFormGroup.value).subscribe({
         next: () => {
           this.stage = 'LOGIN_STAGE';
           this.stageChange.emit(this.stage);
-          this.loginFormGroup.markAsUntouched()
+          this.loginFormGroup.markAsUntouched();
         },
         error: (err) => {
           this.emailControl.setErrors({

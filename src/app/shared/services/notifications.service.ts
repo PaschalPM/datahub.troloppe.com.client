@@ -73,13 +73,18 @@ export class NotificationsService {
   updateNotification(notification: NotificationType) {
     this.loader.start();
     return this.httpClient
-      .put<NotificationType[]>(apiUrlFactory('/notifications/mark-as-read'), {
+      .put<NotificationType>(apiUrlFactory('/notifications/mark-as-read'), {
         id: notification.id,
       })
       .pipe(
         tap({
           next: (value) => {
-            this.notificationsObservable.next(value);
+            const updatedNotifications = this.notificationsObservable.value?.map((notification) =>
+              notification.id === value.id
+                ? { ...notification, is_read: true }
+                : notification
+            );
+            this.notificationsObservable.next(updatedNotifications);
             this.loader.stop();
           },
           error: (err) => {
@@ -108,8 +113,7 @@ export class NotificationsService {
       );
   }
 
-
   private getUnreadCount(notifications: NotificationType[]) {
-    return notifications?.filter((value) => !value.isRead).length;
+    return notifications?.filter((value) => !value.is_read).length;
   }
 }

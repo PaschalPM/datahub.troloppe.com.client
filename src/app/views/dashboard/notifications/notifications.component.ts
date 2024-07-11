@@ -44,7 +44,7 @@ export class NotificationsComponent {
   };
 
   get unreadNotifications(): NotificationType[] | undefined {
-    return this.allNotifications?.filter((value) => !value.isRead);
+    return this.allNotifications?.filter((value) => !value.is_read);
   }
 
   get activeNotifications() {

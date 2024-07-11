@@ -17,7 +17,7 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([
         csrfInterceptor,
         cacheResponseInterceptor,
-        camelcaseResponseInterceptor
+        // camelcaseResponseInterceptor
       ])
     ),
     provideAnimationsAsync(),

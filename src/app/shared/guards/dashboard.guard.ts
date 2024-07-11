@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { catchError, of, switchMap, tap, throwError } from 'rxjs';
+import { catchError, of, switchMap, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LoaderService } from '@services/loader.service';
 import { ToastrService } from 'ngx-toastr';

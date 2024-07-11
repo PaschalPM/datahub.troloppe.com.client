@@ -1,12 +1,20 @@
 <div class="space-y-6 py-2">
-  <h1 class="text-xl font-medium">Color Scheme</h1>
-  <div class="mt-1 flex w-full font-medium [&>button]:grow [&>button]:border [&>button]:p-2 [&>button]:text-xs">
+  <h1 class="text-xl font-medium ">
+    Color Scheme
+  </h1>
+  <div
+    class="mt-1 flex w-full font-medium [&>button]:grow gap-1 [&>button]:shadow-sm [&>button]:rounded-md [&>button]:border dark:[&>button]:border-slate-600 dark:[&>button]:shadow-slate-600  [&>button]:p-2 [&>button]:text-xs">
     @for (scheme of schemes; track scheme) {
-    <button [ngClass]="{
+    <button [attr.data-scheme]="scheme" [ngClass]="{
             'bg-dodger-blue/20 transition-all duration-300 ease-in-out dark:bg-orange-400/50':
               selectedScheme === scheme
           }" (click)="onSelectScheme($event)">
-      {{ scheme | capitalize }}
+      <div class="flex gap-2 items-center justify-center">
+        <my-mat-icon> {{ utils.getColorSchemeIcon(scheme) }} </my-mat-icon>
+        <span>
+          {{ scheme | capitalize }}
+        </span>
+      </div>
     </button>
     }
   </div>

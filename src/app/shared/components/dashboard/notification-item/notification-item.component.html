@@ -10,11 +10,11 @@
     <p class="md:text-sm text-xs">
       {{ notification.message }}
     </p>
-    <small class="text-black/50 dark:text-white/50">{{ notification.sendAt }}</small>
+    <small class="text-black/50 dark:text-white/50">{{ notification.send_at }}</small>
   </div>
   <div [class]="
         utils.cn('flex flex-col justify-start md:justify-end', {
-          invisible: notification.isRead
+          invisible: notification.is_read
         })
       ">
     <text-button (clickEvent)="markAsRead(notification)" text="Mark as read" [small]="true"

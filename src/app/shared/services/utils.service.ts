@@ -34,4 +34,14 @@ export class UtilsService {
     const humanReadableDate = momentUtcDate.local().fromNow();
     return humanReadableDate;
   }
+  getColorSchemeIcon(scheme: string) {
+    switch (scheme) {
+      case 'light':
+        return 'light_mode';
+      case 'dark':
+        return 'dark_mode';
+      default:
+        return 'contrast';
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+import { Location, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TextButtonComponent } from '@components/common/text-button/text-button.component';
@@ -21,7 +21,7 @@ import {
 import { SubmitBtnComponent } from '@components/dashboard/submit-btn/submit-btn.component';
 import { MyMatIconComponent } from '@components/common/my-mat-icon.component';
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
+import { BackBtnComponent } from '@components/back-btn/back-btn.component';
 
 @Component({
   selector: 'app-edit-street-data',
@@ -36,6 +36,7 @@ import { Router } from '@angular/router';
     SelectDropdownComponent,
     SubmitBtnComponent,
     MyMatIconComponent,
+    BackBtnComponent
   ],
   templateUrl: './edit-street-data.component.html',
 })
@@ -99,7 +100,7 @@ export class EditStreetDataComponent extends StreetDataDetails {
     private fb: FormBuilder,
     private newStreetDataFormService: NewStreetDataFormService,
     private toastr: ToastrService,
-    private router: Router
+    private location: Location
   ) {
     super();
     this.streetDataFormGroup = this.fb.group(
@@ -150,9 +151,7 @@ export class EditStreetDataComponent extends StreetDataDetails {
       );
     });
   }
-  goBack() {
-    this.router.navigateByUrl(`/dashboard/street-data/${this.streetData.id}`);
-  }
+
   onDeleteStreetData() {
     this.modalService.open(
       ConfirmModalComponent,

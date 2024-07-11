@@ -95,7 +95,7 @@ export const routes: Routes = [
           ),
       },
       {
-        title: 'Street Data',
+        title: 'View Street Data',
         path: 'street-data/:id',
         loadComponent: () =>
           import('./views/dashboard/view-street-data/view-street-data.component').then(

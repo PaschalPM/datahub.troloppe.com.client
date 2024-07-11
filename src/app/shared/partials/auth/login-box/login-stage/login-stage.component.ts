@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { InputFieldComponent } from '../../../../components/auth/input-field/input-field.component';
 import { BaseComponent } from '../base.component';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -44,6 +44,9 @@ import { ToastrService } from 'ngx-toastr';
   `,
 })
 export class LoginStageComponent extends BaseComponent {
+  @ViewChild(InputFieldComponent)
+  inputFieldComponent!: InputFieldComponent
+  
   emailControl!: FormControl;
   passwordControl!: FormControl;
 
@@ -61,6 +64,10 @@ export class LoginStageComponent extends BaseComponent {
     this.passwordControl = this.loginFormGroup.get('password') as FormControl;
   }
 
+  ngAfterViewInit(): void {
+    this.inputFieldComponent.inputFocus();
+  }
+
   onChangeStage() {
     this.stage = 'VERIFY_EMAIL';
     this.stageChange.emit(this.stage);
@@ -72,7 +79,7 @@ export class LoginStageComponent extends BaseComponent {
       this.loading = true;
       this.authService.signIn(this.loginFormGroup.value).subscribe({
         next: () => {
-          this.toastr.success('Successfully logged in.', 'Success')
+          this.toastr.success('Successfully logged in.', 'Success');
           this.css.local().remove(EMAIL_FOR_RESET_PASSWORD);
           this.activatedRoute.queryParams.subscribe((params) => {
             if (params['returnUrl']) {

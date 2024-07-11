@@ -80,6 +80,7 @@ export class ActiveLocationIndicatorComponent {
     this.activeLocationService.activeLocation().subscribe((value) => {
       if (value) {
         this.activeLocation = value.name;
+        console.log(this.activeLocation)
       } else {
         this.activeLocation = null;
       }

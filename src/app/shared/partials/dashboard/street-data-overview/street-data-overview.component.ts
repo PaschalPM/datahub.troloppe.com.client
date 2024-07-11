@@ -82,17 +82,17 @@ export class StreetDataOverviewComponent {
 
   getWidgetOverviewData() {
     this.streetDataOverviewService.getWidgetSet().subscribe((value) => {
-      this.overviewItems[0].totalSum = value.totalStreetData;
-      this.overviewItems[1].totalSum = value.totalVerifiedStreetData;
-      this.overviewItems[2].totalSum = value.userStreetData;
-      this.overviewItems[3].totalSum = value.userVerifiedStreetData;
+      this.overviewItems[0].totalSum = value.total_street_data;
+      this.overviewItems[1].totalSum = value.total_verified_street_data;
+      this.overviewItems[2].totalSum = value.user_street_data;
+      this.overviewItems[3].totalSum = value.user_verified_street_data;
     });
   }
 
   getVisualOverviewData() {
     this.streetDataOverviewService.getVisualSet().subscribe((value) => {
-      this.verifiedStreetDataByLocation = value.verifiedStreetDataByLocation;
-      this.verifiedStreetDataBySector = value.verifiedStreetDataBySector;
+      this.verifiedStreetDataByLocation = value.verified_street_data_by_location;
+      this.verifiedStreetDataBySector = value.verified_street_data_by_sector;
       this.isLoadingVisualSet = false;
     });
   }
@@ -101,7 +101,7 @@ export class StreetDataOverviewComponent {
       .getUserPerformanceVisual()
       .subscribe((value) => {
         this.verifiedStreetDataUploadedByStaff =
-          value.verifiedStreetDataByStaff;
+          value.verified_street_data_by_staff;
         this.isLoadingUserPerformance = false;
       });
   }

@@ -1,18 +1,23 @@
 import { Component, Input } from '@angular/core';
 import { MenuItemLinkComponent } from '../menu-item-link/menu-item-link.component';
 import { UtilsService } from '@services/utils.service';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'dashboard-side-menu',
   standalone: true,
-  imports: [MenuItemLinkComponent],
+  imports: [MenuItemLinkComponent, RouterModule],
   template: `
     <aside
       [class]="utils.cn('bg-violet-blue text-white dark:bg-gray-900', cls)"
     >
       <div class="h-20">
-        <span class="hidden md:inline"> DataHUB </span>
-        <span class="md:hidden"> D </span>
+        <a class="hidden dark:bg-slate-800 m-1 border dark:border-slate-600 md:flex py-3" routerLink="/">
+          <img src="assets/WhiteDataHUBLogo.svg" class="m-auto"  alt="logo" />
+        </a>
+        <a class="md:hidden flex py-4" routerLink="/">
+          <img src="assets/SmallLogo.png" class="m-auto" alt="logo" />
+        </a>
       </div>
       <div class="flex grow flex-col">
         <nav class="mb-10 overflow-auto">
@@ -46,7 +51,7 @@ import { UtilsService } from '@services/utils.service';
   },
 })
 export class SideMenuComponent {
-  @Input() cls!: string
+  @Input() cls!: string;
 
-  constructor(public utils: UtilsService){}
+  constructor(public utils: UtilsService, private router: Router) {}
 }

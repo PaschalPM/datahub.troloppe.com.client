@@ -1,6 +1,6 @@
 @if(dataIsLoaded){
 <div class="my-4 flex justify-between items-center">
-    <text-button text="Back" state="neutral" withIcon="arrow_back" [small]="true" (clickEvent)="goBack()" />
+    <app-back-btn />
     <text-button withIcon="edit" [isFlexed]="true" (clickEvent)="routeToEditStreetView()"
         text="Edit Street Data"></text-button>
 </div>
@@ -13,7 +13,7 @@
         <div class="flex justify-between items-center relative">
 
             <!---: Image URL -->
-            <app-image-uploader label="Photo Preview" name="image_path" [viewOnly]="true" 
+            <app-image-uploader label="Photo Preview" name="image_path" [viewOnly]="true"
                 [formGroup]="streetDataFormGroup">
             </app-image-uploader>
 

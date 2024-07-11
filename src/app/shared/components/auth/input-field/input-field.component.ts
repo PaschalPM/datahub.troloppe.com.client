@@ -44,8 +44,11 @@ export class InputFieldComponent {
 
   @Output() formIsSubmittingChange = new EventEmitter();
 
-  @ViewChild('passwordInputElement')
+  @ViewChild('passwordInputElement', {static: false})
   passwordInputElement!: ElementRef<HTMLInputElement>;
+
+  @ViewChild('nonPasswordInputElement', {static: false})
+  nonPasswordInputElement!: ElementRef<HTMLInputElement>;
 
   displayPassword = true;
 
@@ -57,7 +60,7 @@ export class InputFieldComponent {
           'ring-2 ring-red-500 border-none': this.errorCondition,
         }
       ),
-      inputBorder: 'relative z-10'
+      inputBorder: 'relative z-10',
     };
   }
 
@@ -86,5 +89,13 @@ export class InputFieldComponent {
       this.passwordInputElement?.nativeElement.focus();
       this.passwordInputElement?.nativeElement.setSelectionRange(-1, -1);
     });
+  }
+
+  inputFocus() {
+    if (this.type === 'password') {
+      this.passwordInputElement.nativeElement.focus();
+    } else {
+      this.nonPasswordInputElement.nativeElement.focus();
+    }
   }
 }

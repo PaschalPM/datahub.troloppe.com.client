@@ -32,6 +32,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ConfirmModalComponent } from '@partials/modals/confirm-modal/confirm-modal.component';
 import { TextButtonComponent } from '@components/common/text-button/text-button.component';
 import { Router } from '@angular/router';
+import { BackBtnComponent } from '@components/back-btn/back-btn.component';
 
 @Component({
   selector: 'app-new-street-data',
@@ -43,6 +44,7 @@ import { Router } from '@angular/router';
     SubmitBtnComponent,
     SelectDropdownComponent,
     TextButtonComponent,
+    BackBtnComponent
   ],
   templateUrl: './new-street-data.component.html',
 })
@@ -162,6 +164,8 @@ export class NewStreetDataComponent {
         (uniqueCode) => uniqueCode.id === uniqueCodeStreetDataId
       )?.value;
       body.location = this.streetDataFormGroup.controls['location'].value;
+      body.geolocation = encodeURIComponent(this.streetDataFormGroup.controls['geolocation'].value);
+
       if (body.unique_code === 'New Entry') {
         body.unique_code = null;
       }
@@ -183,8 +187,7 @@ export class NewStreetDataComponent {
         ok: () => {
           this.loader.start();
           this.streetDataService.store(body).subscribe({
-            next: (value) => {
-              console.log(value);
+            next: (streetData) => {
               this.streetDataFormGroup.reset();
               this.formIsSubmitting = false;
               this.newStreetDataFormService.retrieveOnlyUniqueCodes();
@@ -192,6 +195,7 @@ export class NewStreetDataComponent {
                 'Street Data successfully saved.',
                 'Success'
               );
+              this.router.navigateByUrl(`/dashboard/street-data/${streetData.id}`)
             },
           });
         },

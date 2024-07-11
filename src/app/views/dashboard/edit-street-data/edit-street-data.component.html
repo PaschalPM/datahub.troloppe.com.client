@@ -1,7 +1,7 @@
 @if(dataIsLoaded){
 
 <div class="my-4 flex justify-between items-center">
-    <text-button text="Back" state="neutral" withIcon="arrow_back" [small]="true" (clickEvent)="goBack()" />
+    <app-back-btn/>
     <text-button withIcon="delete" [isFlexed]="true" state="error" text="Delete Street Data"
         (clickEvent)="onDeleteStreetData()"></text-button>
 </div>

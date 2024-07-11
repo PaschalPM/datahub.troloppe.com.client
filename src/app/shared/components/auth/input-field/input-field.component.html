@@ -53,7 +53,7 @@
     </ng-template>
 
     <ng-template #nonPasswordInput>
-        <input [formControl]="control" [name]="name" [type]="type" [class]="classStyles.input"
+        <input #nonPasswordInputElement [formControl]="control" [name]="name" [type]="type" [class]="classStyles.input"
             [placeholder]="placeholder" appKeyupIgnoreEnter (keyupIgnoreEnter)="resetFormIsSubmitting()" />
     </ng-template>
 

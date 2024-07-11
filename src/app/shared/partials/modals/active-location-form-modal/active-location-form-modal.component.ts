@@ -83,11 +83,17 @@ export class ActiveLocationFormModalComponent {
   }
 
   setActiveLocation() {
-    if (confirm('Are you sure you want to set a new active location?')) {
+    let message = 'Are you sure you want to set a new active location?'
+    if (this.activeLocationFormGroup.get('location_id')?.value === null){
+      message = 'Are you sure you want to deactivate set location?'
+    }
+    if (confirm(message)) {
       this.loader.start();
+      console.log(this.activeLocationFormGroup.value)
       this.setActiveLocationSubscription = this.activeLocationService
         .setActiveLocation(this.activeLocationFormGroup.value)
         .subscribe((value) => {
+
           let msg = 'New location activated and notifications sent out.';
           if (!value) {
             msg = 'No active location available';

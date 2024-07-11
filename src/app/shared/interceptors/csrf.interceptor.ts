@@ -10,8 +10,9 @@ export const csrfInterceptor: HttpInterceptorFn = (req, next) => {
     ['POST', 'PUT', 'DELETE'].includes(req.method) 
     || req.url.includes('/api/notifications')
     || req.url.endsWith('/api/auth/user') 
-    || (req.url.includes('/api/street-data') 
-    && !req.url.startsWith('http://localhost:3000'));
+    || req.url.includes('/api/street-data') 
+    || req.url.includes('/api/locations/check-activate-location') 
+    
 
   if (condition) {
     return csrfRequest().pipe(

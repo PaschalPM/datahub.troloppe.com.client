@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, of, switchMap, tap } from 'rxjs';
 import { NewStreetDataFormService } from './new-street-data-form.service';
 import { apiUrlFactory } from '../../configs/global';
 import { HttpClient } from '@angular/common/http';
+import { HttpRequestCacheService } from './http-request-cache.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,8 @@ export class ActiveLocationService {
 
   constructor(
     private nsdfs: NewStreetDataFormService,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private httpCache: HttpRequestCacheService
   ) {
     this.retrieveActiveLocation();
   }
@@ -34,16 +36,25 @@ export class ActiveLocationService {
             activeLocation = value.active_location;
           }
           this.activeLocation$.next(activeLocation);
+          this.httpCache.reset()
+
         })
       );
   }
 
   public forGuard() {
     return this.httpClient
-      .get<NewStreetDataFormType>(apiUrlFactory('/street-data/form-data'))
+      .get<{ name: string }>(
+        apiUrlFactory('/locations/check-activate-location')
+      )
       .pipe(
-        map((value) => value.locations.find((location) => location.is_active)),
-        switchMap((value) => (value ? of(true) : of(false)))
+        tap((value) => console.log(value)),
+        switchMap(() => {
+          return of(true);
+        }),
+        catchError(() => {
+          return of(false);
+        })
       );
   }
 
@@ -55,5 +66,4 @@ export class ActiveLocationService {
         this.activeLocation$.next(value as LocationType);
       });
   }
-
 }

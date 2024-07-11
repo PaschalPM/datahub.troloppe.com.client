@@ -12,9 +12,9 @@ type NotificationType = {
   id: string;
   label: string;
   message: string;
-  sendAt: string;
+  send_at: string;
   severity: 'warning' | 'info';
-  isRead: boolean;
+  is_read: boolean;
 };
 
 type OverviewWidgetItem = {
@@ -54,5 +54,5 @@ type ConfirmModalPropsType = {
 
 // MODAL TYPES
 type InputsType = Record<string, unknown> | undefined;
-type ModalValueType = { template: Type<any>; inputs: InputsType };
+type ModalValueType = { template: Type<any>; inputs: InputsType; modalIcon?: string};
 type ImageModalValueType = { template: Type<any>; imageUrl: string };

@@ -27,29 +27,7 @@ import { ColorSchemeService } from '@services/color-scheme.service';
     MyMatIconComponent,
     AsyncPipe,
   ],
-  template: `
-    <div class="my-4 flex justify-between items-center">
-      <dashboard-active-location-indicator />
-      <text-button
-        withIcon="add"
-        [isFlexed]="true"
-        (clickEvent)="routeToNewStreetView()"
-        text="New Street Data"
-      ></text-button>
-    </div>
-
-    <ag-grid-angular
-      [rowData]="rowData | async"
-      class="!bg-transparent h-[calc(100vh-250px)] md:h-[375px]"
-      [class.ag-theme-quartz-dark]="colorScheme.actualScheme === 'dark'"
-      [class.ag-theme-quartz]="colorScheme.actualScheme === 'light'"
-      [columnDefs]="colDefs"
-      [defaultColDef]="defaultColDefs"
-      [animateRows]="true"
-      (cellClicked)="onCellClick($event)"
-      rowClass="cursor-pointer"
-    ></ag-grid-angular>
-  `,
+  templateUrl: './street-data.component.html',
   styles: `
     :host{
       display: contents;

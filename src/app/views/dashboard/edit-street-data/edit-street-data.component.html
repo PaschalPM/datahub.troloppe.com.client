@@ -47,8 +47,13 @@
         </dashboard-input-field>
 
         <!---: Sector  -->
-        <dashboard-select-dropdown label="Sector" name="sector" [formGroup]="streetDataFormGroup" bindLabel="label"
-            bindValue="value" [formIsSubmitting]="formIsSubmitting" [items]="sectorOptions">
+        <dashboard-select-dropdown label="Sector" name="sector" [formGroup]="streetDataFormGroup" bindLabel="name"
+            bindValue="id" [formIsSubmitting]="formIsSubmitting" [items]="sectorOptions" (changeEvent)="onSectorChange($event)">
+        </dashboard-select-dropdown>
+       
+        <!---:Sub Sector  -->
+        <dashboard-select-dropdown label="Sub Sector" name="sub_sector" [formGroup]="streetDataFormGroup" bindLabel="name"
+            bindValue="id" [formIsSubmitting]="formIsSubmitting" [items]="subSectorOptions" (changeEvent)="onSubSectorChange($event)">
         </dashboard-select-dropdown>
 
         <!---: Location  -->
@@ -58,7 +63,7 @@
         <!---: Section  -->
         <dashboard-select-dropdown label="Section" name="section" [formGroup]="streetDataFormGroup" bindLabel="name"
             bindValue="id" [formIsSubmitting]="formIsSubmitting" notFoundText="Set a location first"
-            [items]="sectionOptions"> </dashboard-select-dropdown>
+            [items]="sectionOptions" (changeEvent)="onSectionChange($event)"> </dashboard-select-dropdown>
 
         <!---: Number of Units  -->
         <dashboard-input-field label="Number of Units" name="number_of_units" [formGroup]="streetDataFormGroup"

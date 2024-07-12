@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
 import { ColorSchemeService } from '../../../services/color-scheme.service';
+import { UtilsService } from '@services/utils.service';
 
 @Component({
   selector: 'dashboard-chart',
@@ -11,17 +12,22 @@ import { ColorSchemeService } from '../../../services/color-scheme.service';
     :host{
       display:contents;
     }
-  `
+  `,
 })
 export class ChartComponent {
-  @Input({required: true}) title!: string
-  @Input({required: true}) results!: any;
-  @Input() type: 'horizontal-bar' | 'vertical-bar' | 'pie' = 'horizontal-bar'
+  @Input({ required: true }) title!: string;
+  @Input({ required: true }) results!: any;
+  @Input() type: 'horizontal-bar' | 'vertical-bar' | 'pie' = 'horizontal-bar';
 
   constructor(
     public colorScheme: ColorSchemeService,
+    private utils: UtilsService
   ) {}
 
+  ngOnInit(): void {
+    this.capitalizeKeyNamesInResults();
+  }
+  
   darkColor = () => {
     return '#FDBA7480';
   };
@@ -34,6 +40,17 @@ export class ChartComponent {
       return this.darkColor;
     } else {
       return this.lightColor;
+    }
+  }
+
+  private capitalizeKeyNamesInResults() {
+    if (this.results instanceof Array) {
+      this.results = this.results.map((result) => {
+        if ('name' in result) {
+          result.name = this.utils.capitalize(result.name);
+        }
+        return result;
+      });
     }
   }
 }

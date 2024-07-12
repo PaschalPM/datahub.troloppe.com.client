@@ -10,14 +10,13 @@ import { ModalService } from '@services/modal.service';
 import {
   NewStreetDataFormService,
   SECTIONS_KEY,
+  SECTORS_KEY,
+  SUB_SECTORS_KEY,
   UNIQUE_CODES_KEY,
 } from '@services/new-street-data-form.service';
 import { StreetDataDetails } from 'app/shared/classes/street-data-details';
 import { NotFoundComponent } from 'app/views/not-found/not-found.component';
-import {
-  constructionStatusOptions,
-  sectorOptions,
-} from '../../../fixtures/street-data';
+import { constructionStatusOptions } from '../../../fixtures/street-data';
 import { SubmitBtnComponent } from '@components/dashboard/submit-btn/submit-btn.component';
 import { MyMatIconComponent } from '@components/common/my-mat-icon.component';
 import { ToastrService } from 'ngx-toastr';
@@ -36,7 +35,7 @@ import { BackBtnComponent } from '@components/back-btn/back-btn.component';
     SelectDropdownComponent,
     SubmitBtnComponent,
     MyMatIconComponent,
-    BackBtnComponent
+    BackBtnComponent,
   ],
   templateUrl: './edit-street-data.component.html',
 })
@@ -66,10 +65,7 @@ export class EditStreetDataComponent extends StreetDataDetails {
     message: 'Are you sure you want to edit this street data record?',
     ok: () => {
       const data = { ...this.streetDataFormGroup.value };
-
-      data['location'] = this.streetDataFormGroup.get('location_id')?.value;
-      data['image'] = this.streetDataFormGroup.get('image_path')?.value;
-
+      data['image_path'] = this.streetDataFormGroup.get('image_path')?.value;
       this.loader.start();
       this.streetDataService.edit(data, data.id).subscribe({
         next: () => {
@@ -77,6 +73,7 @@ export class EditStreetDataComponent extends StreetDataDetails {
           this.loader.stop();
         },
         error: (error) => {
+          console.log(error)
           this.toastr.error(error.message, 'Error');
           this.loader.stop();
         },
@@ -86,13 +83,15 @@ export class EditStreetDataComponent extends StreetDataDetails {
 
   uniqueCodeDataList!: Array<string>;
   formIsSubmitting = false;
-  sectorOptions = sectorOptions;
   locationOptions: IdAndNameType[] = [];
   sectionOptions: IdAndNameType[] = [];
+  sectorOptions: IdAndNameType[] = [];
+  subSectorOptions: IdAndNameType[] = [];
   constructionStatusOptions: OptionType[] = constructionStatusOptions;
   isImageLoading = false;
 
   private allSections: SectionType[] = [];
+  private allSubSectors: SubSectorType[] = [];
   private staticLocationId!: number;
 
   constructor(
@@ -100,7 +99,6 @@ export class EditStreetDataComponent extends StreetDataDetails {
     private fb: FormBuilder,
     private newStreetDataFormService: NewStreetDataFormService,
     private toastr: ToastrService,
-    private location: Location
   ) {
     super();
     this.streetDataFormGroup = this.fb.group(
@@ -118,9 +116,12 @@ export class EditStreetDataComponent extends StreetDataDetails {
         location: [{ value: '', disabled: true }, [Validators.required]],
         location_id: [{ value: 0 }],
         sector: ['', [Validators.required]],
+        sector_id: [{ value: 0 }],
+        sub_sector: ['', [Validators.required]],
+        sub_sector_id: [{ value: 0 }],
         description: ['', [Validators.required]], // *
         section: ['', [Validators.required]],
-        section_id: [{ value: 0 }],
+        section_id: [null, [Validators.required]],
 
         number_of_units: [null, [Validators.required, Validators.max(1000)]], // *
         contact_name: [''],
@@ -143,15 +144,40 @@ export class EditStreetDataComponent extends StreetDataDetails {
     this.getUniqueCodeDataList();
     this.checkDataIsLoaded();
     this.getOptionsValueFromAPI();
+    this.onStreetDataFormValueChange();
+  }
 
+  onStreetDataFormValueChange() {
     this.streetDataFormGroup.valueChanges.subscribe((value) => {
+      console.log('Hello')
       this.staticLocationId = value.location_id;
       this.sectionOptions = this.allSections.filter(
         (value) => value.location_id === this.staticLocationId
       );
+      this.setSubSectorOptions(
+        this.streetDataFormGroup.get('sector_id')?.value
+      );
     });
   }
 
+  onSectorChange(sector: IdAndNameType) {
+    this.streetDataFormGroup.get('sector')?.setValue(sector.id);
+    this.streetDataFormGroup.get('sector_id')?.setValue(sector.id);
+    this.streetDataFormGroup.get('sub_sector')?.setValue(null);
+    this.setSubSectorOptions(sector.id);
+  }
+  
+  onSubSectorChange(subSector: IdAndNameType) {
+    this.streetDataFormGroup.get('sub_sector')?.setValue(subSector.id);
+    this.streetDataFormGroup.get('sub_sector_id')?.setValue(subSector.id);
+  }
+  
+  onSectionChange(section: IdAndNameType) {
+    this.streetDataFormGroup.controls['section_id']?.setValue(section.id);
+    this.streetDataFormGroup.controls['section']?.setValue(section.id);
+    console.log(this.streetDataFormGroup)
+  }
+  
   onDeleteStreetData() {
     this.modalService.open(
       ConfirmModalComponent,
@@ -178,7 +204,19 @@ export class EditStreetDataComponent extends StreetDataDetails {
         ConfirmModalComponent,
         this.confirmEditModalPropsData
       );
+    } else {
+      this.toastr.error(
+        'Check that all fields are correctly filled.',
+        'Form Error'
+      );
     }
+  }
+
+  private setSubSectorOptions(sectorId: number) {
+    this.subSectorOptions = this.allSubSectors.filter(
+      (subSector) => subSector.sector_id === sectorId
+    );
+
   }
 
   private getOptionsValueFromAPI() {
@@ -189,12 +227,16 @@ export class EditStreetDataComponent extends StreetDataDetails {
         case SECTIONS_KEY:
           this.allSections = event.value as SectionType[];
           break;
-        case UNIQUE_CODES_KEY:
-          this.uniqueCodeDataList = (event.value as IdAndValueType[]).map(
-            (uniqueCode) => {
-              return uniqueCode.value;
-            }
+        case SECTORS_KEY:
+          this.sectorOptions = (event.value as IdAndNameType[]).map(
+            (sector) => ({
+              ...sector,
+              name: this.utils.capitalize(sector.name),
+            })
           );
+          break;
+        case SUB_SECTORS_KEY:
+          this.allSubSectors = event.value as SubSectorType[];
           break;
       }
       this.setSections(this.staticLocationId);

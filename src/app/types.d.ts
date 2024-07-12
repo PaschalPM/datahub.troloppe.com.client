@@ -34,11 +34,14 @@ type NameAndValueType = { name: string; value: number };
 type SectionType = IdAndNameType & { location_id: number };
 type LocationType = IdAndNameType & { is_active: boolean };
 type UniqueCodeType = IdAndValueType & { location_id?: number };
+type SubSectorType = IdAndNameType & {sector_id: number}
 
 type NewStreetDataFormType = {
   unique_codes: IdAndValueType[];
   locations: LocationType[];
   sections: SectionType[];
+  sectors: IdAndNameType[];
+  sub_sectors: Array<SubSectorType>;
 };
 
 type NewStreetDataFormEventType<T> = { key: string; value: T[] };

@@ -22,7 +22,7 @@ import { NotFoundComponent } from 'app/views/not-found/not-found.component';
     NgIf,
     MyMatIconComponent,
     NotFoundComponent,
-    BackBtnComponent
+    BackBtnComponent,
   ],
   templateUrl: './view-street-data.component.html',
 })
@@ -50,12 +50,6 @@ export class ViewStreetDataComponent extends StreetDataDetails {
             disabled: true,
           },
         ],
-        sector: [
-          {
-            value: '',
-            disabled: true,
-          },
-        ],
         location: [
           {
             value: '',
@@ -65,6 +59,20 @@ export class ViewStreetDataComponent extends StreetDataDetails {
         location_id: [{ value: 0, disabled: true }],
         section: [{ value: '', disabled: true }],
         section_id: [{ value: 0, disabled: true }],
+        sector: [
+          {
+            value: '',
+            disabled: true,
+          },
+        ],
+        sector_id: [
+          {
+            value: 0,
+            disabled: true,
+          },
+        ],
+        sub_sector: [{ value: '', disabled: true }],
+        sub_sector_id: [{ value: 0, disabled: true }],
         number_of_units: [{ value: '', disabled: true }], // *
         contact_name: [{ value: '', disabled: true }],
         contact_numbers: [{ value: '', disabled: true }],
@@ -87,10 +95,10 @@ export class ViewStreetDataComponent extends StreetDataDetails {
     this.checkDataIsLoaded();
   }
 
-  goBack(){
-    this.router.navigateByUrl('/dashboard/street-data')
+  goBack() {
+    this.router.navigateByUrl('/dashboard/street-data');
   }
-  
+
   routeToEditStreetView() {
     this.router.navigateByUrl(
       `/dashboard/street-data/edit/${this.streetDataId}`

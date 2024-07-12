@@ -5,6 +5,8 @@ import { apiUrlFactory } from '../../configs/global';
 
 export const LOCATIONS_KEY = 'locations';
 export const SECTIONS_KEY = 'sections';
+export const SECTORS_KEY = 'sectors';
+export const SUB_SECTORS_KEY = 'sub_sectors';
 export const UNIQUE_CODES_KEY = 'unique-codes';
 
 @Injectable({
@@ -19,6 +21,10 @@ export class NewStreetDataFormService {
     new BehaviorSubject<NewStreetDataFormEventType<LocationType> | null>(null);
   private sections$ =
     new BehaviorSubject<NewStreetDataFormEventType<SectionType> | null>(null);
+  private sectors$ =
+    new BehaviorSubject<NewStreetDataFormEventType<IdAndNameType> | null>(null);
+  private subSectors$ =
+    new BehaviorSubject<NewStreetDataFormEventType<SubSectorType> | null>(null);
 
   private getNewStreetDataFormValues$!: Observable<NewStreetDataFormType>;
   private getNewStreetDataFormValuesSubscription!: Subscription;
@@ -39,6 +45,8 @@ export class NewStreetDataFormService {
     return merge(
       this.locations$.asObservable(),
       this.sections$.asObservable(),
+      this.sectors$.asObservable(),
+      this.subSectors$.asObservable(),
       this.propertyUniqueCodes$.asObservable()
     );
   }
@@ -72,6 +80,11 @@ export class NewStreetDataFormService {
       this.getNewStreetDataFormValues$.subscribe((value) => {
         this.locations$.next({ key: LOCATIONS_KEY, value: value.locations });
         this.sections$.next({ key: SECTIONS_KEY, value: value.sections });
+        this.sectors$.next({ key: SECTORS_KEY, value: value.sectors });
+        this.subSectors$.next({
+          key: SUB_SECTORS_KEY,
+          value: value.sub_sectors,
+        });
         this.propertyUniqueCodes$.next({
           key: UNIQUE_CODES_KEY,
           value: value.unique_codes,

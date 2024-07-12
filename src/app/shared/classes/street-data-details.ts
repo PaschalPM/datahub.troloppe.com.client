@@ -45,10 +45,13 @@ export class StreetDataDetails {
           if (forEditForm) {
             const newValue = {...value}
             newValue.section = value.section_id as any;
+            newValue.sector = value.sector_id as any;
+            newValue.sub_sector = value.sub_sector_id as any;
             this.streetData = newValue;
           } else {
             const newValue = {...value}
             newValue.sector = this.utils.capitalize(value.sector)
+            newValue.sub_sector = this.utils.capitalize(value.sub_sector)
             this.streetData = newValue;
           }
           this.streetData.unique_code = value.unique_code || 'New Entry';

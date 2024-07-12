@@ -1,5 +1,7 @@
 @if(results.length === 0){
+<div class="px-4">
     No data available for {{ title }}
+</div>
 }
 @else {
 
@@ -18,7 +20,7 @@
 </div>
 }
 @else if (type === 'pie') {
-<div class="pt-4">
+<div class="pt-4 ">
     <h2 class="md:text-lg font-medium -mb-4 text-center"> {{ title }} </h2>
     <ngx-charts-pie-chart class="lg:hidden" [labels]="true" [results]="results" [customColors]="currentColor"
         [view]="[305,305]"></ngx-charts-pie-chart>

@@ -4,6 +4,9 @@ export type StreetData = {
   street_address: string; // *
   description: string;
   sector: string; // enum // *
+  sector_id: number
+  sub_sector: string
+  sub_sector_id: number
   section: string; // *
   section_id: number; // *
   location: string; // *

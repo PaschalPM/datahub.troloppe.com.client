@@ -7,8 +7,6 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideToastr } from 'ngx-toastr';
 ;
 import { csrfInterceptor } from '@interceptors/csrf.interceptor';
-import { cacheResponseInterceptor } from '@interceptors/cache-response.interceptor';
-import { camelcaseResponseInterceptor } from '@interceptors/camelcase-response.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,8 +14,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withInterceptors([
         csrfInterceptor,
-        cacheResponseInterceptor,
-        // camelcaseResponseInterceptor
       ])
     ),
     provideAnimationsAsync(),

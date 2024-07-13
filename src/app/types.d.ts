@@ -60,3 +60,17 @@ type ConfirmModalPropsType = {
 type InputsType = Record<string, unknown> | undefined;
 type ModalValueType = { template: Type<any>; inputs: InputsType; modalIcon?: string};
 type ImageModalValueType = { template: Type<any>; imageUrl: string };
+
+type StreetDataColType = Pick<
+  StreetData,
+  | 'id'
+  | 'unique_code'
+  | 'street_address'
+  | 'sector'
+  | 'section'
+  | 'location'
+  | 'is_verified'
+  | 'image_path'
+  | 'created_at'
+  | 'creator'
+>;

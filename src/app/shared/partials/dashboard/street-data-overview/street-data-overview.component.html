@@ -24,7 +24,7 @@
     }
 </dashboard-chart-container>
 
-<!-- @if (isPermitted) { -->
+@if (isPermitted) {
 <dashboard-chart-container class="justify-center min-h-52">
     @if(isLoadingUserPerformance){
     <app-spinner class="size-12 m-auto" />
@@ -35,4 +35,4 @@
     }
 </dashboard-chart-container>
 
-<!-- } -->
+}

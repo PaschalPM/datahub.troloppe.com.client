@@ -4,7 +4,6 @@ import { AgGridAngular } from 'ag-grid-angular';
 import { ColDef, CellClickedEvent } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
-import { StreetDataColType } from '../../../shared/types/street-data';
 import { TextButtonComponent } from '@components/common/text-button/text-button.component';
 import { Router } from '@angular/router';
 import { ActiveLocationIndicatorComponent } from '@components/dashboard/active-location-indicator/active-location-indicator.component';

@@ -1,5 +1,4 @@
 import { FormGroup } from '@angular/forms';
-import { StreetData } from '../types/street-data';
 import { UserRoles } from '../enums/user-roles';
 import { StreetDataService } from '@services/street-data.service';
 import { ActivatedRoute } from '@angular/router';

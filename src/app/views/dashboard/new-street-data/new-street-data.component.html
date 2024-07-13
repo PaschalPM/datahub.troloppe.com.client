@@ -1,8 +1,8 @@
-<app-back-btn/>
+<app-back-btn />
 
 <div class="w-full p-2 md:p-4 lg:w-3/4 mx-auto -mt-5">
 
-    <form [formGroup]="streetDataFormGroup" (ngSubmit)="onSubmit()"
+    <form [formGroup]="streetDataFormGroup" (ngSubmit)="onCreate()"
         class="rounded-lg bg-white p-4 md:p-8 text-sm shadow-md backdrop-blur-md my-6 dark:border-white/50 dark:bg-white/5  dark:shadow-sm dark:shadow-white/35 ">
 
         <!---: Image URL -->
@@ -23,10 +23,18 @@
 
 
         <!---: Sector  -->
-        <dashboard-select-dropdown label="Sector" name="sector" [formGroup]="streetDataFormGroup" bindLabel="label"
-            bindValue="value" [formIsSubmitting]="formIsSubmitting" [items]="sectorOptions">
+        <dashboard-select-dropdown label="Sector" name="sector" [formGroup]="streetDataFormGroup" bindLabel="name"
+            bindValue="id" [formIsSubmitting]="formIsSubmitting" [items]="sectorOptions"
+            (changeEvent)="onSectorChange($event)">
         </dashboard-select-dropdown>
 
+        @if(selectedSectorId !== 0){
+
+        <!---:Sub Sector  -->
+        <dashboard-select-dropdown label="Sub Sector" name="sub_sector" [formGroup]="streetDataFormGroup"
+            bindLabel="name" bindValue="id" [formIsSubmitting]="formIsSubmitting" [items]="subSectorOptions">
+        </dashboard-select-dropdown>
+        }
 
         <!---: Location  -->
         <dashboard-select-dropdown label="Location" name="location" [formGroup]="streetDataFormGroup" bindLabel="name"
@@ -72,6 +80,12 @@
             [formIsSubmitting]="formIsSubmitting">
         </dashboard-input-field>
 
-        <dashboard-submit-btn [isLoading]="isImageLoading"> Submit </dashboard-submit-btn>
+        <div class="flex gap-2">
+            <dashboard-submit-btn [isLoading]="isImageLoading"> Create </dashboard-submit-btn>
+            @if(!isImageLoading){
+            <text-button text="Create Another" type="button" (clickEvent)="onCreate(true)"> </text-button>
+            }
+
+        </div>
     </form>
 </div>

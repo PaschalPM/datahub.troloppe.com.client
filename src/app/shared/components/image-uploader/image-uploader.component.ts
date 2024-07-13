@@ -142,8 +142,13 @@ export class ImageUploaderComponent {
       this.imagePath = this.control.value;
       this.viewOnlyLoading = false;
     }
+
+    this.control.valueChanges.subscribe((value) => {
+      this.imagePath = value
+    })
   }
 
+  
   deleteImage() {
     if (this.imagePath && !this.isLoading) {
       this.loadingState = true;

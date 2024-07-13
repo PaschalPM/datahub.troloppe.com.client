@@ -10,8 +10,6 @@ import {
 } from 'rxjs';
 import { apiUrlFactory } from '../../configs/global';
 import { HttpClient } from '@angular/common/http';
-import { HttpRequestCacheService } from './http-request-cache.service';
-import { FormFieldDataService } from './street-data/form-field-data.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +20,6 @@ export class ActiveLocationService {
 
   constructor(
     private httpClient: HttpClient,
-    private httpCache: HttpRequestCacheService
   ) {}
 
   getActiveLocation(revalidate = true) {
@@ -46,7 +43,6 @@ export class ActiveLocationService {
             activeLocation = value.active_location;
           }
           this.activeLocation$.next(activeLocation);
-          this.httpCache.reset();
         })
       );
   }

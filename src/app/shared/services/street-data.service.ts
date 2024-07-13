@@ -1,11 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { StreetData, StreetDataColType } from '../types/street-data';
 import { apiUrlFactory, apiHttpOptions } from '../../configs/global';
-import { BehaviorSubject, Observable, map, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, map, Subscription, switchMap, tap } from 'rxjs';
 import { AuthService } from './auth.service';
 import { PermissionService } from './permission.service';
-import { HttpRequestCacheService } from './http-request-cache.service';
 import { Router } from '@angular/router';
 import { LoaderService } from './loader.service';
 
@@ -13,34 +11,22 @@ import { LoaderService } from './loader.service';
   providedIn: 'root',
 })
 export class StreetDataService {
+  private streetData$ = new BehaviorSubject<StreetDataColType[]>([]);
+  private streetDataSubscription!: Subscription;
+
   constructor(
     private httpClient: HttpClient,
     private auth: AuthService,
     private permission: PermissionService,
-    private httpReqCacheService: HttpRequestCacheService,
     private router: Router,
     private loader: LoaderService
   ) {}
 
-  getStreetData() {
-    return this.auth.onCurrentUser().pipe(
-      switchMap((currentUser) => {
-        return this.httpClient
-          .get<StreetDataColType[]>(apiUrlFactory('/street-data'))
-          .pipe(
-            tap((value) => { this.loader.stop()}),
-            map((streetDataList) =>
-              this.permission.isResearchStaff
-                ? streetDataList.filter(
-                    (streetData) =>
-                      streetData.creator.toLowerCase() ===
-                      currentUser?.name.toLowerCase()
-                  )
-                : streetDataList
-            )
-          );
-      })
-    );
+  getStreetData(revalidate = true) {
+    if (revalidate){
+      this.streetDataSubscription = this.retrieveStreetData().subscribe()
+    }
+    return this.streetData$.asObservable()
   }
 
   getStreetDataDetails(streetDataId: number) {
@@ -48,12 +34,12 @@ export class StreetDataService {
       .get<StreetData>(apiUrlFactory(`/street-data/${streetDataId}`))
       .pipe(tap(() => this.loader.stop()));
   }
+
   store(body: any) {
     return this.httpClient
-      .post<{id: number}>(apiUrlFactory(`/street-data`), body, apiHttpOptions)
+      .post<{ id: number }>(apiUrlFactory(`/street-data`), body, apiHttpOptions)
       .pipe(
         tap(() => {
-          this.httpReqCacheService.reset();
           this.loader.stop();
         })
       );
@@ -64,7 +50,6 @@ export class StreetDataService {
       .put(apiUrlFactory(`/street-data/${streetDataId}`), body, apiHttpOptions)
       .pipe(
         tap(() => {
-          this.httpReqCacheService.reset();
           this.loader.stop();
         })
       );
@@ -75,10 +60,36 @@ export class StreetDataService {
       .delete(apiUrlFactory(`/street-data/${streetDataId}`), apiHttpOptions)
       .pipe(
         tap(() => {
-          this.httpReqCacheService.reset();
           this.router.navigateByUrl('/dashboard/street-data');
           this.loader.stop();
         })
       );
+  }
+
+  ngOnDestroy(): void {
+    this.streetDataSubscription.unsubscribe()
+  }
+  private retrieveStreetData() {
+    return this.auth.onCurrentUser().pipe(
+      switchMap((currentUser) => {
+        return this.httpClient
+          .get<StreetDataColType[]>(apiUrlFactory('/street-data'))
+          .pipe(
+            map((streetDataList) =>
+              this.permission.isResearchStaff
+                ? streetDataList.filter(
+                    (streetData) =>
+                      streetData.creator.toLowerCase() ===
+                      currentUser?.name.toLowerCase()
+                  )
+                : streetDataList
+            ),
+            tap((value) => {
+              this.loader.stop();
+              this.streetData$.next(value);
+            })
+          );
+      })
+    );
   }
 }

@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { TextButtonComponent } from '@components/common/text-button/text-button.component';
 import { OverviewService } from '@services/street-data/overview.service';
 import { SpinnerComponent } from '@components/spinner/spinner.component';
+import { UtilsService } from '@services/utils.service';
 
 @Component({
   selector: 'dashboard-street-data-overview',
@@ -66,7 +67,8 @@ export class StreetDataOverviewComponent {
   constructor(
     private permission: PermissionService,
     private router: Router,
-    private streetDataOverviewService: OverviewService
+    private streetDataOverviewService: OverviewService,
+    private utils: UtilsService
   ) {
     this.isPermitted = this.permission.isPermitted(this.allowedToView);
   }
@@ -96,7 +98,10 @@ export class StreetDataOverviewComponent {
       if (value) {
         this.verifiedStreetDataByLocation =
           value!.verified_street_data_by_location;
-        this.verifiedStreetDataBySector = value.verified_street_data_by_sector;
+        this.verifiedStreetDataBySector = value.verified_street_data_by_sector.map((data) => ({
+          value: data.value,
+          name: this.utils.capitalize(data.name)
+        }));
         this.isLoadingVisualSet = false;
       }
     });

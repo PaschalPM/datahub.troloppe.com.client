@@ -11,7 +11,7 @@ export class TempImageUploaderService {
   store(formData: FormData) {
     return this.http.post<{ image_tmp_url: string }>(
       `${BASE_API_URL}/store-temp-image`,
-      formData,
+      formData
     );
   }
 

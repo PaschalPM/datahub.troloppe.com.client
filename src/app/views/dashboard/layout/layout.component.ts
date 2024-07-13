@@ -13,7 +13,6 @@ import { ModalComponent } from '@components/modal/modal.component';
 import { NotificationsService } from '@services/notifications.service';
 import { WindowFocusService } from '@services/window-focus.service';
 import { Subscription } from 'rxjs';
-import { NewStreetDataFormService } from '@services/new-street-data-form.service';
 import { ImageViewerModalComponent } from '@components/image-viewer-modal/image-viewer-modal.component';
 
 @Component({
@@ -40,7 +39,6 @@ export class LayoutComponent {
     private colorScheme: ColorSchemeService,
     private ns: NotificationsService,
     private wfs: WindowFocusService,
-    private nsdfs: NewStreetDataFormService,
     public utils: UtilsService
   ) {
     this.appEventEmitter.listen(TOGGLE_SIDE_MENU, (state: boolean) => {
@@ -63,9 +61,6 @@ export class LayoutComponent {
 
     // Revalidate ColorScheme and Notifications on Window Focus
     this.revalidateOnWindowFocus();
-
-    // Initializes all street data needed for street data form
-    this.nsdfs.onInit();
   }
 
   ngOnDestroy(): void {

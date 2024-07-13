@@ -19,12 +19,6 @@ import { ModalService } from '@services/modal.service';
 import { GeolocationAlertModalComponent } from '@partials/modals/geolocation-alert-modal/geolocation-alert-modal.component';
 import { SubmitBtnComponent } from '@components/dashboard/submit-btn/submit-btn.component';
 import { SelectDropdownComponent } from '@components/select-dropdown/select-dropdown.component';
-import {
-  LOCATIONS_KEY,
-  NewStreetDataFormService,
-  SECTIONS_KEY,
-  UNIQUE_CODES_KEY,
-} from '@services/new-street-data-form.service';
 import { StreetDataService } from '@services/street-data.service';
 import { LoaderService } from '@services/loader.service';
 import { ActiveLocationService } from '@services/active-location.service';
@@ -59,7 +53,7 @@ export class NewStreetDataComponent {
   uniqueCodeOptions: IdAndValueType[] = [];
   sectionOptions: SectionType[] = [];
 
-  private staticLocationId!: number;
+  private activeLocation!: LocationType;
   private allSections: SectionType[] = [];
   private allUniqueCodes: UniqueCodeType[] = [];
 
@@ -69,7 +63,6 @@ export class NewStreetDataComponent {
 
   constructor(
     private fb: FormBuilder,
-    private newStreetDataFormService: NewStreetDataFormService,
     private geo: GeolocationService,
     private modalService: ModalService,
     private streetDataService: StreetDataService,
@@ -103,7 +96,7 @@ export class NewStreetDataComponent {
 
   ngOnInit(): void {
     this.getOptionsValueFromAPI();
-    this.setKeyFieldsFromActiveLocation();
+    this.setKeyFieldsFromGetActiveLocation();
 
     // -----> Enable Geolocation Alert
     this.geo.errorEvents$.subscribe((error) => {
@@ -133,7 +126,7 @@ export class NewStreetDataComponent {
                 streetData.unique_code.toLowerCase()
             );
             const selectedSection = this.allSections.find(
-              (value) => value.location_id === this.staticLocationId
+              (value) => value.location_id === this.activeLocation.id
             );
 
             this.streetDataFormGroup.setValue({
@@ -141,7 +134,7 @@ export class NewStreetDataComponent {
               street_address: streetData.street_address,
               description: streetData.description,
               sector: streetData.sector,
-              location: this.staticLocationId,
+              location: this.activeLocation.id,
               section: selectedSection ? selectedSection.id : null,
               number_of_units: streetData.number_of_units,
               contact_name: streetData.contact_name,
@@ -194,7 +187,6 @@ export class NewStreetDataComponent {
             next: (streetData) => {
               this.streetDataFormGroup.reset();
               this.formIsSubmitting = false;
-              this.newStreetDataFormService.retrieveOnlyUniqueCodes();
               this.toaster.success(
                 'Street Data successfully saved.',
                 'Success'
@@ -216,38 +208,43 @@ export class NewStreetDataComponent {
 
   private getOptionsValueFromAPI() {
     // Retrieve Active Location First
-    this.activeLocationService.activeLocation().subscribe((activeLocation) => {
-      this.sdffd.formFieldData().subscribe((formFieldData) => {
-        formFieldData = formFieldData as StreetDataFormFieldDataInterface
-        // Set Location Options
-        this.locationOptions = formFieldData.locations.map((location) => ({
-          id: location.id,
-          name: location.name,
-        }));
-        // Set Section Options based on active location
-        this.sectionOptions = formFieldData.locations.find(
-          (location) => location.id === activeLocation?.id
-        )?.sections as SectionType[];
+    this.activeLocationService
+      .getActiveLocation()
+      .subscribe((activeLocation) => {
+        if (activeLocation) this.activeLocation = activeLocation;
 
-        // Set Unique Code Options
-        this.uniqueCodeOptions = formFieldData.unique_codes.filter(
-          (value) => value.location_id === activeLocation?.id
-        );
+        this.sdffd.getFormFieldData().subscribe((formFieldData) => {
+          if (formFieldData) {
+            // Set Location Options
+            this.locationOptions = formFieldData.locations.map((location) => ({
+              id: location.id,
+              name: location.name,
+            }));
+
+            // Set Section Options based on active location
+            this.sectionOptions = formFieldData.locations.find(
+              (location) => location.id === this.activeLocation.id
+            )?.sections as SectionType[];
+
+            // Set Unique Code Options
+            this.uniqueCodeOptions = formFieldData.unique_codes.filter(
+              (value) => value.location_id === this.activeLocation.id
+            );
+          }
+        });
       });
-    });
   }
 
   /**
    * Sets the values for Location, Section and UniqueCode fields
    */
-  private setKeyFieldsFromActiveLocation() {
-    this.activeLocationService.activeLocation().subscribe((activeLocation) => {
-      this.staticLocationId = activeLocation?.id as number;
+  private setKeyFieldsFromGetActiveLocation() {
+    if (this.activeLocation) {
       this.streetDataFormGroup.controls['location'].setValue(
-        activeLocation?.id
+        this.activeLocation.id
       );
-      this.setUniqueCodeAndSections(activeLocation?.id as number);
-    });
+      this.setUniqueCodeAndSections(this.activeLocation.id as number);
+    }
   }
 
   private setUniqueCodeAndSections(staticLocationId: number) {

@@ -34,6 +34,7 @@ type NameAndValueType = { name: string; value: number };
 type SectionType = IdAndNameType & { location_id: number };
 type LocationType = IdAndNameType & { is_active: boolean };
 type UniqueCodeType = IdAndValueType & { location_id?: number };
+type SectorType =  IdAndNameType & {sub_sectors: Array<{ id: number; sector_id: number; name: string }>}
 type SubSectorType = IdAndNameType & {sector_id: number}
 
 type NewStreetDataFormType = {

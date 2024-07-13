@@ -25,7 +25,7 @@ import { ImageViewerModalService } from '@services/image-viewer-modal.service';
           {{ label }}<span class="font-bold" *ngIf="isRequired"> *</span></label
         >
         <!---: Image Uploader -->
-        <div class="relative size-32" *ngIf="!imageUrl && !viewOnly">
+        <div class="relative size-32" *ngIf="!imagePath && !viewOnly">
           <div
             [class]="
               utils.cn(
@@ -47,9 +47,9 @@ import { ImageViewerModalService } from '@services/image-viewer-modal.service';
         <!-- End Image Uploader -->
 
         <!---: Image Viewer -->
-        <div class="relative size-32" *ngIf="imageUrl" >
+        <div class="relative size-32" *ngIf="imagePath">
           <img
-            [src]="imageUrl"
+            [src]="imagePath"
             alt=""
             #thumbnail
             (click)="viewImage()"
@@ -115,8 +115,8 @@ export class ImageUploaderComponent {
 
   isRequired = false;
   control!: FormControl;
-  imageUrl = '';
-  viewOnlyLoading = false;
+  imagePath = '';
+  viewOnlyLoading = true;
 
   get errorBorder() {
     return this.formIsSubmitting && this.control.invalid
@@ -139,18 +139,15 @@ export class ImageUploaderComponent {
     this.control = this.formGroup.controls?.[this.name] as FormControl;
     this.isRequired = this.control.hasValidator(Validators.required);
     if (this.viewOnly) {
-      this.viewOnlyLoading = true;
-    }
-    this.control.valueChanges.subscribe((value) => {
-      this.imageUrl = value;
+      this.imagePath = this.control.value;
       this.viewOnlyLoading = false;
-    });
+    }
   }
 
   deleteImage() {
-    if (this.imageUrl && !this.isLoading) {
+    if (this.imagePath && !this.isLoading) {
       this.loadingState = true;
-      this.tempImgUploader.deleteImage(this.imageUrl).subscribe({
+      this.tempImgUploader.deleteImage(this.imagePath).subscribe({
         next: () => {
           this.resetImage();
         },
@@ -166,7 +163,7 @@ export class ImageUploaderComponent {
 
     if (target.files && target.files[0]) {
       const file = target.files[0];
-      this.imageUrl = URL.createObjectURL(file);
+      this.imagePath = URL.createObjectURL(file);
       setTimeout(() => {
         URL.revokeObjectURL(this.thumbnail.nativeElement.src);
       });
@@ -180,7 +177,7 @@ export class ImageUploaderComponent {
     this.loadingState = true;
     this.tempImgUploader.store(formData).subscribe({
       next: (value) => {
-        this.imageUrl = value.image_tmp_url;
+        this.imagePath = value.image_tmp_url;
         this.control.setValue(value.image_tmp_url);
         this.loadingState = false;
       },
@@ -193,12 +190,11 @@ export class ImageUploaderComponent {
     });
   }
 
-  viewImage(){
-   
-    this.imageViewerService.open(this.imageUrl)
+  viewImage() {
+    this.imageViewerService.open(this.imagePath);
   }
   private resetImage() {
-    this.imageUrl = '';
+    this.imagePath = '';
     this.loadingState = false;
     this.control.setValue(null);
   }

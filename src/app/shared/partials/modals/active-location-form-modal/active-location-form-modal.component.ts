@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { SelectDropdownComponent } from '@components/select-dropdown/select-dropdown.component';
-import { NewStreetDataFormService } from '@services/new-street-data-form.service';
 import { TextButtonComponent } from '@components/common/text-button/text-button.component';
 import { ActiveLocationService } from '@services/active-location.service';
 import { ModalService } from '@services/modal.service';
@@ -84,17 +83,15 @@ export class ActiveLocationFormModalComponent {
   }
 
   setActiveLocation() {
-    let message = 'Are you sure you want to set a new active location?'
-    if (this.activeLocationFormGroup.get('location_id')?.value === null){
-      message = 'Are you sure you want to deactivate set location?'
+    let message = 'Are you sure you want to set a new active location?';
+    if (this.activeLocationFormGroup.get('location_id')?.value === null) {
+      message = 'Are you sure you want to deactivate set location?';
     }
     if (confirm(message)) {
       this.loader.start();
-      console.log(this.activeLocationFormGroup.value)
       this.setActiveLocationSubscription = this.activeLocationService
         .setActiveLocation(this.activeLocationFormGroup.value)
         .subscribe((value) => {
-
           let msg = 'New location activated and notifications sent out.';
           if (!value) {
             msg = 'No active location available';
@@ -111,14 +108,15 @@ export class ActiveLocationFormModalComponent {
   }
 
   private getLocationOptions() {
-    this.sdffd.formFieldData().subscribe((formFieldData) => {
-      this.locationOptions = (formFieldData as StreetDataFormFieldDataInterface).locations as IdAndNameType[]
-    })
+    this.sdffd.getFormFieldData().subscribe((formFieldData) => {
+      if (formFieldData) {
+        this.locationOptions = formFieldData.locations as IdAndNameType[];
+      }
+    });
   }
 
   private retrieveActiveLocation() {
-    this.activeLocationService.activeLocation().subscribe()
-    this.activeLocationService.activeLocation().subscribe((activeLocation) => {
+    this.activeLocationService.getActiveLocation().subscribe((activeLocation) => {
       if (activeLocation) {
         this.currentActiveLocation = activeLocation;
         this.locationControl.setValue(activeLocation.id);

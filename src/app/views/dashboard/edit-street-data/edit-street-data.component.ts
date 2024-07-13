@@ -1,4 +1,4 @@
-import { Location, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TextButtonComponent } from '@components/common/text-button/text-button.component';
@@ -7,13 +7,6 @@ import { ImageUploaderComponent } from '@components/image-uploader/image-uploade
 import { SelectDropdownComponent } from '@components/select-dropdown/select-dropdown.component';
 import { ConfirmModalComponent } from '@partials/modals/confirm-modal/confirm-modal.component';
 import { ModalService } from '@services/modal.service';
-import {
-  NewStreetDataFormService,
-  SECTIONS_KEY,
-  SECTORS_KEY,
-  SUB_SECTORS_KEY,
-  UNIQUE_CODES_KEY,
-} from '@services/new-street-data-form.service';
 import { StreetDataDetails } from 'app/shared/classes/street-data-details';
 import { NotFoundComponent } from 'app/views/not-found/not-found.component';
 import { constructionStatusOptions } from '../../../fixtures/street-data';
@@ -21,6 +14,7 @@ import { SubmitBtnComponent } from '@components/dashboard/submit-btn/submit-btn.
 import { MyMatIconComponent } from '@components/common/my-mat-icon.component';
 import { ToastrService } from 'ngx-toastr';
 import { BackBtnComponent } from '@components/back-btn/back-btn.component';
+import { FormFieldDataService } from '@services/street-data/form-field-data.service';
 
 @Component({
   selector: 'app-edit-street-data',
@@ -73,7 +67,7 @@ export class EditStreetDataComponent extends StreetDataDetails {
           this.loader.stop();
         },
         error: (error) => {
-          console.log(error)
+          console.log(error);
           this.toastr.error(error.message, 'Error');
           this.loader.stop();
         },
@@ -90,15 +84,14 @@ export class EditStreetDataComponent extends StreetDataDetails {
   constructionStatusOptions: OptionType[] = constructionStatusOptions;
   isImageLoading = false;
 
-  private allSections: SectionType[] = [];
-  private allSubSectors: SubSectorType[] = [];
-  private staticLocationId!: number;
+  private formFieldData!: StreetDataFormFieldDataInterface;
+  private fixedLocationId!: number;
 
   constructor(
     private modalService: ModalService,
     private fb: FormBuilder,
-    private newStreetDataFormService: NewStreetDataFormService,
-    private toastr: ToastrService,
+    private streetDataFormFieldService: FormFieldDataService,
+    private toastr: ToastrService
   ) {
     super();
     this.streetDataFormGroup = this.fb.group(
@@ -143,22 +136,22 @@ export class EditStreetDataComponent extends StreetDataDetails {
     this.setPermission();
     this.getUniqueCodeDataList();
     this.checkDataIsLoaded();
-    this.getOptionsValueFromAPI();
-    this.onStreetDataFormValueChange();
+    this.getFormFieldDataAndSetsOptionsValueFromAPI();
+    // this.onStreetDataFormValueChange();
   }
 
-  onStreetDataFormValueChange() {
-    this.streetDataFormGroup.valueChanges.subscribe((value) => {
-      console.log('Hello')
-      this.staticLocationId = value.location_id;
-      this.sectionOptions = this.allSections.filter(
-        (value) => value.location_id === this.staticLocationId
-      );
-      this.setSubSectorOptions(
-        this.streetDataFormGroup.get('sector_id')?.value
-      );
-    });
-  }
+  // onStreetDataFormValueChange() {
+  //   this.streetDataFormGroup.valueChanges.subscribe((value) => {
+  //     console.log('Hello');
+  //     this.fixedLocationId = value.location_id;
+  //     this.sectionOptions = this.allSections.filter(
+  //       (value) => value.location_id === this.fixedLocationId
+  //     );
+  //     this.setSubSectorOptions(
+  //       this.streetDataFormGroup.get('sector_id')?.value
+  //     );
+  //   });
+  // }
 
   onSectorChange(sector: IdAndNameType) {
     this.streetDataFormGroup.get('sector')?.setValue(sector.id);
@@ -166,18 +159,18 @@ export class EditStreetDataComponent extends StreetDataDetails {
     this.streetDataFormGroup.get('sub_sector')?.setValue(null);
     this.setSubSectorOptions(sector.id);
   }
-  
+
   onSubSectorChange(subSector: IdAndNameType) {
     this.streetDataFormGroup.get('sub_sector')?.setValue(subSector.id);
     this.streetDataFormGroup.get('sub_sector_id')?.setValue(subSector.id);
   }
-  
+
   onSectionChange(section: IdAndNameType) {
     this.streetDataFormGroup.controls['section_id']?.setValue(section.id);
     this.streetDataFormGroup.controls['section']?.setValue(section.id);
-    console.log(this.streetDataFormGroup)
+    console.log(this.streetDataFormGroup);
   }
-  
+
   onDeleteStreetData() {
     this.modalService.open(
       ConfirmModalComponent,
@@ -186,15 +179,15 @@ export class EditStreetDataComponent extends StreetDataDetails {
   }
 
   getUniqueCodeDataList() {
-    this.newStreetDataFormService.observeAllResources().subscribe((event) => {
-      if (event?.key === UNIQUE_CODES_KEY) {
-        this.uniqueCodeDataList = (event.value as IdAndValueType[]).map(
-          (uniqueCode) => {
-            return uniqueCode.value;
-          }
-        );
-      }
-    });
+    this.streetDataFormFieldService
+      .getFormFieldData()
+      .subscribe((formFieldData) => {
+        if (formFieldData) {
+          this.uniqueCodeDataList = formFieldData.unique_codes.map(
+            (uniqueCode) => uniqueCode.value
+          );
+        }
+      });
   }
 
   onEditStreetData() {
@@ -212,42 +205,50 @@ export class EditStreetDataComponent extends StreetDataDetails {
     }
   }
 
+  private setSectionOptions() {
+    const fixedLocation = this.formFieldData.locations.find(
+      (location) => location.id === this.fixedLocationId
+    );
+    if (fixedLocation) {
+      this.sectionOptions = fixedLocation.sections;
+    }
+  }
+
+  private setSectorOptions() {
+    this.sectorOptions = this.formFieldData.sectors.map((sector) => ({
+      ...sector,
+      name: this.utils.capitalize(sector.name),
+    }));
+  }
   private setSubSectorOptions(sectorId: number) {
-    this.subSectorOptions = this.allSubSectors.filter(
-      (subSector) => subSector.sector_id === sectorId
+    const selectedSector = this.formFieldData.sectors.find(
+      (sector) => sector.id === sectorId
     );
 
+    if (selectedSector) {
+      this.subSectorOptions = selectedSector.sub_sectors;
+    }
   }
 
-  private getOptionsValueFromAPI() {
-    this.newStreetDataFormService.observeAllResources().subscribe((event) => {
-      this.staticLocationId =
-        this.streetDataFormGroup.get('location_id')?.value;
-      switch (event?.key) {
-        case SECTIONS_KEY:
-          this.allSections = event.value as SectionType[];
-          break;
-        case SECTORS_KEY:
-          this.sectorOptions = (event.value as IdAndNameType[]).map(
-            (sector) => ({
-              ...sector,
-              name: this.utils.capitalize(sector.name),
-            })
-          );
-          break;
-        case SUB_SECTORS_KEY:
-          this.allSubSectors = event.value as SubSectorType[];
-          break;
-      }
-      this.setSections(this.staticLocationId);
-    });
-  }
+  private getFormFieldDataAndSetsOptionsValueFromAPI() {
+    this.streetDataFormFieldService
+      .getFormFieldData()
+      .subscribe((formFieldData) => {
+        if (formFieldData) {
+          this.formFieldData = formFieldData;
+          // Set fixed location ID
+          this.fixedLocationId =
+            this.streetDataFormGroup.get('location_id')?.value;
 
-  private setSections(staticLocationId: number) {
-    setTimeout(() => {
-      this.sectionOptions = this.allSections.filter(
-        (value) => value.location_id === staticLocationId
-      );
-    });
+          this.setSectionOptions();
+          this.setSectorOptions();
+
+          // Set selected sector ID
+          const selectedSectorId =
+            this.streetDataFormGroup.get('sector_id')?.value;
+            
+          this.setSubSectorOptions(selectedSectorId);
+        }
+      });
   }
 }

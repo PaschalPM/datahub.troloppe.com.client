@@ -8,7 +8,6 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { NewStreetDataFormService } from './new-street-data-form.service';
 import { apiUrlFactory } from '../../configs/global';
 import { HttpClient } from '@angular/common/http';
 import { HttpRequestCacheService } from './http-request-cache.service';
@@ -26,9 +25,11 @@ export class ActiveLocationService {
     private httpCache: HttpRequestCacheService
   ) {}
 
-  activeLocation() {
-    this.activeLocationSubscription =
-      this.revalidateActiveLocation().subscribe();
+  getActiveLocation(revalidate = true) {
+    if (revalidate) {
+      this.activeLocationSubscription =
+        this.retrieveActiveLocation().subscribe();
+    }
     return this.activeLocation$.asObservable();
   }
 
@@ -50,8 +51,8 @@ export class ActiveLocationService {
       );
   }
 
-  public forGuard() {
-    return this.revalidateActiveLocation().pipe(
+  forGuard() {
+    return this.retrieveActiveLocation().pipe(
       switchMap(() => {
         return of(true);
       }),
@@ -64,7 +65,8 @@ export class ActiveLocationService {
   ngOnDestroy(): void {
     this.activeLocationSubscription.unsubscribe();
   }
-  private revalidateActiveLocation() {
+
+  private retrieveActiveLocation() {
     return this.httpClient
       .get<LocationType>(apiUrlFactory('/locations/get-active-location'))
       .pipe(

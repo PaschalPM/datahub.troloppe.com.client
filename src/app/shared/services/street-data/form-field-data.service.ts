@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { apiUrlFactory } from 'app/configs/global';
-import { BehaviorSubject, Subscription, tap } from 'rxjs';
+import { BehaviorSubject, map, Subscription, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -14,12 +14,18 @@ export class FormFieldDataService {
 
   constructor(private httpClient: HttpClient) {}
 
-  formFieldData() {
-    this.formFieldDataSubscription = this.revalidateFormFieldData().subscribe();
+  getFormFieldData(revalidate = true) {
+    if (revalidate) {
+      this.formFieldDataSubscription = this.retrieveFormFieldData().subscribe();
+    }
     return this.formFieldData$.asObservable();
   }
 
-  private revalidateFormFieldData() {
+  ngOnDestroy(): void {
+    this.formFieldDataSubscription.unsubscribe();
+  }
+
+  private retrieveFormFieldData() {
     return this.httpClient
       .get<StreetDataFormFieldDataInterface>(
         apiUrlFactory('/street-data/form-field-data')
@@ -29,9 +35,5 @@ export class FormFieldDataService {
           this.formFieldData$.next(formFieldData);
         })
       );
-  }
-
-  ngOnDestroy(): void {
-    this.formFieldDataSubscription.unsubscribe();
   }
 }

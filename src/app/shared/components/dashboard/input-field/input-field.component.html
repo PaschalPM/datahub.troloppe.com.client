@@ -31,10 +31,10 @@
     (input)="onInput($event)"></textarea>
   }
   @else {
-  <input autocomplete="off" [attr.list]="dataList.length && name+'options'" #myInput [type]="type" [id]="name" [name]="name" [readonly]="readonly"
+  <input autocomplete="off" [attr.list]="dataList && dataList.length && name+'options'" #myInput [type]="type" [id]="name" [name]="name" [readonly]="readonly"
     [formControl]="control" [class]="classStyle" appKeyupIgnoreEnter (keyupIgnoreEnter)="onKeyUp()"
     (input)="onInput($event)" />
-    <datalist [id]="name+'options'" *ngIf="dataList.length">
+    <datalist [id]="name+'options'" *ngIf="dataList && dataList.length">
       @for(data of dataList; track data){
         <option [value]="data">
       }

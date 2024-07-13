@@ -8,7 +8,7 @@ import { PermissionService } from '../../../services/permission.service';
 import { ActiveLocationIndicatorComponent } from '../../../components/dashboard/active-location-indicator/active-location-indicator.component';
 import { Router } from '@angular/router';
 import { TextButtonComponent } from '@components/common/text-button/text-button.component';
-import { StreetDataOverviewService } from '@services/street-data-overview.service';
+import { OverviewService } from '@services/street-data/overview.service';
 import { SpinnerComponent } from '@components/spinner/spinner.component';
 
 @Component({
@@ -66,7 +66,7 @@ export class StreetDataOverviewComponent {
   constructor(
     private permission: PermissionService,
     private router: Router,
-    private streetDataOverviewService: StreetDataOverviewService
+    private streetDataOverviewService: OverviewService
   ) {
     this.isPermitted = this.permission.isPermitted(this.allowedToView);
   }
@@ -74,7 +74,7 @@ export class StreetDataOverviewComponent {
   ngOnInit(): void {
     this.getWidgetOverviewData();
     this.getVisualOverviewData();
-    this.isPermitted && this.getUserPerformanceVisuals();
+    this.getUserPerformanceVisuals();
   }
   routeToNewStreetView() {
     this.router.navigateByUrl('/dashboard/street-data/new');
@@ -82,27 +82,34 @@ export class StreetDataOverviewComponent {
 
   getWidgetOverviewData() {
     this.streetDataOverviewService.getWidgetSet().subscribe((value) => {
-      this.overviewItems[0].totalSum = value.total_street_data;
-      this.overviewItems[1].totalSum = value.total_verified_street_data;
-      this.overviewItems[2].totalSum = value.user_street_data;
-      this.overviewItems[3].totalSum = value.user_verified_street_data;
+      if (value) {
+        this.overviewItems[0].totalSum = value.total_street_data;
+        this.overviewItems[1].totalSum = value.total_verified_street_data;
+        this.overviewItems[2].totalSum = value.user_street_data;
+        this.overviewItems[3].totalSum = value.user_verified_street_data;
+      }
     });
   }
 
   getVisualOverviewData() {
     this.streetDataOverviewService.getVisualSet().subscribe((value) => {
-      this.verifiedStreetDataByLocation = value.verified_street_data_by_location;
-      this.verifiedStreetDataBySector = value.verified_street_data_by_sector;
-      this.isLoadingVisualSet = false;
+      if (value) {
+        this.verifiedStreetDataByLocation =
+          value!.verified_street_data_by_location;
+        this.verifiedStreetDataBySector = value.verified_street_data_by_sector;
+        this.isLoadingVisualSet = false;
+      }
     });
   }
   getUserPerformanceVisuals() {
     this.streetDataOverviewService
       .getUserPerformanceVisual()
       .subscribe((value) => {
-        this.verifiedStreetDataUploadedByStaff =
-          value.verified_street_data_by_staff;
-        this.isLoadingUserPerformance = false;
+        if (value) {
+          this.verifiedStreetDataUploadedByStaff =
+            value.verified_street_data_by_staff;
+          this.isLoadingUserPerformance = false;
+        }
       });
   }
 }

@@ -77,10 +77,9 @@ export class ActiveLocationIndicatorComponent {
   }
 
   private retrieveAndSetActiveLocation() {
-    this.activeLocationService.activeLocation().subscribe((value) => {
+    this.activeLocationService.getActiveLocation().subscribe((value) => {
       if (value) {
         this.activeLocation = value.name;
-        console.log(this.activeLocation)
       } else {
         this.activeLocation = null;
       }

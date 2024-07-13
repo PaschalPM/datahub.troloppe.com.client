@@ -42,26 +42,28 @@ export class StreetDataDetails {
     this.streetDataService.getStreetDataDetails(this.streetDataId).subscribe({
       next: (value) => {
         setTimeout(() => {
-          if (forEditForm) {
-            const newValue = {...value}
-            newValue.section = value.section_id as any;
-            newValue.sector = value.sector_id as any;
-            newValue.sub_sector = value.sub_sector_id as any;
-            this.streetData = newValue;
-          } else {
-            const newValue = {...value}
-            newValue.sector = this.utils.capitalize(value.sector)
-            newValue.sub_sector = this.utils.capitalize(value.sub_sector)
-            this.streetData = newValue;
+          if (value) {
+            if (forEditForm) {
+              const newValue = { ...value };
+              newValue.section = value.section_id as any;
+              newValue.sector = value.sector_id as any;
+              newValue.sub_sector = value.sub_sector_id as any;
+              this.streetData = newValue;
+            } else {
+              const newValue = { ...value };
+              newValue.sector = this.utils.capitalize(value.sector);
+              newValue.sub_sector = this.utils.capitalize(value.sub_sector);
+              this.streetData = newValue;
+            }
+            this.streetData.unique_code = value.unique_code || 'New Entry';
+            this.streetDataFormGroup.patchValue(this.streetData);
+            this.geolocation = decodeURIComponent(value.geolocation);
+            this.creator = value.creator;
+            this.createdAt = this.utils.utcToFormattedDate(value.created_at);
           }
-          this.streetData.unique_code = value.unique_code || 'New Entry';
-          this.streetDataFormGroup.setValue(this.streetData);
-          this.geolocation = decodeURIComponent(value.geolocation);
-          this.creator = value.creator;
-          this.createdAt = this.utils.utcToFormattedDate(value.created_at);
+          this.dataIsLoaded = true;
+          this.dataLoadedEvent.emit(this.dataIsLoaded);
         });
-        this.dataIsLoaded = true;
-        this.dataLoadedEvent.emit(this.dataIsLoaded);
       },
       error: (error) => {
         if (error.status === 404) {

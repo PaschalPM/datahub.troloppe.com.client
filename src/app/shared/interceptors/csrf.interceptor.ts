@@ -11,7 +11,7 @@ export const csrfInterceptor: HttpInterceptorFn = (req, next) => {
     || req.url.includes('/api/notifications')
     || req.url.endsWith('/api/auth/user') 
     || req.url.includes('/api/street-data') 
-    || req.url.includes('/api/locations/check-activate-location') 
+    || req.url.includes('/api/locations/get-active-location') 
     
 
   if (condition) {

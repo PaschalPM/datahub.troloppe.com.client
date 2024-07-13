@@ -8,6 +8,7 @@ import { ModalService } from '@services/modal.service';
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { LoaderService } from '@services/loader.service';
+import { FormFieldDataService } from '@services/street-data/form-field-data.service';
 
 @Component({
   selector: 'app-active-location-form-modal',
@@ -64,7 +65,7 @@ export class ActiveLocationFormModalComponent {
   constructor(
     private fb: FormBuilder,
     private activeLocationService: ActiveLocationService,
-    private nsdfs: NewStreetDataFormService,
+    private sdffd: FormFieldDataService,
     private modalService: ModalService,
     private toastr: ToastrService,
     private loader: LoaderService
@@ -78,7 +79,7 @@ export class ActiveLocationFormModalComponent {
   }
 
   ngOnInit(): void {
-    this.retrieveLocationOptions();
+    this.getLocationOptions();
     this.retrieveActiveLocation();
   }
 
@@ -109,13 +110,14 @@ export class ActiveLocationFormModalComponent {
     this.setActiveLocationSubscription?.unsubscribe();
   }
 
-  private retrieveLocationOptions() {
-    this.nsdfs.locations().subscribe((event) => {
-      this.locationOptions = event?.value as LocationType[];
-    });
+  private getLocationOptions() {
+    this.sdffd.formFieldData().subscribe((formFieldData) => {
+      this.locationOptions = (formFieldData as StreetDataFormFieldDataInterface).locations as IdAndNameType[]
+    })
   }
 
   private retrieveActiveLocation() {
+    this.activeLocationService.activeLocation().subscribe()
     this.activeLocationService.activeLocation().subscribe((activeLocation) => {
       if (activeLocation) {
         this.currentActiveLocation = activeLocation;

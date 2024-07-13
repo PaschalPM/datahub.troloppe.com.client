@@ -33,6 +33,7 @@ import { ConfirmModalComponent } from '@partials/modals/confirm-modal/confirm-mo
 import { TextButtonComponent } from '@components/common/text-button/text-button.component';
 import { Router } from '@angular/router';
 import { BackBtnComponent } from '@components/back-btn/back-btn.component';
+import { FormFieldDataService } from '@services/street-data/form-field-data.service';
 
 @Component({
   selector: 'app-new-street-data',
@@ -44,7 +45,7 @@ import { BackBtnComponent } from '@components/back-btn/back-btn.component';
     SubmitBtnComponent,
     SelectDropdownComponent,
     TextButtonComponent,
-    BackBtnComponent
+    BackBtnComponent,
   ],
   templateUrl: './new-street-data.component.html',
 })
@@ -56,7 +57,7 @@ export class NewStreetDataComponent {
   // ----->  Property Options From API
   locationOptions: IdAndNameType[] = [];
   uniqueCodeOptions: IdAndValueType[] = [];
-  sectionOptions: IdAndNameType[] = [];
+  sectionOptions: SectionType[] = [];
 
   private staticLocationId!: number;
   private allSections: SectionType[] = [];
@@ -75,7 +76,8 @@ export class NewStreetDataComponent {
     private loader: LoaderService,
     private activeLocationService: ActiveLocationService,
     private toaster: ToastrService,
-    private router: Router
+    private router: Router,
+    private sdffd: FormFieldDataService
   ) {
     // -----> Form Group
     this.streetDataFormGroup = this.fb.group(
@@ -164,7 +166,9 @@ export class NewStreetDataComponent {
         (uniqueCode) => uniqueCode.id === uniqueCodeStreetDataId
       )?.value;
       body.location = this.streetDataFormGroup.controls['location'].value;
-      body.geolocation = encodeURIComponent(this.streetDataFormGroup.controls['geolocation'].value);
+      body.geolocation = encodeURIComponent(
+        this.streetDataFormGroup.controls['geolocation'].value
+      );
 
       if (body.unique_code === 'New Entry') {
         body.unique_code = null;
@@ -195,7 +199,9 @@ export class NewStreetDataComponent {
                 'Street Data successfully saved.',
                 'Success'
               );
-              this.router.navigateByUrl(`/dashboard/street-data/${streetData.id}`)
+              this.router.navigateByUrl(
+                `/dashboard/street-data/${streetData.id}`
+              );
             },
           });
         },
@@ -209,19 +215,25 @@ export class NewStreetDataComponent {
   }
 
   private getOptionsValueFromAPI() {
-    this.newStreetDataFormService.observeAllResources().subscribe((event) => {
-      switch (event?.key) {
-        case LOCATIONS_KEY:
-          this.locationOptions = event.value as LocationType[];
-          break;
-        case SECTIONS_KEY:
-          this.allSections = event.value as SectionType[];
-          break;
-        case UNIQUE_CODES_KEY:
-          this.allUniqueCodes = event.value as UniqueCodeType[];
-          break;
-      }
-      this.setUniqueCodeAndSections(this.staticLocationId);
+    // Retrieve Active Location First
+    this.activeLocationService.activeLocation().subscribe((activeLocation) => {
+      this.sdffd.formFieldData().subscribe((formFieldData) => {
+        formFieldData = formFieldData as StreetDataFormFieldDataInterface
+        // Set Location Options
+        this.locationOptions = formFieldData.locations.map((location) => ({
+          id: location.id,
+          name: location.name,
+        }));
+        // Set Section Options based on active location
+        this.sectionOptions = formFieldData.locations.find(
+          (location) => location.id === activeLocation?.id
+        )?.sections as SectionType[];
+
+        // Set Unique Code Options
+        this.uniqueCodeOptions = formFieldData.unique_codes.filter(
+          (value) => value.location_id === activeLocation?.id
+        );
+      });
     });
   }
 

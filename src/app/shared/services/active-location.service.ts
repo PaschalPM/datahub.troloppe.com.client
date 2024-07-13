@@ -1,25 +1,34 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, of, switchMap, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  map,
+  of,
+  Subscription,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { NewStreetDataFormService } from './new-street-data-form.service';
 import { apiUrlFactory } from '../../configs/global';
 import { HttpClient } from '@angular/common/http';
 import { HttpRequestCacheService } from './http-request-cache.service';
+import { FormFieldDataService } from './street-data/form-field-data.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ActiveLocationService {
   private activeLocation$ = new BehaviorSubject<LocationType | null>(null);
+  private activeLocationSubscription!: Subscription;
 
   constructor(
-    private nsdfs: NewStreetDataFormService,
     private httpClient: HttpClient,
     private httpCache: HttpRequestCacheService
-  ) {
-    this.retrieveActiveLocation();
-  }
+  ) {}
 
   activeLocation() {
+    this.activeLocationSubscription =
+      this.revalidateActiveLocation().subscribe();
     return this.activeLocation$.asObservable();
   }
 
@@ -36,34 +45,37 @@ export class ActiveLocationService {
             activeLocation = value.active_location;
           }
           this.activeLocation$.next(activeLocation);
-          this.httpCache.reset()
-
+          this.httpCache.reset();
         })
       );
   }
 
   public forGuard() {
-    return this.httpClient
-      .get<{ name: string }>(
-        apiUrlFactory('/locations/check-activate-location')
-      )
-      .pipe(
-        tap((value) => console.log(value)),
-        switchMap(() => {
-          return of(true);
-        }),
-        catchError(() => {
-          return of(false);
-        })
-      );
+    return this.revalidateActiveLocation().pipe(
+      switchMap(() => {
+        return of(true);
+      }),
+      catchError(() => {
+        return of(false);
+      })
+    );
   }
 
-  private retrieveActiveLocation() {
-    this.nsdfs
-      .locations()
-      .pipe(map((value) => value?.value.find((location) => location.is_active)))
-      .subscribe((value) => {
-        this.activeLocation$.next(value as LocationType);
-      });
+  ngOnDestroy(): void {
+    this.activeLocationSubscription.unsubscribe();
+  }
+  private revalidateActiveLocation() {
+    return this.httpClient
+      .get<LocationType>(apiUrlFactory('/locations/get-active-location'))
+      .pipe(
+        tap({
+          next: (activeLocation) => {
+            this.activeLocation$.next(activeLocation);
+          },
+          error: () => {
+            this.activeLocation$.next(null);
+          },
+        })
+      );
   }
 }

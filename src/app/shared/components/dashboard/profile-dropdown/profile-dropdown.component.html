@@ -1,4 +1,4 @@
-<div appClickOutside (clickOutside)="closeProfileDropdown()" #profileDropdown
+<div @dropdownTrigger appClickOutside (clickOutside)="closeProfileDropdown()" #profileDropdown
   class="fixed right-0 top-14 z-50 flex w-56 flex-col divide-y rounded-md border bg-white text-gray-800 shadow-md dark:divide-gray-500 dark:border-gray-500 dark:bg-gray-700  dark:text-white">
   <div class="flex flex-col items-center justify-center space-y-0.5 p-4">
     <img src="assets/OnIcon.png" alt="on-icon" width="25px" height="25px" />

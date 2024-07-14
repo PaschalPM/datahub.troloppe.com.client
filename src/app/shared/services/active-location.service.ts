@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
   catchError,
-  map,
   of,
   Subscription,
   switchMap,
@@ -18,9 +17,7 @@ export class ActiveLocationService {
   private activeLocation$ = new BehaviorSubject<LocationType | null>(null);
   private activeLocationSubscription!: Subscription;
 
-  constructor(
-    private httpClient: HttpClient,
-  ) {}
+  constructor(private httpClient: HttpClient) {}
 
   getActiveLocation(revalidate = true) {
     if (revalidate) {

@@ -1,5 +1,4 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { ComponentType } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',

@@ -1,3 +1,3 @@
 export const environment = {
-  baseApiURL: 'https://datahub.troloppe.com/api',
+  baseApiURL: 'https://api.datahub.troloppe.com/api',
 };

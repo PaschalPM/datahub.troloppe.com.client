@@ -4,6 +4,7 @@ import { ModalService } from '../../services/modal.service';
 import { ClickSelfDirective } from '../../directives/click-self.directive';
 import { KeyupEscapeDirective } from '../../directives/keyup-escape.directive';
 import { MyMatIconComponent } from '../common/my-mat-icon.component';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-modal',
@@ -17,6 +18,7 @@ import { MyMatIconComponent } from '../common/my-mat-icon.component';
   template: `
     @if (template) {
     <div
+      @modalAnimation
       appKeyupEscape
       (keyupEscape)="modalService.close()"
       appClickSelf
@@ -44,6 +46,17 @@ import { MyMatIconComponent } from '../common/my-mat-icon.component';
     </div>
     }
   `,
+  animations: [
+    trigger('modalAnimation', [
+      transition(':enter', [
+        style({opacity:0}),
+        animate('200ms', style({opacity:1}))
+      ]),
+      transition(':leave', [
+        animate('200ms', style({opacity:0}))
+      ]),
+    ]),
+  ]
 })
 export class ModalComponent {
   template!: Type<any>;

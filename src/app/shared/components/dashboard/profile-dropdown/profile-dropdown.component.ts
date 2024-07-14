@@ -16,18 +16,35 @@ import { AuthService } from '@services/auth.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { LoaderService } from '@services/loader.service';
-import { Observable, Subscription } from 'rxjs';
-import { User } from 'app/shared/types/user';
+import { Subscription } from 'rxjs';
 import { AsyncPipe, TitleCasePipe } from '@angular/common';
 import { MyMatIconComponent } from "../../common/my-mat-icon.component";
 import { UtilsService } from '@services/utils.service';
 import { TextButtonComponent } from '@components/common/text-button/text-button.component';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'dashboard-profile-dropdown',
   standalone: true,
   imports: [CapitalizePipe, ClickOutsideDirective, AsyncPipe, TitleCasePipe, MyMatIconComponent, TextButtonComponent],
   templateUrl: './profile-dropdown.component.html',
+  styles: `
+    :host{
+      display:contents;
+    }
+  `,
+  animations: [
+    trigger('dropdownTrigger', [
+      transition(':enter', [
+        style({opacity: 0}),
+        animate('200ms ease-in-out', style({opacity: 1}))
+      ]),
+      transition(':leave', [
+        style({opacity: 1}),
+        animate('2000ms', style({opacity: 0}))
+      ]),
+    ])
+  ]
 })
 export class ProfileDropdownComponent {
   @Output() isProfileDropdownOpenChange = new EventEmitter();

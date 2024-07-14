@@ -79,11 +79,12 @@ export class NotificationsService {
       .pipe(
         tap({
           next: (value) => {
-            const updatedNotifications = this.notificationsObservable.value?.map((notification) =>
-              notification.id === value.id
-                ? { ...notification, is_read: true }
-                : notification
-            );
+            const updatedNotifications =
+              this.notificationsObservable.value?.map((notification) =>
+                notification.id === value.id
+                  ? { ...notification, is_read: true }
+                  : notification
+              );
             this.notificationsObservable.next(updatedNotifications);
             this.loader.stop();
           },

@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+import { Location, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TextButtonComponent } from '@components/common/text-button/text-button.component';
@@ -65,6 +65,7 @@ export class EditStreetDataComponent extends StreetDataDetails {
         next: () => {
           this.toastr.success('Street Data updated successfully.', 'Success');
           this.loader.stop();
+          this.location.back()
         },
         error: (error) => {
           console.log(error);
@@ -91,7 +92,8 @@ export class EditStreetDataComponent extends StreetDataDetails {
     private modalService: ModalService,
     private fb: FormBuilder,
     private streetDataFormFieldService: FormFieldDataService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private location: Location
   ) {
     super();
     this.streetDataFormGroup = this.fb.group(
@@ -137,21 +139,8 @@ export class EditStreetDataComponent extends StreetDataDetails {
     this.getUniqueCodeDataList();
     this.checkDataIsLoaded();
     this.getFormFieldDataAndSetsOptionsValueFromAPI();
-    // this.onStreetDataFormValueChange();
   }
 
-  // onStreetDataFormValueChange() {
-  //   this.streetDataFormGroup.valueChanges.subscribe((value) => {
-  //     console.log('Hello');
-  //     this.fixedLocationId = value.location_id;
-  //     this.sectionOptions = this.allSections.filter(
-  //       (value) => value.location_id === this.fixedLocationId
-  //     );
-  //     this.setSubSectorOptions(
-  //       this.streetDataFormGroup.get('sector_id')?.value
-  //     );
-  //   });
-  // }
 
   onSectorChange(sector: IdAndNameType) {
     this.streetDataFormGroup.get('sector')?.setValue(sector.id);

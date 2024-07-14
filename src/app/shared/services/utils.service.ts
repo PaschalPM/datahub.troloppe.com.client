@@ -28,7 +28,7 @@ export class UtilsService {
     const formattedDate = momentUtcDate.format('Do MMM, YYYY');
     return formattedDate;
   }
- 
+
   utcToHumanReadableDate(utcDate: string) {
     const momentUtcDate = moment.utc(utcDate);
     const humanReadableDate = momentUtcDate.local().fromNow();

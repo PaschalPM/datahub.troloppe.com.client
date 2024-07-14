@@ -1,4 +1,4 @@
-import { EventEmitter, Inject, Injectable, Renderer2 } from '@angular/core';
+import { EventEmitter, Inject, Injectable } from '@angular/core';
 import { ClientStorageService } from './client-storage.service';
 import { MediaQueryService } from './media-query.service';
 import { DOCUMENT } from '@angular/common';

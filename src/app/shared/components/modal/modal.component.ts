@@ -44,7 +44,6 @@ import { MyMatIconComponent } from '../common/my-mat-icon.component';
     </div>
     }
   `,
-  styles: ``,
 })
 export class ModalComponent {
   template!: Type<any>;

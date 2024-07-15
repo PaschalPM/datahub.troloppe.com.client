@@ -28,6 +28,8 @@ import { FormFieldDataService } from '@services/street-data/form-field-data.serv
 import { UtilsService } from '@services/utils.service';
 import { CreateStreetDataHelper } from 'app/shared/classes/create-street-data-helper';
 
+type CreationType = 'create' | 'createAnother' | null
+
 @Component({
   selector: 'app-new-street-data',
   standalone: true,
@@ -54,6 +56,7 @@ export class NewStreetDataComponent extends CreateStreetDataHelper {
   sectionOptions: IdAndNameType[] = [];
   sectorOptions: IdAndNameType[] = [];
   subSectorOptions: IdAndNameType[] = [];
+  creationType: CreationType = null
 
   private formFieldData!: StreetDataFormFieldDataInterface;
   private activeLocation!: LocationType;
@@ -92,6 +95,7 @@ export class NewStreetDataComponent extends CreateStreetDataHelper {
         image: ['', [Validators.required]],
 
         geolocation: [''],
+        submit:['']
       },
       { updateOn: 'submit' }
     );
@@ -157,7 +161,8 @@ export class NewStreetDataComponent extends CreateStreetDataHelper {
     }
   }
 
-  onCreate(createAnother = false) {
+
+  onCreate() {
     this.formIsSubmitting = true;
     if (this.streetDataFormGroup.valid) {
       this.modalService.open(ConfirmModalComponent, {
@@ -172,14 +177,14 @@ export class NewStreetDataComponent extends CreateStreetDataHelper {
             this.uniqueCodeOptions
           );
 
-          let googleMapsUrl;
+          let googleMapsUrlOrErrorMsg;
           try {
-            googleMapsUrl = await this.geo.getGoogleMapsUrl();
+            googleMapsUrlOrErrorMsg = await this.geo.getGoogleMapsUrl();
           } catch (error) {
-            googleMapsUrl = null;
+            googleMapsUrlOrErrorMsg = error;
           }
 
-          body.geolocation = googleMapsUrl;
+          body.geolocation = googleMapsUrlOrErrorMsg;
           this.streetDataService.store(body).subscribe({
             next: (streetData) => {
               this.formIsSubmitting = false;
@@ -187,7 +192,7 @@ export class NewStreetDataComponent extends CreateStreetDataHelper {
                 'Street Data successfully saved.',
                 'Success'
               );
-              if (createAnother) {
+              if (this.creationType === 'createAnother') {
                 this.streetDataFormGroup.reset();
                 this.streetDataFormGroup.patchValue({
                   location: this.activeLocation.id,

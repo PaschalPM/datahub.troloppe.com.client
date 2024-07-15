@@ -81,11 +81,8 @@
         </dashboard-input-field>
 
         <div class="flex gap-2">
-            <dashboard-submit-btn [isLoading]="isImageLoading"> Create </dashboard-submit-btn>
-            @if(!isImageLoading){
-            <text-button text="Create Another" type="button" (clickEvent)="onCreate(true)"> </text-button>
-            }
-
+            <dashboard-submit-btn id="create" [isLoading]="isImageLoading" (clickEvent)="creationType='create'"> Create </dashboard-submit-btn>
+            <dashboard-submit-btn id="create_another" variant="text" [isLoading]="isImageLoading" (clickEvent)="creationType='createAnother'"> Create Another </dashboard-submit-btn>
         </div>
     </form>
 </div>

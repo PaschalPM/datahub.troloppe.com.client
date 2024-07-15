@@ -4,8 +4,6 @@ import { Subject } from 'rxjs';
 export const PERMISSION_DENIED = 1;
 export const POSITION_UNAVAILABLE = 2;
 
-type CallbackType = (googleMapsUrlOrErrorMsg: string) => void;
-
 @Injectable({
   providedIn: 'root',
 })

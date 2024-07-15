@@ -172,14 +172,14 @@ export class NewStreetDataComponent extends CreateStreetDataHelper {
             this.uniqueCodeOptions
           );
 
-          let googleMapsUrlOrErrorMsg;
+          let googleMapsUrl;
           try {
-            googleMapsUrlOrErrorMsg = await this.geo.getGoogleMapsUrl();
+            googleMapsUrl = await this.geo.getGoogleMapsUrl();
           } catch (error) {
-            googleMapsUrlOrErrorMsg = error;
+            googleMapsUrl = null;
           }
 
-          body.geolocation = googleMapsUrlOrErrorMsg;
+          body.geolocation = googleMapsUrl;
           this.streetDataService.store(body).subscribe({
             next: (streetData) => {
               this.formIsSubmitting = false;

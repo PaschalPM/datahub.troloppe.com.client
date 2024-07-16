@@ -5,12 +5,13 @@ import {
   interval,
   map,
   Observable,
+  of,
   startWith,
   switchMap,
   tap,
   throwError,
 } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { apiUrlFactory } from 'app/configs/global';
 import { LoaderService } from './loader.service';
 
@@ -44,29 +45,28 @@ export class NotificationsService {
       .pipe(map((notifications) => notifications?.length));
   }
 
-  fetchNotifications(): Observable<NotificationType[]> {
+  getNotifications() {
+    return this.httpClient
+      .get<NotificationType[]>(apiUrlFactory('/notifications/all'))
+      .pipe(
+        catchError((err: HttpErrorResponse) => {
+          if (err.status === 401) {
+            return of([])
+          }
+          return throwError(() => err)
+        }),
+        tap({
+          next: (value) => {
+            this.notificationsObservable.next(value);
+          }
+        })
+      );
+  }
+
+  pollNotifications(): Observable<NotificationType[]> {
     return interval(1000 * 60 * 10).pipe(
       startWith(0),
-      switchMap(() => {
-        return this.httpClient
-          .get<NotificationType[]>(apiUrlFactory('/notifications/all'))
-          .pipe(
-            tap({
-              next: (value) => {
-                this.notificationsObservable.next(value);
-              },
-              error: (err) => {
-                this.notificationsObservable.error(err);
-              },
-            }),
-            catchError((error) => {
-              if (error.name === 'HttpErrorResponse') {
-                return throwError(() => 'Oops! Network Error...');
-              }
-              return throwError(() => error);
-            })
-          );
-      })
+      switchMap(() => this.getNotifications())
     );
   }
 
@@ -88,8 +88,7 @@ export class NotificationsService {
             this.notificationsObservable.next(updatedNotifications);
             this.loader.stop();
           },
-          error: (err) => {
-            this.notificationsObservable.error(err);
+          error: () => {
             this.loader.stop();
           },
         })
@@ -106,8 +105,7 @@ export class NotificationsService {
             this.notificationsObservable.next([]);
             this.loader.stop();
           },
-          error: (err) => {
-            this.notificationsObservable.error(err);
+          error: () => {
             this.loader.stop();
           },
         })

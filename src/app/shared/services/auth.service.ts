@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  BehaviorSubject,
-  Observable,
-  tap,
-} from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { ClientStorageService } from './client-storage.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { apiHttpOptions, apiUrlFactory } from '../../configs/global';
@@ -21,20 +17,6 @@ export class AuthService {
     return this.currentUser$.asObservable();
   }
 
-  /**
-   * Sets the Current User instance to localstorage and emits a current user event.
-   * If null is passed in, it deletes instance from localstorage and emits null
-   * @param value 
-   */
-  private setAndEmitCurrentUser(value: UserType | null) {
-    if (value) {
-      this.css.local().set(CURRENT_USER_STORE_KEY, value);
-    } else {
-      this.css.local().remove(CURRENT_USER_STORE_KEY);
-    }
-    this.currentUser$.next(value);
-  }
-
   constructor(
     private css: ClientStorageService,
     private httpClient: HttpClient
@@ -48,11 +30,11 @@ export class AuthService {
       .pipe(
         tap({
           next: (value) => {
-            this.setAndEmitCurrentUser(value)
+            this.setAndEmitCurrentUser(value);
           },
           error: (err: HttpErrorResponse) => {
             if (err.status === 401) {
-              this.setAndEmitCurrentUser(null)
+              this.setAndEmitCurrentUser(null);
             }
           },
         })
@@ -77,6 +59,10 @@ export class AuthService {
       );
   }
 
+  signOutOnClient() {
+    this.setAndEmitCurrentUser(null);
+  }
+  
   signOut(): Observable<{ message: string }> {
     return this.httpClient
       .delete<{ message: string }>(apiUrlFactory('/auth/logout'))
@@ -113,5 +99,19 @@ export class AuthService {
       body,
       apiHttpOptions
     );
+  }
+
+  /**
+   * Sets the Current User instance to localstorage and emits a current user event.
+   * If null is passed in, it deletes instance from localstorage and emits null
+   * @param value
+   */
+  private setAndEmitCurrentUser(value: UserType | null) {
+    if (value) {
+      this.css.local().set(CURRENT_USER_STORE_KEY, value);
+    } else {
+      this.css.local().remove(CURRENT_USER_STORE_KEY);
+    }
+    this.currentUser$.next(value);
   }
 }

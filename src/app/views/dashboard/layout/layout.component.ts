@@ -12,13 +12,19 @@ import { EXTRA_LARGE } from '../../../shared/constants/media-query';
 import { ModalComponent } from '@components/modal/modal.component';
 import { NotificationsService } from '@services/notifications.service';
 import { WindowFocusService } from '@services/window-focus.service';
-import { Subscription } from 'rxjs';
+import { first, fromEvent, Subscription, tap, map, startWith } from 'rxjs';
 import { ImageViewerModalComponent } from '@components/image-viewer-modal/image-viewer-modal.component';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterModule, SideMenuComponent, NavbarComponent, ModalComponent, ImageViewerModalComponent],
+  imports: [
+    RouterModule,
+    SideMenuComponent,
+    NavbarComponent,
+    ModalComponent,
+    ImageViewerModalComponent,
+  ],
   templateUrl: './layout.component.html',
 })
 export class LayoutComponent {
@@ -28,8 +34,7 @@ export class LayoutComponent {
   isProfileDropdownOpen = false;
   isExtraLarge = false;
   windowFocusSubscription!: Subscription;
-  fetchNotificationsSubscription!: Subscription;
-
+  pollNotificationsSubscription!: Subscription;
 
   constructor(
     private mediaQuery: MediaQueryService,
@@ -57,7 +62,9 @@ export class LayoutComponent {
     this.colorScheme.init();
 
     // Fetches User Notifications
-    this.fetchNotificationsSubscription = this.ns.fetchNotifications().subscribe();
+    this.pollNotificationsSubscription = this.ns
+      .pollNotifications()
+      .subscribe();
 
     // Revalidate ColorScheme and Notifications on Window Focus
     this.revalidateOnWindowFocus();
@@ -65,7 +72,7 @@ export class LayoutComponent {
 
   ngOnDestroy(): void {
     this.windowFocusSubscription.unsubscribe();
-    this.fetchNotificationsSubscription.unsubscribe();
+    this.pollNotificationsSubscription.unsubscribe();
   }
 
   private responsiveLayoutObserver() {
@@ -84,7 +91,7 @@ export class LayoutComponent {
       next: (value) => {
         if (value instanceof NavigationEnd) {
           setTimeout(() => {
-            if(!this.isExtraLarge){
+            if (!this.isExtraLarge) {
               this.appEventEmitter.emit(TOGGLE_SIDE_MENU, false);
             }
             this.title = this.pageTitle.getTitle();
@@ -98,9 +105,7 @@ export class LayoutComponent {
     this.windowFocusSubscription = this.wfs.focus$.subscribe((isFocused) => {
       if (isFocused) {
         this.colorScheme.init();
-        this.fetchNotificationsSubscription = this.ns.fetchNotifications().subscribe();
-      } else {
-        this.fetchNotificationsSubscription.unsubscribe();
+        this.ns.getNotifications().pipe(first()).subscribe();
       }
     });
   }

@@ -16,7 +16,7 @@ export class ColorSchemeService {
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private mediaQuery: MediaQueryService,
-    private css: ClientStorageService,
+    private css: ClientStorageService
   ) {}
 
   changeColorScheme(value: ColorSchemeType) {
@@ -40,8 +40,8 @@ export class ColorSchemeService {
     this.currentChange.unsubscribe();
   }
 
-  reset(){
-    this.setMode('light')
+  reset() {
+    this.setMode('light');
   }
   private listen() {
     this.currentChange.subscribe((value) => {
@@ -60,21 +60,23 @@ export class ColorSchemeService {
         this.document.body.classList.add('bg-lighter-blue');
       },
     };
-    return colorModeFuncts[mode]()
+    return colorModeFuncts[mode]();
   }
   private setColorScheme(value: ColorSchemeType) {
     if (value === 'dark' || value === 'light') {
       this.actualScheme = value;
     }
-    if (value === 'light') this.setMode("light")
-     else if (value === 'dark') this.setMode("dark")
-     else {
-      this.actualScheme = 'light';
+    if (value === 'light') this.setMode('light');
+    else if (value === 'dark') this.setMode('dark');
+    else {
       this.mediaQuery.observe(SYSTEM_COLOR_SCHEME).subscribe({
         next: (matches) => {
           if (matches) {
-            this.setMode("dark")
+            this.setMode('dark');
             this.actualScheme = 'dark';
+          } else {
+            this.setMode('light');
+            this.actualScheme = 'light';
           }
         },
       });

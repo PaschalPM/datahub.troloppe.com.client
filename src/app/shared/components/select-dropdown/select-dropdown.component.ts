@@ -10,6 +10,7 @@ import { NgSelectComponent, NgSelectModule } from '@ng-select/ng-select';
 import { UtilsService } from '../../services/utils.service';
 import { NgIf } from '@angular/common';
 import { CapitalizePipe } from '../../pipes/capitalize.pipe';
+import { fromEvent, Subscription } from 'rxjs';
 
 @Component({
   selector: 'dashboard-select-dropdown',
@@ -24,7 +25,7 @@ export class SelectDropdownComponent {
   @Input({ required: true }) bindLabel!: string;
   @Input({ required: true }) formGroup!: FormGroup;
   @Input({ required: true }) bindValue!: string;
-  
+
   @Input() label = '';
   @Input() class = '';
   @Input() isRequired = true;
@@ -38,10 +39,18 @@ export class SelectDropdownComponent {
   @ViewChild('ngSelect', { static: false }) ngSelect!: NgSelectComponent;
   control = new FormControl();
 
+  windowScrollSubscription!: Subscription;
+
   constructor(public utils: UtilsService) {}
   ngOnInit(): void {
     this.control = this.formGroup.controls?.[this.name] as FormControl;
     this.control.value;
+
+    this.windowScrollSubscription = fromEvent(window, 'scroll').subscribe(
+      () => {
+        this.ngSelect.close();
+      }
+    );
   }
 
   ngAfterViewChecked(): void {
@@ -53,8 +62,12 @@ export class SelectDropdownComponent {
   }
 
   onChange(value: Event) {
-    this.ngSelect.close()
+    this.ngSelect.close();
     this.control.setErrors(null);
     this.changeEvent.emit(value);
+  }
+
+  ngOnDestroy(): void {
+    this.windowScrollSubscription.unsubscribe()
   }
 }

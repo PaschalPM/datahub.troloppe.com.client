@@ -95,6 +95,7 @@ export class NotificationsComponent {
         this.allNotifications = notifications;
       },
       error: (err) => {
+        console.log(err)
         this.error = err;
         this.allNotifications = undefined;
       },
